@@ -12,7 +12,8 @@ export const SITE = {
   locale: "en_NG",
   twitter: "@urbn_hq",
   themeColor: "#253DE2",
-  ogImage: "/og/default.png",
+  // Bump ?v= whenever the share card changes so WhatsApp/Facebook refetch it.
+  ogImage: "/og/urbn-share.png?v=3",
   apps: {
     // TODO: replace with live store links at launch
     ios: "/download",

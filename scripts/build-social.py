@@ -75,5 +75,5 @@ def og(name, tagline):
     d.text(((W - d.textlength(t2, font=small)) / 2, 470), t2, font=small, fill=(200, 208, 255))
     im.save(PUB / "og" / f"{name}.png", optimize=True)
 
-og("default", "The digital infrastructure for housing")
+og("urbn-share", "The digital infrastructure for housing")
 print("ok")
