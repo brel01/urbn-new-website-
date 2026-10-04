@@ -4,15 +4,16 @@
 export const SITE = {
   name: "Urbn",
   legalName: "Urbn Technologies Ltd", // TODO: confirm registered company name
-  url: "https://urbn.ng",
-  tagline: "Nigeria's Digital Property Identity platform",
+  url: import.meta.env.VITE_SITE_URL ?? "https://urbn.ng",
+  tagline: "The digital infrastructure for housing",
   description:
-    "Urbn gives every property in Nigeria a permanent, verifiable Digital Property Identity (DPI). Verify any property in seconds, find verified homes, and rent or buy without blind trust.",
+    "Urbn is the digital infrastructure for housing in Nigeria. Every property gets a permanent, verifiable Digital Property Identity (DPI), so you can verify homes in seconds, find verified listings, and rent or buy without blind trust.",
   email: "hello@urbn.ng", // TODO: confirm inbox
   locale: "en_NG",
   twitter: "@urbn_hq",
   themeColor: "#253DE2",
-  ogImage: "/og/default.png",
+  // Bump ?v= whenever the share card changes so WhatsApp/Facebook refetch it.
+  ogImage: "/og/urbn-share.png?v=3",
   apps: {
     // TODO: replace with live store links at launch
     ios: "/download",

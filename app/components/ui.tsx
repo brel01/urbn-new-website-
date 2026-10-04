@@ -1,4 +1,5 @@
 import { clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 import { ChevronRight } from "lucide-react";
 import type { ComponentProps, ReactNode } from "react";
 import { Link } from "react-router";
@@ -20,13 +21,14 @@ const sizes: Record<Size, string> = {
 };
 
 export function buttonClass(variant: Variant = "dark", size: Size = "md", className?: string) {
-  return clsx(
+  // twMerge lets callers override base utilities (e.g. "hidden md:inline-flex").
+  return twMerge(clsx(
     "group inline-flex items-center justify-center gap-2 rounded-[10px] font-medium whitespace-nowrap",
     "transition-[background-color,border-color,transform,box-shadow] duration-200 active:scale-[0.97]",
     variants[variant],
     sizes[size],
     className,
-  );
+  ));
 }
 
 type BtnProps = {
@@ -104,12 +106,13 @@ export function SectionHeading({
   className?: string;
 }) {
   return (
-    <div className={clsx("max-w-3xl", align === "center" && "mx-auto text-center", className)}>
-      {eyebrow && <Eyebrow dark={dark} className={clsx("mb-4", align === "center" && "justify-center")}>{eyebrow}</Eyebrow>}
-      <As className={clsx("text-4xl leading-[1.05] text-balance sm:text-5xl lg:text-[3.5rem]", dark ? "text-white" : "text-ink")}>
+    // Phones get left-aligned, app-style headings; centring starts at md.
+    <div className={clsx("max-w-3xl", align === "center" && "md:mx-auto md:text-center", className)}>
+      {eyebrow && <Eyebrow dark={dark} className={clsx("mb-3 md:mb-4", align === "center" && "md:justify-center")}>{eyebrow}</Eyebrow>}
+      <As className={clsx("text-[2.1rem] leading-[1.05] text-balance sm:text-5xl lg:text-[3.5rem]", dark ? "text-white" : "text-ink")}>
         {title}
       </As>
-      {lede && <p className={clsx("mt-5 text-pretty", dark ? "text-base text-neutral-400 sm:text-lg" : "lede")}>{lede}</p>}
+      {lede && <p className={clsx("mt-3 text-pretty md:mt-5", dark ? "text-base text-neutral-400 sm:text-lg" : "lede")}>{lede}</p>}
     </div>
   );
 }

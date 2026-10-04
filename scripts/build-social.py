@@ -38,7 +38,7 @@ icon(512, 0.3).save(PUB / "icons/icon-maskable-512.png")
 manifest = {
     "name": "Urbn: Digital Property Identity",
     "short_name": "Urbn",
-    "description": "Verify any property in Nigeria and find verified homes.",
+    "description": "The digital infrastructure for housing.",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#000000",
@@ -51,31 +51,29 @@ manifest = {
 }
 (PUB / "site.webmanifest").write_text(json.dumps(manifest, indent=2))
 
-# --- Open Graph 1200x630
-def og(name, line1, line2, bg_img=None):
+# --- Open Graph 1200x630, centre-weighted so WhatsApp's square crop keeps the logo
+def og(name, tagline):
     W, H = 1200, 630
-    im = Image.new("RGB", (W, H), (0, 0, 0))
-    pat = Image.open(DA / "BRAND PATTERN WHITE.png").convert("L").resize((360, 360))
-    tile = Image.new("RGB", pat.size, (0, 0, 0))
-    tile.paste((22, 22, 26), mask=pat)
-    for x in range(0, W, 360):
-        for y in range(0, H, 360):
+    im = Image.new("RGB", (W, H), BLUE)
+    pat = Image.open(DA / "BRAND PATTERN WHITE.png").convert("L").resize((300, 300))
+    tile = Image.new("RGB", pat.size, BLUE)
+    tile.paste((52, 76, 232), mask=pat)
+    for x in range(0, W, 300):
+        for y in range(0, H, 300):
             im.paste(tile, (x, y))
-    if bg_img:
-        b = Image.open(bg_img).convert("RGB")
-        b = b.crop((1010, 0, b.width, b.height))
-        b = b.resize((int(b.width * H / b.height), H), Image.LANCZOS)
-        fade = Image.linear_gradient("L").rotate(90).resize((b.width, H))
-        fade = fade.point(lambda v: min(255, int(v * 2.2)))
-        im.paste(b, (W - b.width, 0), fade)
+    # soft vignette towards the centre so the logo reads cleanly
+    glow = Image.radial_gradient("L").resize((W, H)).point(lambda v: max(0, 255 - int(v * 1.4)))
+    im = Image.composite(Image.new("RGB", (W, H), BLUE), im, glow)
+    w = word_white.copy(); w.thumbnail((440, 200), Image.LANCZOS)
+    im.paste(w, ((W - w.width) // 2, 175), w)
     d = ImageDraw.Draw(im)
-    w = word_white.copy(); w.thumbnail((210, 90), Image.LANCZOS)
-    im.paste(w, (72, 70), w)
-    f = ImageFont.truetype(str(FONT), 84)
-    d.text((72, 300), line1, font=f, fill="white")
-    d.text((72, 395), line2, font=f, fill=BLUE)
-    d.text((72, 540), "urbn.ng", font=ImageFont.truetype(str(FONT), 30), fill=(160, 160, 170))
+    f = ImageFont.truetype(str(FONT), 46)
+    tw = d.textlength(tagline, font=f)
+    d.text(((W - tw) / 2, 395), tagline, font=f, fill="white")
+    small = ImageFont.truetype(str(FONT), 28)
+    t2 = "Digital Property Identity — urbn.ng"
+    d.text(((W - d.textlength(t2, font=small)) / 2, 470), t2, font=small, fill=(200, 208, 255))
     im.save(PUB / "og" / f"{name}.png", optimize=True)
 
-og("default", "Can you trust", "this property?", PUB / "images/hero-verify.webp")
+og("urbn-share", "The digital infrastructure for housing")
 print("ok")

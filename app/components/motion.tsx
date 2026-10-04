@@ -4,10 +4,17 @@ import { type ReactNode, useEffect, useRef, useState } from "react";
 
 export const EASE = [0.16, 1, 0.3, 1] as const;
 
-const revealVariants: Variants = {
-  hidden: { opacity: 0, y: 28, filter: "blur(6px)" },
-  show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.8, ease: EASE } },
-};
+// Blur is GPU-heavy on phones, so it only runs on wider screens.
+const canBlur = typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches;
+const revealVariants: Variants = canBlur
+  ? {
+      hidden: { opacity: 0, y: 28, filter: "blur(6px)" },
+      show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.8, ease: EASE } },
+    }
+  : {
+      hidden: { opacity: 0, y: 22 },
+      show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
+    };
 
 /** Fades and lifts content into view once, as the reader scrolls. */
 export function Reveal({

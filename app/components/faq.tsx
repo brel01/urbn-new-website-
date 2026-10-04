@@ -72,15 +72,15 @@ export function FaqSection({
   lede?: string;
 }) {
   return (
-    <section className="container-x py-24 sm:py-32" aria-labelledby="faq-heading">
+    <section className="container-x py-16 sm:py-24 lg:py-32" aria-labelledby="faq-heading">
       <Reveal>
         <SectionHeading title={<span id="faq-heading">FAQs.</span>} lede={lede} />
       </Reveal>
-      <Reveal className="mx-auto mt-14 max-w-5xl" delay={0.1}>
+      <Reveal className="mx-auto mt-8 max-w-5xl md:mt-14" delay={0.1}>
         <FaqList faqs={faqs} />
       </Reveal>
-      <div className="mt-10 text-center">
-        <ButtonLink to="/faq" variant="dark">
+      <div className="mt-8 md:mt-10 md:text-center">
+        <ButtonLink to="/faq" variant="dark" size="lg" className="w-full md:h-11 md:w-auto md:px-5 md:text-[15px]">
           See all FAQs
         </ButtonLink>
       </div>

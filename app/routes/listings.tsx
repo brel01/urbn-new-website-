@@ -152,13 +152,15 @@ export default function Listings({ loaderData }: Route.ComponentProps) {
   return (
     <>
       <Hero />
-      <section id="search" className="scroll-mt-16 bg-[#F9FAFB] pt-10 pb-24 sm:pt-14">
+      <section id="search" className="scroll-mt-16 bg-[#F9FAFB] pt-6 pb-24 sm:pt-14">
         <div className="container-x">
+          {/* phones: the toolbar pins to the top while results scroll, like the app */}
+          <div className="sticky top-0 z-40 -mx-4 bg-[#F9FAFB]/95 px-4 pt-3 pb-3 backdrop-blur-xl sm:-mx-6 sm:px-6 lg:static lg:mx-0 lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
           {/* App-style header: title, AI toggle, list/map switch */}
           <div className="flex items-end justify-between gap-4">
             <div>
               <p className="text-[10px] tracking-widest text-neutral-400 uppercase">Urbn</p>
-              <h2 className="font-sans text-2xl font-bold tracking-tight sm:text-3xl">Listings</h2>
+              <h2 className="font-sans text-xl font-bold tracking-tight sm:text-3xl">Listings</h2>
             </div>
             <div className="flex items-center gap-2">
               <button
@@ -191,7 +193,7 @@ export default function Listings({ loaderData }: Route.ComponentProps) {
             </div>
           </div>
 
-          <div className="mt-5">
+          <div className="mt-3 lg:mt-5">
             <AnimatePresence mode="wait" initial={false}>
               {mode === "ai" ? (
                 <motion.div key="ai" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.3, ease: EASE }}>
@@ -238,10 +240,11 @@ export default function Listings({ loaderData }: Route.ComponentProps) {
               )}
             </AnimatePresence>
           </div>
+          </div>
 
           {showFeatured && <FeaturedCarousel listings={loaderData.featured} />}
 
-          <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-3 lg:mt-8">
             <div className="text-sm text-neutral-500" aria-live="polite">
               {mode === "ai" && q && ai.data && !ai.data.error ? (
                 <p className="flex flex-wrap items-center gap-1.5 text-xs font-medium text-urbn">
@@ -359,14 +362,14 @@ function Hero() {
         <div className="absolute inset-0 bg-gradient-to-r from-mist via-mist/70 to-transparent lg:via-mist/10" />
         <div className="absolute inset-0 bg-mist/75 lg:hidden" />
       </motion.div>
-      <div className="container-x flex min-h-[30rem] flex-col justify-end pt-24 pb-12 lg:min-h-[32rem] lg:justify-center lg:py-20">
-        <WordsReveal text="Verified. Not just listed." className="max-w-xl text-5xl leading-[1] sm:text-7xl" />
+      <div className="container-x flex min-h-[18rem] flex-col justify-end pt-16 pb-8 sm:min-h-[30rem] sm:pt-24 sm:pb-12 lg:min-h-[32rem] lg:justify-center lg:py-20">
+        <WordsReveal text="Verified. Not just listed." className="max-w-xl text-[2.6rem] leading-[1] sm:text-7xl" />
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.8, ease: EASE }}>
-          <p className="mt-6 max-w-md text-lg text-neutral-700">
+          <p className="mt-3 max-w-md text-[15px] text-neutral-700 sm:mt-6 sm:text-lg">
             Every property on Urbn has been checked: ownership confirmed, documents verified, and someone from our team
             has actually seen it. Search with confidence, not crossed fingers.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-8 hidden flex-wrap gap-3 sm:flex">
             <a href="#search" className="inline-flex h-11 items-center rounded-[10px] bg-ink px-5 text-[15px] font-medium text-white transition hover:bg-neutral-800">
               Search Verified Homes
             </a>

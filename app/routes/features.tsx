@@ -15,6 +15,7 @@ import {
   UBeepScreen,
   VideoScreen,
 } from "~/components/phone";
+import { Rail } from "~/components/mobile";
 import { ButtonLink } from "~/components/ui";
 import { FEATURE_FAQS } from "~/lib/faqs";
 import { breadcrumbs, faqJsonLd, seo } from "~/lib/seo";
@@ -116,8 +117,34 @@ export default function Features() {
   return (
     <>
       <Hero />
-      <section className="container-x py-20 sm:py-28" aria-label="Urbn features">
-        <nav aria-label="Jump to feature" className="no-scrollbar -mx-4 mb-10 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:flex-wrap sm:justify-center sm:px-0">
+      <section className="container-x py-12 sm:py-20 lg:py-28" aria-label="Urbn features">
+        {/* phones: an app tour, one feature per swipe */}
+        <div className="lg:hidden">
+          <p className="text-[10px] font-semibold tracking-widest text-neutral-400 uppercase">Swipe the tour</p>
+          <Rail grid="md:grid-cols-2 md:gap-5" item="w-[86%] sm:w-[60%]" className="mt-3" label="Urbn features">
+            {FEATURES.map((f, i) => (
+              <article key={f.id} className="flex h-full flex-col overflow-hidden rounded-[1.75rem] bg-mist">
+                <div className="relative bg-gradient-to-b from-blue-100 to-mist px-10 pt-8">
+                  <span className="absolute top-4 left-4 rounded-full bg-white px-2.5 py-1 text-[11px] font-semibold text-neutral-500">
+                    {i + 1} / {FEATURES.length}
+                  </span>
+                  <div className="mx-auto -mb-24 w-full max-w-[12.5rem]">
+                    <Phone>{f.screen}</Phone>
+                  </div>
+                </div>
+                <div className="relative z-10 -mt-px flex flex-1 flex-col bg-mist p-6 pt-8 shadow-[0_-24px_30px_-8px_rgba(245,245,246,1)]">
+                  <span className="grid size-11 place-items-center rounded-full bg-ink text-white">
+                    <f.icon className="size-5" />
+                  </span>
+                  <h2 className="mt-4 text-2xl">{f.title}</h2>
+                  <p className="mt-2 text-[15px] leading-relaxed text-neutral-600">{f.body}</p>
+                  {(f.highlight || f.kicker) && <p className="mt-3 text-[15px] leading-snug font-medium text-urbn">{f.highlight ?? f.kicker}</p>}
+                </div>
+              </article>
+            ))}
+          </Rail>
+        </div>
+        <nav aria-label="Jump to feature" className="mb-10 hidden flex-wrap justify-center gap-2 lg:flex">
           {FEATURES.map((f) => (
             <a
               key={f.id}
@@ -128,7 +155,7 @@ export default function Features() {
             </a>
           ))}
         </nav>
-        <Stagger className="grid gap-5 lg:grid-cols-2" stagger={0.08}>
+        <Stagger className="hidden gap-5 lg:grid lg:grid-cols-2" stagger={0.08}>
           {FEATURES.map((f, i) => (
             <StaggerItem key={f.id} className={clsx(i === FEATURES.length - 1 && "lg:col-span-2")}>
               <FeatureCard feature={f} wide={i === FEATURES.length - 1} />
@@ -166,8 +193,8 @@ function Hero() {
         <div className="absolute inset-0 bg-gradient-to-r from-mist via-mist/70 to-transparent lg:via-mist/10" />
         <div className="absolute inset-0 bg-mist/75 lg:hidden" />
       </motion.div>
-      <div className="container-x flex min-h-[30rem] flex-col justify-end pt-24 pb-14 sm:min-h-[34rem] lg:justify-center lg:py-28">
-        <WordsReveal text="More than verification" highlight={["verification"]} className="max-w-xl text-5xl leading-[1] sm:text-7xl" />
+      <div className="container-x flex min-h-[22rem] flex-col justify-end pt-20 pb-10 sm:min-h-[34rem] sm:pt-24 sm:pb-14 lg:justify-center lg:py-28">
+        <WordsReveal text="More than verification" highlight={["verification"]} className="max-w-xl text-[2.75rem] leading-[1] sm:text-7xl" />
         <motion.p
           className="mt-6 max-w-sm text-lg text-neutral-700"
           initial={{ opacity: 0, y: 10 }}

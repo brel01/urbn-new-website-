@@ -7,6 +7,7 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import { Footer } from "./components/footer";
 import { Header } from "./components/header";
+import { TabBar } from "./components/mobile";
 import { ButtonLink } from "./components/ui";
 import { organizationJsonLd, websiteJsonLd } from "./lib/seo";
 import { SITE } from "./lib/site";
@@ -55,6 +56,7 @@ export default function App() {
           <Outlet />
         </main>
         <Footer />
+        <TabBar />
       </MotionConfig>
     </QueryClientProvider>
   );

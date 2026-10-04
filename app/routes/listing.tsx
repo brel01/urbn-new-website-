@@ -28,6 +28,7 @@ import { data, Link, redirect } from "react-router";
 import { ListingCard } from "~/components/listing-card";
 import { EASE, Reveal } from "~/components/motion";
 import { Plaque } from "~/components/plaque";
+import { BottomBar } from "~/components/mobile";
 import { ButtonLink } from "~/components/ui";
 import { appDeepLink, verifyPath } from "~/lib/dpi";
 import { getListing, similarListings } from "~/lib/marketplace/source.server";
@@ -55,6 +56,9 @@ export async function loader({ params }: Route.LoaderArgs) {
 
 const fmtDate = (d?: string | null) =>
   d ? new Date(d).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) : null;
+
+// Phones swap the tab bar for a sticky price + Book Inspection bar.
+export const handle = { hideTabBar: true };
 
 export const meta: Route.MetaFunction = ({ loaderData }) => {
   if (!loaderData) return [{ title: "Listing not found | Urbn" }];
@@ -148,7 +152,21 @@ export default function ListingPage({ loaderData }: Route.ComponentProps) {
 
   return (
     <div className="bg-[#F9FAFB]">
-      <div className="container-x pt-6">
+      <MobileGallery
+        images={l.images}
+        title={l.propertyTitle}
+        badges={
+          <>
+            {l.isFeatured && <span className="inline-flex items-center gap-1 rounded-full bg-urbn px-3 py-1 text-[11px] font-bold text-white"><Star className="size-3 fill-white" /> Featured</span>}
+            <span className="rounded-full bg-black px-3 py-1 text-[11px] font-bold text-white">{listingTypeLabel(l.listingType)}</span>
+          </>
+        }
+        saved={saved}
+        onSave={() => setSaved((v) => !v)}
+        onShare={share}
+        shared={shared}
+      />
+      <div className="container-x hidden pt-6 lg:block">
         <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm text-neutral-500">
           <Link to="/listings" className="inline-flex items-center gap-1 hover:text-ink">
             <ChevronLeft className="size-4" /> Listings
@@ -160,8 +178,8 @@ export default function ListingPage({ loaderData }: Route.ComponentProps) {
         </nav>
       </div>
 
-      {/* Hero gallery */}
-      <section className="container-x mt-5">
+      {/* Hero gallery (desktop) */}
+      <section className="container-x mt-5 hidden lg:block">
         <div className="grid gap-3 lg:grid-cols-[2fr_1fr]">
           <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-mist sm:aspect-[16/10]">
             <AnimatePresence initial={false}>
@@ -222,7 +240,7 @@ export default function ListingPage({ loaderData }: Route.ComponentProps) {
         </div>
       </section>
 
-      <section className="container-x mt-8 grid gap-10 pb-24 lg:grid-cols-[1fr_23rem]">
+      <section className="container-x relative z-10 -mt-6 grid gap-10 pb-28 lg:mt-8 lg:grid-cols-[1fr_23rem] lg:pb-24">
         <div className="space-y-5">
           {/* Header */}
           <Reveal className="rounded-2xl bg-white p-5 sm:p-6">
@@ -381,7 +399,7 @@ export default function ListingPage({ loaderData }: Route.ComponentProps) {
         </div>
 
         {/* Sticky CTA */}
-        <aside className="lg:sticky lg:top-24 lg:self-start">
+        <aside className="hidden lg:sticky lg:top-24 lg:block lg:self-start">
           <div className="rounded-2xl bg-white p-6 ring-1 ring-black/5">
             <p className="text-xs text-neutral-500">{listingTypeLabel(l.listingType)}</p>
             <p className="text-3xl font-bold tracking-tight">{formatPrice(l.price, l.rentPeriod, true)}</p>
@@ -458,6 +476,81 @@ export default function ListingPage({ loaderData }: Route.ComponentProps) {
           </div>
         </section>
       )}
+      <BottomBar>
+        <div className="flex items-center gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-lg font-bold tracking-tight">{formatPrice(l.price, l.rentPeriod)}</p>
+            <p className="truncate text-xs text-neutral-500">
+              {l.inspectionFeeKobo ? `Inspection fee ₦${(l.inspectionFeeKobo / 100).toLocaleString("en-NG")}` : "Free inspection"} · {listedByLabel(l)}
+            </p>
+          </div>
+          <Link to="/download" aria-label={`Message ${l.agent ? "agent" : "owner"}`} className="grid size-12 shrink-0 place-items-center rounded-xl border border-neutral-200 active:scale-95">
+            <MessageCircle className="size-5" />
+          </Link>
+          <Link to="/download" className="inline-flex h-12 shrink-0 items-center rounded-xl bg-urbn px-5 text-sm font-semibold text-white shadow-[0_10px_24px_-10px_rgba(37,61,226,0.9)] active:scale-95">
+            Book Inspection
+          </Link>
+        </div>
+      </BottomBar>
     </div>
+  );
+}
+
+/** Phones: full-bleed swipeable photos with a counter and floating controls. */
+function MobileGallery({
+  images,
+  title,
+  badges,
+  saved,
+  onSave,
+  onShare,
+  shared,
+}: {
+  images: string[];
+  title: string;
+  badges: React.ReactNode;
+  saved: boolean;
+  onSave: () => void;
+  onShare: () => void;
+  shared: boolean;
+}) {
+  const [index, setIndex] = useState(0);
+  return (
+    <section className="relative lg:hidden" aria-label="Photos">
+      <div
+        className="no-scrollbar flex aspect-[4/3.4] snap-x snap-mandatory overflow-x-auto"
+        onScroll={(e) => setIndex(Math.round(e.currentTarget.scrollLeft / e.currentTarget.clientWidth))}
+      >
+        {(images.length ? images : [""]).map((src, i) => (
+          <div key={i} className="relative w-full shrink-0 snap-center bg-mist">
+            {src ? (
+              <img src={src} alt={`${title}, photo ${i + 1} of ${images.length}`} loading={i ? "lazy" : "eager"} className="size-full object-cover" />
+            ) : (
+              <div className="grid size-full place-items-center text-neutral-300"><Home className="size-12" /></div>
+            )}
+          </div>
+        ))}
+      </div>
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/35 to-transparent" />
+      <div className="absolute inset-x-4 top-3 flex items-center justify-between">
+        <Link to="/listings" aria-label="Back to listings" className="grid size-10 place-items-center rounded-full bg-white/90 backdrop-blur active:scale-90">
+          <ChevronLeft className="size-5" />
+        </Link>
+        <div className="flex gap-2">
+          <button type="button" onClick={onShare} aria-label="Share listing" className="grid size-10 place-items-center rounded-full bg-white/90 backdrop-blur active:scale-90">
+            {shared ? <Check className="size-4 text-success" /> : <Share2 className="size-4" />}
+          </button>
+          <button type="button" onClick={onSave} aria-pressed={saved} aria-label="Save listing" className="grid size-10 place-items-center rounded-full bg-white/90 backdrop-blur active:scale-90">
+            <Heart className={clsx("size-4", saved && "fill-error text-error")} />
+          </button>
+        </div>
+      </div>
+      <div className="absolute bottom-10 left-4 flex gap-2">{badges}</div>
+      {images.length > 1 && (
+        <span className="absolute right-4 bottom-10 rounded-full bg-black/60 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur">
+          {index + 1} / {images.length}
+        </span>
+      )}
+    </section>
   );
 }

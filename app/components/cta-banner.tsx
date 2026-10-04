@@ -24,7 +24,7 @@ export function CtaBanner({
 }) {
   return (
     <section className="container-x pb-20 sm:pb-28">
-      <Reveal className="relative overflow-hidden rounded-[1.75rem] bg-ink px-6 py-14 sm:px-12 sm:py-16 lg:px-16">
+      <Reveal className="relative overflow-hidden rounded-[1.75rem] bg-ink px-6 pt-12 pb-40 sm:px-12 sm:py-16 lg:px-16">
         {/* drifting brand pattern */}
         <motion.div
           aria-hidden
@@ -62,11 +62,11 @@ export function CtaBanner({
             <WaitlistForm className="w-full max-w-md lg:justify-self-end" />
           ) : (
             (children ?? (
-              <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-                <ButtonLink to="/download" variant="light">
+              <div className="mt-8 grid gap-3 sm:mt-9 sm:flex sm:flex-wrap sm:items-center sm:justify-center">
+                <ButtonLink to="/download" variant="light" size="lg" className="w-full sm:h-11 sm:w-auto sm:px-5 sm:text-[15px]">
                   Get Started
                 </ButtonLink>
-                <ButtonLink to="/verify" variant="light">
+                <ButtonLink to="/verify" variant="ghost-light" size="lg" className="w-full sm:h-11 sm:w-auto sm:px-5 sm:text-[15px]">
                   Verify a Property
                 </ButtonLink>
               </div>

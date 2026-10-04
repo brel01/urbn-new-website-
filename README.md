@@ -22,6 +22,7 @@ The marketplace and DPI lookups use the **same endpoints and payload shapes as `
 | Env var | Purpose |
 | --- | --- |
 | `URBN_API_URL` | e.g. `https://api.urbn.ng`. When set, all data is live. When unset, the site serves the seed data in `app/lib/marketplace/seed.ts`. |
+| `SITE_URL` | Public origin for canonical URLs and link-preview images (e.g. `https://urbn.ng`). On Vercel it defaults to the project's production domain; otherwise `https://urbn.ng`. Set it when you move to the real domain. |
 | `URBN_API_TOKEN` | Optional service token, sent as `Authorization: Bearer`. Lets the website call `POST /listings/ai-search` on behalf of signed-out visitors. |
 
 Endpoints used (all server-side, in `app/lib/marketplace/source.server.ts`):
@@ -61,7 +62,7 @@ DPI codes follow the backend and app format: `LGA-NNNN-C` (e.g. `IBADAN-NORTH-00
 ## SEO
 
 - Every marketing page, story and seed listing is **pre-rendered** to static HTML. `server.js` serves those without trailing-slash redirects and falls back to SSR for queries and dynamic pages.
-- Per-route `<title>`, description, canonical, Open Graph and Twitter tags (`app/lib/seo.ts`). Branded OG image at `public/og/default.png`.
+- Per-route `<title>`, description, canonical, Open Graph and Twitter tags (`app/lib/seo.ts`). Branded share image at `public/og/urbn-share.png` (bump `?v=` in `SITE.ogImage` when it changes, so WhatsApp refetches it).
 - JSON-LD: `Organization`, `WebSite` + `SearchAction`, `FAQPage`, `HowTo` (getting a DPI), `RealEstateListing` (offers, address, geo, DPI identifier), `ItemList`, `BlogPosting`, `BreadcrumbList` and `MobileApplication`.
 - `/sitemap.xml` (including live listings and images) and `/robots.txt` are generated.
 - Area pages (`/listings/in/bodija`, `/listings/in/lagos`, …) target local searches. Roadmap cities show a waitlist.

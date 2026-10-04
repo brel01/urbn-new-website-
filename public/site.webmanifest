@@ -1,7 +1,7 @@
 {
   "name": "Urbn: Digital Property Identity",
   "short_name": "Urbn",
-  "description": "Verify any property in Nigeria and find verified homes.",
+  "description": "The digital infrastructure for housing.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",
