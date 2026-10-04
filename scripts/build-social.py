@@ -38,7 +38,7 @@ icon(512, 0.3).save(PUB / "icons/icon-maskable-512.png")
 manifest = {
     "name": "Urbn: Digital Property Identity",
     "short_name": "Urbn",
-    "description": "Verify any property in Nigeria and find verified homes.",
+    "description": "The digital infrastructure for housing.",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#000000",
@@ -75,5 +75,5 @@ def og(name, tagline):
     d.text(((W - d.textlength(t2, font=small)) / 2, 470), t2, font=small, fill=(200, 208, 255))
     im.save(PUB / "og" / f"{name}.png", optimize=True)
 
-og("default", "Verify any property before you pay.")
+og("default", "The digital infrastructure for housing")
 print("ok")

@@ -21,7 +21,7 @@ export function seo({
   description,
   path,
   image = SITE.ogImage,
-  imageAlt = "Urbn — Digital Property Identity",
+  imageAlt = "Urbn: The digital infrastructure for housing",
   type = "website",
   noindex = false,
   jsonLd,

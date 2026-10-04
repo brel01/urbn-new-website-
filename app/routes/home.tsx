@@ -20,9 +20,9 @@ import type { Route } from "./+types/home";
 
 export const meta: Route.MetaFunction = () =>
   seo({
-    title: "Urbn | Verify Any Property in Nigeria Before You Pay",
+    title: "Urbn | The Digital Infrastructure for Housing",
     description:
-      "Urbn gives every property a permanent Digital Property Identity (DPI). Check any home in seconds, find verified listings in Ibadan, and rent or buy without blind trust.",
+      "Urbn is the digital infrastructure for housing in Nigeria. Every property gets a permanent Digital Property Identity (DPI), so anyone can verify a home in seconds and rent or buy without blind trust.",
     path: "/",
     jsonLd: faqJsonLd(HOME_FAQS),
   });

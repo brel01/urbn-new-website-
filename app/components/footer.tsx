@@ -12,7 +12,7 @@ export function Footer() {
             <Logo className="w-36 text-white" />
           </Link>
           <p className="mt-6 max-w-xs text-[15px] leading-relaxed">
-            Nigeria's Digital Property Identity platform. Get updates as we launch in new cities, plus early
+            The digital infrastructure for housing. Get updates as we launch in new cities, plus early
             access when we do.
           </p>
           <SocialLinks className="mt-6 -ml-2.5 text-neutral-400" />
