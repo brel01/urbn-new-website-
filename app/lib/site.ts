@@ -4,7 +4,7 @@
 export const SITE = {
   name: "Urbn",
   legalName: "Urbn Technologies Ltd", // TODO: confirm registered company name
-  url: "https://urbn.ng",
+  url: import.meta.env.VITE_SITE_URL ?? "https://urbn.ng",
   tagline: "Nigeria's Digital Property Identity platform",
   description:
     "Urbn gives every property in Nigeria a permanent, verifiable Digital Property Identity (DPI). Verify any property in seconds, find verified homes, and rent or buy without blind trust.",

@@ -22,6 +22,7 @@ The marketplace and DPI lookups use the **same endpoints and payload shapes as `
 | Env var | Purpose |
 | --- | --- |
 | `URBN_API_URL` | e.g. `https://api.urbn.ng`. When set, all data is live. When unset, the site serves the seed data in `app/lib/marketplace/seed.ts`. |
+| `SITE_URL` | Public origin for canonical URLs and link-preview images (e.g. `https://urbn.ng`). On Vercel it defaults to the project's production domain; otherwise `https://urbn.ng`. Set it when you move to the real domain. |
 | `URBN_API_TOKEN` | Optional service token, sent as `Authorization: Bearer`. Lets the website call `POST /listings/ai-search` on behalf of signed-out visitors. |
 
 Endpoints used (all server-side, in `app/lib/marketplace/source.server.ts`):

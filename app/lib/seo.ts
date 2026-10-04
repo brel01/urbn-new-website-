@@ -40,6 +40,14 @@ export function seo({
     { property: "og:description", content: description },
     { property: "og:url", content: url },
     { property: "og:image", content: img },
+    { property: "og:image:secure_url", content: img },
+    ...(image === SITE.ogImage
+      ? [
+          { property: "og:image:type", content: "image/png" },
+          { property: "og:image:width", content: "1200" },
+          { property: "og:image:height", content: "630" },
+        ]
+      : []),
     { property: "og:image:alt", content: imageAlt },
     { name: "twitter:card", content: "summary_large_image" },
     { name: "twitter:site", content: SITE.twitter },
