@@ -1,0 +1,126 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+
+/* Creato Display — URBN primary typeface (Visual Identity Guide, p.4).
+   Rebuilt from the brand guide PDF; see scripts/build-font.py.
+   Swap in the licensed full font files when available. */
+@font-face {
+  font-family: "Creato Display";
+  src: url("/fonts/creato-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Creato Display";
+  src: url("/fonts/creato-medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Creato Display", "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+
+  /* URBN Blue #253DE2 + tonal scale */
+  --color-blue-50: #eef0fe;
+  --color-blue-100: #dde2fc;
+  --color-blue-200: #bcc5f8;
+  --color-blue-300: #8f9df2;
+  --color-blue-400: #5c6deb;
+  --color-blue-500: #253de2;
+  --color-blue-600: #1d31c4;
+  --color-blue-700: #18279d;
+  --color-blue-800: #15217c;
+  --color-blue-900: #111a5e;
+  --color-blue-950: #0a0f38;
+  --color-urbn: #253de2;
+
+  /* Neutrals */
+  --color-ink: #000000;
+  --color-paper: #ffffff;
+  --color-mist: #f5f5f6;
+  --color-fog: #ececee;
+  --color-graphite: #141416;
+  --color-slate: #1c1c1f;
+
+  /* Action colours */
+  --color-warning: #f79009;
+  --color-error: #ff1100;
+  --color-success: #12b76a;
+
+  --radius-card: 1.25rem;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-ping-slow: ping-slow 2.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-scan: scan 2.4s ease-in-out infinite;
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes ping-slow {
+    0% { transform: scale(1); opacity: 0.55; }
+    80%, 100% { transform: scale(2.4); opacity: 0; }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  @keyframes scan {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+  }
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-padding-top: 6rem;
+  }
+  body {
+    @apply bg-paper text-ink font-sans;
+  }
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  ::selection {
+    background: var(--color-urbn);
+    color: white;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-urbn);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-[84rem] px-4 sm:px-6 lg:px-10;
+  }
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-sm font-medium text-urbn;
+  }
+  .lede {
+    @apply text-base leading-relaxed text-neutral-600 sm:text-lg;
+  }
+  /* Brand "U" pattern, tintable through background-color */
+  .pattern-u {
+    -webkit-mask-image: url("/images/pattern-u.png");
+    mask-image: url("/images/pattern-u.png");
+    -webkit-mask-size: 180px;
+    mask-size: 180px;
+    -webkit-mask-repeat: repeat;
+    mask-repeat: repeat;
+  }
+  .no-scrollbar { scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+}

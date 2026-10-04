@@ -1,0 +1,89 @@
+import { Check } from "lucide-react";
+import { motion } from "motion/react";
+import { EASE, Reveal, WordsReveal } from "~/components/motion";
+import { AppHomeScreen, Phone, UBeepScreen } from "~/components/phone";
+import { WaitlistForm } from "~/components/waitlist-form";
+import { breadcrumbs, seo } from "~/lib/seo";
+import { SITE } from "~/lib/site";
+import type { Route } from "./+types/download";
+
+export const meta: Route.MetaFunction = () =>
+  seo({
+    title: "Download the Urbn App for iOS & Android",
+    description:
+      "Verify properties, search verified homes, book inspections, chat with owners and use U-Beep, all in the Urbn app for iPhone and Android.",
+    path: "/download",
+    jsonLd: breadcrumbs([
+      { name: "Home", path: "/" },
+      { name: "Download", path: "/download" },
+    ]),
+  });
+
+function StoreBadge({ store }: { store: "ios" | "android" }) {
+  return (
+    <a
+      href={SITE.apps[store]}
+      className="inline-flex h-14 items-center gap-3 rounded-xl bg-white px-5 text-ink transition hover:bg-neutral-200 active:scale-[0.97]"
+    >
+      {store === "ios" ? (
+        <svg viewBox="0 0 24 24" className="size-7" fill="currentColor" aria-hidden>
+          <path d="M16.4 12.6c0-2.6 2.1-3.8 2.2-3.9-1.2-1.8-3.1-2-3.7-2-1.6-.2-3.1.9-3.9.9-.8 0-2-.9-3.4-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.8 1.2 1.8 2.6 3.1 2.6 1.3-.1 1.7-.8 3.3-.8 1.5 0 1.9.8 3.3.8 1.4 0 2.2-1.3 3-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.4-1-2.4-4.1ZM13.9 4.9c.7-.9 1.2-2 1-3.2-1 .1-2.3.7-3 1.6-.7.8-1.2 2-1.1 3.1 1.2.1 2.3-.6 3.1-1.5Z" />
+        </svg>
+      ) : (
+        <svg viewBox="0 0 24 24" className="size-6" aria-hidden>
+          <path fill="#34A853" d="M3.6 2.3 13.7 12 3.6 21.7c-.4-.2-.6-.6-.6-1.1V3.4c0-.5.2-.9.6-1.1Z" />
+          <path fill="#FBBC04" d="m17 8.6-3.3 3.4 3.3 3.4 3.8-2.1c.8-.5.8-1.6 0-2.1L17 8.6Z" />
+          <path fill="#4285F4" d="M3.6 2.3c.3-.2.8-.2 1.2 0L17 8.6 13.7 12 3.6 2.3Z" />
+          <path fill="#EA4335" d="M13.7 12 17 15.4 4.8 21.7c-.4.2-.9.2-1.2 0L13.7 12Z" />
+        </svg>
+      )}
+      <span className="text-left leading-tight">
+        <span className="block text-[11px] text-neutral-500">{store === "ios" ? "Download on the" : "Get it on"}</span>
+        <span className="block text-lg font-semibold">{store === "ios" ? "App Store" : "Google Play"}</span>
+      </span>
+    </a>
+  );
+}
+
+export default function Download() {
+  return (
+    <section className="relative overflow-hidden bg-ink text-white">
+      <div aria-hidden className="pattern-u absolute inset-0 bg-white/[0.04]" />
+      <div className="absolute top-1/3 right-0 size-[40rem] rounded-full bg-urbn/30 blur-[120px]" aria-hidden />
+      <div className="container-x relative grid items-center gap-16 py-20 lg:grid-cols-2 lg:py-28">
+        <div>
+          <WordsReveal text="Your next home, verified." highlight={["verified."]} className="text-5xl leading-[1] sm:text-7xl" />
+          <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.8, ease: EASE }}>
+            <p className="mt-6 max-w-lg text-lg text-neutral-400">
+              Verify any property, search verified homes, book inspections and message owners, all in one app.
+            </p>
+            <ul className="mt-8 space-y-3">
+              {["Scan a plaque to see the verified record", "Video walkthroughs of every verified home", "Book inspections & track your agent live", "U-Beep: the digital doorbell for every property"].map((t) => (
+                <li key={t} className="flex items-center gap-3">
+                  <span className="grid size-6 place-items-center rounded-full bg-urbn"><Check className="size-3.5" /></span>
+                  {t}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-10 flex flex-wrap gap-3">
+              <StoreBadge store="ios" />
+              <StoreBadge store="android" />
+            </div>
+            <Reveal className="mt-12 max-w-md">
+              <p className="mb-3 text-sm text-neutral-400">Not in Ibadan yet? Join 10,000+ people on the waitlist.</p>
+              <WaitlistForm />
+            </Reveal>
+          </motion.div>
+        </div>
+        <div className="relative mx-auto flex w-full max-w-md justify-center gap-5">
+          <motion.div className="w-1/2 animate-float" initial={{ opacity: 0, y: 60 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, ease: EASE, delay: 0.2 }}>
+            <Phone><AppHomeScreen /></Phone>
+          </motion.div>
+          <motion.div className="mt-16 w-1/2 animate-float [animation-delay:1.5s]" initial={{ opacity: 0, y: 80 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, ease: EASE, delay: 0.35 }}>
+            <Phone><UBeepScreen /></Phone>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}

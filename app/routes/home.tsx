@@ -1,0 +1,492 @@
+import { clsx } from "clsx";
+import { Briefcase, FileUp, House, Search, ShieldCheck, Stamp, Users, MapPin } from "lucide-react";
+import { motion, useScroll, useTransform } from "motion/react";
+import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router";
+import { CtaBanner } from "~/components/cta-banner";
+import { DpiSearch } from "~/components/dpi-search";
+import { FaqSection } from "~/components/faq";
+import { IbadanMap } from "~/components/ibadan-map";
+import { ListingCard } from "~/components/listing-card";
+import { CountUp, EASE, Reveal, Rings, Stagger, StaggerItem, WordsReveal } from "~/components/motion";
+import { ButtonLink, SectionHeading } from "~/components/ui";
+import { SAMPLE_DPI } from "~/lib/dpi";
+import { HOME_FAQS } from "~/lib/faqs";
+import { featuredListings } from "~/lib/marketplace/source.server";
+import type { ListingCard as Card } from "~/lib/marketplace/types";
+import { faqJsonLd, seo } from "~/lib/seo";
+import { STORIES } from "~/lib/stories";
+import type { Route } from "./+types/home";
+
+export const meta: Route.MetaFunction = () =>
+  seo({
+    title: "Urbn | Verify Any Property in Nigeria Before You Pay",
+    description:
+      "Urbn gives every property a permanent Digital Property Identity (DPI). Check any home in seconds, find verified listings in Ibadan, and rent or buy without blind trust.",
+    path: "/",
+    jsonLd: faqJsonLd(HOME_FAQS),
+  });
+
+export async function loader() {
+  return { featured: await featuredListings(7) };
+}
+
+export default function Home({ loaderData }: Route.ComponentProps) {
+  const { featured } = loaderData;
+  return (
+    <>
+      <Hero />
+      <Problem />
+      <Identity />
+      <HowItWorks />
+      <Audiences />
+      <Growth listings={featured} />
+      <FeaturedListings listings={featured} />
+      <Stories />
+      <FaqSection faqs={HOME_FAQS} />
+      <CtaBanner
+        variant="waitlist"
+        body="Get updates as we launch in new cities, plus early access when we do."
+      />
+    </>
+  );
+}
+
+// ---------------------------------------------------------------------------
+
+function Hero() {
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "18%"]);
+  const fade = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+
+  return (
+    <section ref={ref} className="relative isolate overflow-hidden bg-[#9fc6ea]">
+      <motion.div className="absolute inset-0 -z-10" style={{ y }}>
+        <motion.img
+          src="/images/hero-lagos.webp"
+          srcSet="/images/hero-lagos-768.webp 768w, /images/hero-lagos.webp 1440w"
+          sizes="100vw"
+          alt="Illustrated Nigerian cityscape with Lagos landmarks, danfo buses and a billboard reading 'Don't pay before you verify'"
+          fetchPriority="high"
+          className="size-full object-cover object-[50%_70%]"
+          initial={{ scale: 1.12 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 2.4, ease: EASE }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/55 via-white/10 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/25 to-transparent" />
+      </motion.div>
+
+      <motion.div style={{ opacity: fade }} className="container-x flex min-h-[38rem] flex-col items-center pt-20 pb-40 text-center sm:min-h-[44rem] sm:pt-24 lg:min-h-[48rem]">
+        <WordsReveal
+          text="Can you trust this property?"
+          className="max-w-4xl text-[2.9rem] leading-[0.98] text-ink sm:text-7xl lg:text-[5.5rem]"
+        />
+        <motion.p
+          className="mt-5 max-w-xl text-base font-medium text-neutral-800 sm:text-lg"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.8, ease: EASE }}
+        >
+          Check any property's Digital Property Identity before you pay a single naira. Free, instant, no account needed.
+        </motion.p>
+        <motion.div
+          className="mt-8 w-full max-w-2xl"
+          initial={{ opacity: 0, y: 24, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ delay: 0.8, duration: 0.9, ease: EASE }}
+        >
+          <DpiSearch />
+          <p className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-white/90 px-4 py-2 text-sm text-neutral-700 shadow-sm backdrop-blur">
+            No code?
+            <Link to="/listings" className="font-semibold text-urbn underline-offset-4 hover:underline">
+              Browse verified homes in Ibadan →
+            </Link>
+          </p>
+        </motion.div>
+      </motion.div>
+    </section>
+  );
+}
+
+function Problem() {
+  const cards = [
+    {
+      big: <><CountUp to={1} /> in <CountUp to={3} /></>,
+      text: "property deals in Nigeria involve a documentation dispute",
+      img: "/images/stat-sunset.webp",
+      alt: "Sunset view from a residential balcony",
+      tone: "bg-ink text-white",
+    },
+    {
+      big: <CountUp to={0} />,
+      text: "shared identity layer exists for real estate in Nigeria, until now",
+      img: "/images/stat-skyline.webp",
+      alt: "Blue line illustration of a city skyline",
+      tone: "bg-urbn text-white",
+    },
+    {
+      big: "Countless",
+      text: "buyers and renters lose money to fake or duplicate listings every year",
+      img: "/images/stat-phone.webp",
+      alt: "Hand holding a phone running the Urbn app",
+      tone: "bg-mist text-ink",
+    },
+  ];
+  return (
+    <section className="container-x py-24 sm:py-32">
+      <Reveal>
+        <SectionHeading
+          title="Real estate shouldn't require blind trust."
+          lede="Real estate in Nigeria is broken. Urbn is here to change that."
+        />
+      </Reveal>
+      <Stagger className="mt-14 grid gap-5 md:grid-cols-3" stagger={0.12}>
+        {cards.map((c, i) => (
+          <StaggerItem key={i}>
+            <article className={clsx("group relative flex h-full flex-col overflow-hidden rounded-card", c.tone)}>
+              {i === 1 && <Rings className="-top-16 -right-16 size-48" />}
+              <div className="relative p-7 pb-6">
+                <p className="font-display text-5xl leading-none sm:text-6xl">{c.big}</p>
+                <span className={clsx("mt-4 block h-0.5 w-10", i === 2 ? "bg-urbn" : i === 1 ? "bg-white" : "bg-urbn")} />
+                <p className={clsx("mt-3 max-w-[16rem] text-[15px] leading-snug", i === 2 ? "text-neutral-600" : "text-white/75")}>
+                  {c.text}
+                </p>
+              </div>
+              <div className="mt-auto overflow-hidden">
+                <img src={c.img} alt={c.alt} loading="lazy" className="aspect-[2/1] w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+              </div>
+            </article>
+          </StaggerItem>
+        ))}
+      </Stagger>
+    </section>
+  );
+}
+
+function Identity() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const y = useTransform(scrollYProgress, [0, 1], [60, -60]);
+  return (
+    <section className="overflow-hidden bg-gradient-to-b from-white via-blue-50/60 to-white">
+      <div ref={ref} className="container-x grid items-center gap-10 py-20 lg:grid-cols-[1fr_1.15fr] lg:py-28">
+        <Reveal>
+          <p className="eyebrow">
+            <span className="size-2 rounded-full bg-urbn" /> What DPI is
+          </p>
+          <h2 className="mt-4 text-[2.6rem] leading-[1.02] sm:text-6xl">
+            Meet your property's <span className="text-urbn">identity.</span>
+          </h2>
+          <p className="lede mt-6 max-w-lg">
+            A DPI is a permanent record tied to a property: not its owner, not its agent, not a listing. Once issued,
+            it can never be faked, duplicated, or reassigned. Anyone can verify it in seconds.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <ButtonLink to="/dpi" variant="blue">
+              Learn more about DPI
+            </ButtonLink>
+            <ButtonLink to="/verify" variant="outline">
+              Verify a property
+            </ButtonLink>
+          </div>
+        </Reveal>
+        <div className="relative">
+          <Rings className="top-[58%] left-1/2 aspect-[2.6] w-[115%] -translate-x-1/2 -translate-y-1/2" count={4} />
+          <motion.img
+            style={{ y }}
+            src="/images/house-identity.webp"
+            srcSet="/images/house-identity-640.webp 640w, /images/house-identity.webp 810w"
+            sizes="(min-width: 1024px) 50vw, 100vw"
+            alt="Modern two-storey white house with a verified Digital Property Identity"
+            loading="lazy"
+            className="relative w-full mix-blend-multiply [mask-image:radial-gradient(ellipse_at_center,black_55%,transparent_78%)]"
+          />
+          <motion.div
+            className="absolute bottom-[12%] left-0 flex items-center gap-3 rounded-2xl bg-white p-3 pr-5 shadow-xl ring-1 ring-black/5 sm:left-[6%]"
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.5, duration: 0.8, ease: EASE }}
+          >
+            <span className="grid size-10 place-items-center rounded-full bg-success/15 text-success">
+              <ShieldCheck className="size-5" />
+            </span>
+            <span className="text-sm">
+              <b className="block font-semibold">Property Verified</b>
+              <span className="font-mono text-xs text-neutral-500">{SAMPLE_DPI}</span>
+            </span>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const STEPS = [
+  { icon: FileUp, title: "Submit", text: "An owner or agent submits the property to Urbn, with ownership details and title documents." },
+  { icon: ShieldCheck, title: "Verify", text: "We confirm ownership, check the title document, and visit the property in person." },
+  { icon: Stamp, title: "Issue", text: "The property gets a permanent DPI and a plaque anyone can scan to see the verified record." },
+];
+
+function HowItWorks() {
+  const [active, setActive] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { threshold: 0.4 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  useEffect(() => {
+    if (!visible) return;
+    const t = setInterval(() => setActive((a) => (a + 1) % 4), 2600);
+    return () => clearInterval(t);
+  }, [visible]);
+
+  return (
+    <section className="bg-ink py-24 text-white sm:py-32">
+      <div className="container-x" ref={ref}>
+        <Reveal>
+          <SectionHeading dark eyebrow="How to get started" title="How It Works" lede="From submission to proof in three steps. Every property, every time." />
+        </Reveal>
+        <div className="mt-14 grid gap-4 lg:grid-cols-[1fr_1fr_1fr]">
+          <ol className="flex flex-col gap-4">
+            {STEPS.map((s, i) => (
+              <li key={s.title}>
+                <button
+                  type="button"
+                  onClick={() => setActive(i)}
+                  className={clsx(
+                    "relative flex w-full items-center gap-4 overflow-hidden rounded-card p-5 text-left transition-all duration-500 sm:p-6",
+                    active === i ? "bg-urbn" : "bg-blue-950/60 hover:bg-blue-900/60",
+                  )}
+                >
+                  <span className="grid size-12 shrink-0 place-items-center rounded-full bg-white text-urbn">
+                    <s.icon className="size-5" />
+                  </span>
+                  <span className="relative z-10">
+                    <span className="block font-display text-xl">{s.title}</span>
+                    <span className="mt-1 block text-sm leading-snug text-white/80">{s.text}</span>
+                  </span>
+                  <span className="pointer-events-none absolute right-3 -bottom-4 font-display text-8xl text-white/15">{i + 1}</span>
+                  {active === i && visible && (
+                    <motion.span
+                      key={`bar-${i}`}
+                      className="absolute bottom-0 left-0 h-1 bg-white/70"
+                      initial={{ width: 0 }}
+                      animate={{ width: "100%" }}
+                      transition={{ duration: 2.6, ease: "linear" }}
+                    />
+                  )}
+                </button>
+              </li>
+            ))}
+          </ol>
+
+          <Reveal delay={0.1} className="h-full">
+            <button
+              type="button"
+              onClick={() => setActive(3)}
+              className={clsx(
+                "relative flex h-full w-full flex-col overflow-hidden rounded-card bg-graphite text-left ring-2 transition-all duration-500",
+                active === 3 ? "ring-urbn" : "ring-transparent",
+              )}
+            >
+              <img src="/images/property-card-scene.webp" alt="Black Urbn Property Card with QR code" loading="lazy" className="aspect-[1.42] w-full object-cover" />
+              <div className="relative flex flex-1 flex-col p-6">
+                <p className="font-display text-2xl leading-tight">And once you're verified, carry the proof.</p>
+                <p className="mt-3 text-sm text-white/65">
+                  Every verified resident and owner can request a Property Card: one simple way to prove your relationship
+                  to a property, wherever you need to.
+                </p>
+                <Link to="/dpi#property-card" className="mt-6 inline-flex w-fit items-center gap-1 rounded-lg bg-white px-4 py-2.5 text-sm font-medium text-ink">
+                  Learn more ›
+                </Link>
+                <span className="pointer-events-none absolute right-4 -bottom-4 font-display text-8xl text-white/10">4</span>
+              </div>
+            </button>
+          </Reveal>
+
+          <Reveal delay={0.2} className="relative hidden overflow-hidden rounded-card lg:block">
+            <img src="/images/app-in-hand.webp" alt="The Urbn app showing verified properties on a phone" loading="lazy" className="size-full object-cover" />
+            <motion.div
+              className="absolute right-4 bottom-4 left-4 rounded-xl bg-black/70 p-3 text-xs backdrop-blur"
+              key={active}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <span className="text-white/60">Step {active + 1} of 4 · </span>
+              {["Property submitted", "Checks in progress", "DPI issued", "Property Card ready"][active]}
+            </motion.div>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Audiences() {
+  const items = [
+    {
+      icon: House,
+      title: "Property Owners",
+      kicker: "To protect what's yours",
+      text: "Get your property a permanent identity, and prove it's legitimately yours to anyone, instantly.",
+      img: "/images/illus-owners.webp",
+      to: "/for-owners",
+      dark: false,
+    },
+    {
+      icon: Briefcase,
+      title: "Agents & Property Managers",
+      kicker: "Close faster. Prove it's real.",
+      text: "Give every listing a verified identity that builds trust before you even show up.",
+      img: "/images/illus-agents.webp",
+      to: "/for-agents",
+      dark: true,
+    },
+    {
+      icon: Search,
+      title: "Renters / Home Seekers",
+      kicker: "Never guess again",
+      text: "Check a property's identity before you send a single naira. No more taking anyone's word for it.",
+      img: "/images/illus-renters.webp",
+      to: "/for-renters",
+      dark: false,
+    },
+  ];
+  return (
+    <section className="container-x py-24 sm:py-32">
+      <Reveal>
+        <SectionHeading
+          eyebrow="Who we built Urbn for"
+          title="Built for everyone in real estate."
+          lede="Whether you own it, manage it or want to live in it, a DPI gives everyone the same source of truth."
+        />
+      </Reveal>
+      <Stagger className="mt-14 grid gap-5 md:grid-cols-3 md:items-center">
+        {items.map((it) => (
+          <StaggerItem key={it.title}>
+            <Link
+              to={it.to}
+              className={clsx(
+                "group flex h-full flex-col rounded-card p-7 transition-all duration-500 hover:-translate-y-1.5",
+                it.dark
+                  ? "bg-ink text-white shadow-[0_30px_60px_-25px_rgba(0,0,0,0.6)] md:py-10"
+                  : "bg-white shadow-[0_20px_60px_-30px_rgba(0,0,0,0.25)] ring-1 ring-black/5",
+              )}
+            >
+              <span className={clsx("grid size-12 place-items-center rounded-full", it.dark ? "bg-white text-ink" : "bg-blue-50 text-urbn")}>
+                <it.icon className="size-5" />
+              </span>
+              <h3 className="mt-6 font-display text-2xl">{it.title}</h3>
+              <p className={clsx("mt-1 text-[15px]", it.dark ? "text-white/70" : "text-neutral-600")}>{it.kicker}</p>
+              <span className="mt-4 block h-px w-24 bg-current opacity-30" />
+              <p className={clsx("mt-4 text-sm leading-relaxed", it.dark ? "text-white/60" : "text-neutral-500")}>{it.text}</p>
+              <img src={it.img} alt="" loading="lazy" className={clsx("mt-6 h-28 w-full object-contain object-bottom", !it.dark && "mix-blend-multiply")} />
+              <span className={clsx("mt-5 text-sm font-semibold", it.dark ? "text-blue-300" : "text-urbn")}>
+                See how it works <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
+              </span>
+            </Link>
+          </StaggerItem>
+        ))}
+      </Stagger>
+    </section>
+  );
+}
+
+function Growth({ listings }: { listings: Card[] }) {
+  const stats = [
+    { icon: Users, value: <CountUp to={10000} suffix="+" />, label: "People on the waitlist", text: "Join thousands of owners, agencies and renters building a safer real estate future." },
+    { icon: MapPin, value: <><CountUp to={1} /> city live</>, label: "Ibadan, with Lagos, Abuja, and Port Harcourt next", text: "We're expanding carefully, city by city, with verification you can trust." },
+    { icon: House, value: <CountUp to={50} />, label: "Properties currently in verification", text: "Every one checked for identity, title and condition before a DPI is issued." },
+  ];
+  return (
+    <section className="pt-8 pb-24 sm:pb-32">
+      <Reveal className="container-x">
+        <SectionHeading title="Growing fast, city by city." lede="Live in Ibadan today. Search verified homes on the map, or pick an area to explore." />
+      </Reveal>
+      <div className="mt-12">
+        <IbadanMap listings={listings} />
+      </div>
+      <Stagger className="container-x mt-16 grid gap-10 md:grid-cols-3">
+        {stats.map((s, i) => (
+          <StaggerItem key={i} className="flex gap-4">
+            <span className="grid size-12 shrink-0 place-items-center rounded-full bg-urbn text-white">
+              <s.icon className="size-5" />
+            </span>
+            <div>
+              <p className="font-display text-4xl leading-none">{s.value}</p>
+              <p className="mt-2 font-semibold">{s.label}</p>
+              <p className="mt-1 text-sm text-neutral-500">{s.text}</p>
+            </div>
+          </StaggerItem>
+        ))}
+      </Stagger>
+    </section>
+  );
+}
+
+function FeaturedListings({ listings }: { listings: Card[] }) {
+  const featured = listings.slice(0, 4);
+  return (
+    <section className="relative overflow-hidden bg-mist py-24 sm:py-32">
+      <div className="container-x">
+        <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+          <Reveal>
+            <SectionHeading
+              align="left"
+              eyebrow="Verified listings"
+              title={<>Verified. <span className="text-neutral-400">Not just listed.</span></>}
+              lede="Every home here has been checked: ownership confirmed, documents verified, and seen in person by our team."
+            />
+          </Reveal>
+          <ButtonLink to="/listings" variant="dark" className="shrink-0">
+            Search verified homes
+          </ButtonLink>
+        </div>
+        <Stagger className="no-scrollbar -mx-4 mt-12 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:grid-cols-4">
+          {featured.map((l) => (
+            <StaggerItem key={l.id} className="w-[82%] shrink-0 snap-start sm:w-auto">
+              <ListingCard listing={l} />
+            </StaggerItem>
+          ))}
+        </Stagger>
+      </div>
+    </section>
+  );
+}
+
+function Stories() {
+  return (
+    <section className="bg-ink py-24 text-white sm:py-32">
+      <div className="container-x">
+        <Reveal>
+          <SectionHeading dark title="Stories" lede="News, product updates and the people behind Nigeria's first Digital Property Identity system." />
+        </Reveal>
+        <Stagger className="mt-14 grid gap-5 md:grid-cols-3">
+          {STORIES.map((s) => (
+            <StaggerItem key={s.slug} as="article">
+              <Link to={`/blog/${s.slug}`} className="group flex h-full flex-col rounded-card bg-white p-3 text-ink transition-transform duration-500 hover:-translate-y-1.5">
+                <div className="overflow-hidden rounded-[0.9rem]">
+                  <img src={s.image} alt={s.imageAlt} loading="lazy" className="aspect-[1.55] w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                </div>
+                <div className="flex flex-1 flex-col px-2 pt-4 pb-2">
+                  <h3 className="font-display text-xl leading-tight">{s.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-neutral-600">{s.excerpt}</p>
+                  <span className="mt-auto self-end pt-5 text-sm font-semibold text-urbn">
+                    Read more <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
+                  </span>
+                </div>
+              </Link>
+            </StaggerItem>
+          ))}
+        </Stagger>
+      </div>
+    </section>
+  );
+}
