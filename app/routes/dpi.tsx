@@ -24,6 +24,7 @@ import { CtaBanner } from "~/components/cta-banner";
 import { FaqSection } from "~/components/faq";
 import { EASE, Reveal, Rings, Stagger, StaggerItem, WordsReveal } from "~/components/motion";
 import { Plaque } from "~/components/plaque";
+import { Rail } from "~/components/mobile";
 import { ButtonLink, SectionHeading } from "~/components/ui";
 import { SAMPLE_DPI } from "~/lib/dpi";
 import { DPI_FAQS } from "~/lib/faqs";
@@ -178,20 +179,22 @@ function WhyExists() {
     { icon: ScanLine, title: "No way to verify before committing", text: "Buyers and renters have no independent source to check a property against. They rely entirely on the word of whoever's showing them around." },
   ];
   return (
-    <section className="bg-ink py-24 text-white sm:py-28">
+    <section className="bg-ink py-16 text-white sm:py-24 lg:py-28">
       <div className="container-x">
         <Reveal>
           <SectionHeading dark title="Why DPI exists." lede="Real estate runs on trust, and today there's nothing to anchor it to." />
         </Reveal>
-        <Stagger className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <Reveal className="mt-8 md:mt-14">
+        <Rail grid="md:grid-cols-2 md:gap-4 lg:grid-cols-4" item="w-[78%] sm:w-[52%]" dark label="Why DPI exists">
           {items.map((it) => (
-            <StaggerItem key={it.title} className="flex flex-col items-center rounded-card bg-graphite p-7 text-center ring-1 ring-white/5 transition hover:ring-white/20">
+            <div key={it.title} className="flex h-full flex-col items-start rounded-card bg-graphite p-7 ring-1 ring-white/5 transition hover:ring-white/20 md:items-center md:text-center">
               <IconBadge icon={it.icon} dark />
               <h3 className="mt-6 font-sans text-lg font-semibold tracking-normal">{it.title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-neutral-400">{it.text}</p>
-            </StaggerItem>
+            </div>
           ))}
-        </Stagger>
+        </Rail>
+        </Reveal>
       </div>
     </section>
   );
@@ -205,21 +208,23 @@ function Solves() {
     { icon: Lock, title: "Proof, before you pay anything", text: "Scan the plaque before sending money or signing anything. See the verified record for yourself: ownership, registration date, status. No one's word required." },
   ];
   return (
-    <section className="container-x py-24 sm:py-28">
+    <section className="container-x py-16 sm:py-24 lg:py-28">
       <Reveal>
         <SectionHeading title="How DPI solves it" />
       </Reveal>
-      <Stagger className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <Reveal className="mt-8 md:mt-14">
+      <Rail grid="md:grid-cols-2 md:gap-4 lg:grid-cols-4" item="w-[78%] sm:w-[52%]" label="How DPI solves it">
         {items.map((it) => (
-          <StaggerItem key={it.title} className="group flex flex-col items-center rounded-card border border-neutral-200 p-7 text-center transition duration-500 hover:-translate-y-1 hover:border-urbn hover:shadow-[0_20px_50px_-25px_rgba(37,61,226,0.5)]">
+          <div key={it.title} className="group flex h-full flex-col items-start rounded-card border border-neutral-200 bg-white p-7 transition duration-500 md:items-center md:text-center lg:hover:-translate-y-1 lg:hover:border-urbn lg:hover:shadow-[0_20px_50px_-25px_rgba(37,61,226,0.5)]">
             <span className="transition-transform duration-500 group-hover:scale-110">
               <IconBadge icon={it.icon} />
             </span>
             <h3 className="mt-6 font-sans text-lg font-semibold tracking-normal">{it.title}</h3>
             <p className="mt-3 text-sm leading-relaxed text-neutral-500">{it.text}</p>
-          </StaggerItem>
+          </div>
         ))}
-      </Stagger>
+      </Rail>
+      </Reveal>
     </section>
   );
 }
@@ -270,14 +275,21 @@ function DetailedSteps() {
     return () => clearInterval(t);
   }, [inView, auto]);
   const step = DETAILED_STEPS[active];
+  // keep the active chip in view on phones without moving the page
+  const chipsRef = useRef<HTMLOListElement>(null);
+  useEffect(() => {
+    const ol = chipsRef.current;
+    const chip = ol?.children[active] as HTMLElement | undefined;
+    if (ol && chip && ol.scrollWidth > ol.clientWidth) ol.scrollTo({ left: chip.offsetLeft - 16, behavior: "smooth" });
+  }, [active]);
 
   return (
     <section className="container-x pb-24 sm:pb-32" id="how-to-get-a-dpi">
       <Reveal>
         <SectionHeading title="How to Get a DPI" lede="Seven steps, the same for every property. No shortcuts, no exceptions." />
       </Reveal>
-      <div ref={ref} className="mt-14 grid gap-10 lg:grid-cols-2 lg:gap-16">
-        <div className="relative order-2 min-h-[26rem] lg:order-1 lg:border-r lg:border-neutral-200 lg:pr-16">
+      <div ref={ref} className="mt-8 grid gap-8 lg:mt-14 lg:grid-cols-2 lg:gap-16">
+        <div className="relative order-2 min-h-[24rem] lg:order-1 lg:min-h-[26rem] lg:border-r lg:border-neutral-200 lg:pr-16">
           <motion.span
             className="absolute top-0 right-[-1px] hidden w-0.5 bg-ink lg:block"
             animate={{ height: `${((active + 1) / DETAILED_STEPS.length) * 100}%` }}
@@ -299,9 +311,9 @@ function DetailedSteps() {
             </motion.div>
           </AnimatePresence>
         </div>
-        <ol className="order-1 flex flex-col gap-3 lg:order-2">
+        <ol ref={chipsRef} className="no-scrollbar order-1 -mx-4 flex gap-2 overflow-x-auto px-4 lg:order-2 lg:mx-0 lg:flex-col lg:gap-3 lg:overflow-visible lg:px-0">
           {DETAILED_STEPS.map((s, i) => (
-            <li key={s.title} id={`step-${i + 1}`}>
+            <li key={s.title} id={`step-${i + 1}`} className="shrink-0">
               <button
                 type="button"
                 onClick={() => {
@@ -310,13 +322,13 @@ function DetailedSteps() {
                 }}
                 aria-current={active === i ? "step" : undefined}
                 className={clsx(
-                  "relative flex w-full items-center gap-4 overflow-hidden rounded-2xl px-6 py-5 text-left transition-colors duration-300",
+                  "relative flex w-full items-center gap-2.5 overflow-hidden rounded-full px-4 py-2.5 text-left transition-colors duration-300 lg:gap-4 lg:rounded-2xl lg:px-6 lg:py-5",
                   active === i ? "bg-ink text-white" : "bg-mist text-ink hover:bg-fog",
                 )}
               >
-                <span className="w-5 text-lg tabular-nums">{i + 1}</span>
-                <span className="size-1.5 rounded-full bg-current" />
-                <span className="text-lg font-medium sm:text-xl">{s.title}</span>
+                <span className="text-sm tabular-nums lg:w-5 lg:text-lg">{i + 1}</span>
+                <span className="hidden size-1.5 rounded-full bg-current lg:block" />
+                <span className="text-sm font-medium whitespace-nowrap lg:text-xl lg:whitespace-normal">{s.title}</span>
                 {active === i && auto && inView && (
                   <motion.span
                     className="absolute bottom-0 left-0 h-0.5 bg-urbn"
@@ -341,7 +353,7 @@ function PropertyCard() {
     { title: "What's on it?", text: "Your name, your permanent User ID, an issue date, and a QR code that pulls up your verified relationships in real time. It isn't tied to just one property, so it works no matter how many you're connected to." },
   ];
   return (
-    <section id="property-card" className="scroll-mt-24 bg-ink py-24 text-white sm:py-32">
+    <section id="property-card" className="scroll-mt-24 bg-ink py-16 text-white sm:py-24 lg:py-32">
       <div className="container-x">
         <Reveal>
           <SectionHeading
@@ -387,7 +399,7 @@ function Anatomy() {
   const inView = useInView(ref, { once: true, margin: "-25%" });
   const [hover, setHover] = useState<number | null>(null);
   return (
-    <section className="bg-mist py-24 sm:py-32">
+    <section className="bg-mist py-16 sm:py-24 lg:py-32">
       <div className="container-x">
         <Reveal>
           <SectionHeading eyebrow="What's on a DPI plaque" title="Anatomy of a DPI" />
@@ -441,7 +453,7 @@ function CodeExplained() {
     { seg: "U", label: "U", sub: "check letter: a single typo won't match" },
   ];
   return (
-    <section className="bg-ink py-24 text-white sm:py-32">
+    <section className="bg-ink py-16 text-white sm:py-24 lg:py-32">
       <div className="container-x">
         <Reveal>
           <SectionHeading dark eyebrow="How to read a DPI code" title="DPI Code Explained" lede="Every code tells you where a property is registered, and carries its own typo check." />
@@ -494,19 +506,20 @@ function CodeExplained() {
 
 function Formats() {
   return (
-    <section className="container-x py-24 sm:py-32">
+    <section className="container-x py-16 sm:py-24 lg:py-32">
       <Reveal>
         <SectionHeading eyebrow="One identity, two formats." title="Physical vs. Virtual Plaque" />
       </Reveal>
-      <Stagger className="mx-auto mt-14 grid max-w-5xl gap-8 md:grid-cols-2">
-        <StaggerItem>
+      <Reveal className="mx-auto mt-8 max-w-5xl md:mt-14">
+      <Rail grid="md:grid-cols-2 md:gap-8" item="w-[85%] sm:w-[60%]" label="Plaque formats">
+        <div>
           <div className="overflow-hidden rounded-card">
             <img src="/images/plaque-scene.webp" alt="Physical Urbn DPI plaque mounted on a property wall" loading="lazy" className="aspect-[1.4] w-full object-cover transition-transform duration-700 hover:scale-105" />
           </div>
           <h3 className="mt-5 font-display text-2xl">Physical</h3>
           <p className="mt-2 text-neutral-500">Mounted on the property itself. Anyone standing in front of it can scan the QR code and see the verified record on the spot.</p>
-        </StaggerItem>
-        <StaggerItem>
+        </div>
+        <div>
           <div className="grid aspect-[1.4] place-items-center overflow-hidden rounded-card bg-gradient-to-br from-blue-50 to-blue-100 p-6">
             <motion.div className="w-full max-w-sm" animate={{ y: [0, -8, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}>
               <Plaque />
@@ -514,8 +527,9 @@ function Formats() {
           </div>
           <h3 className="mt-5 font-display text-2xl">Virtual</h3>
           <p className="mt-2 text-neutral-500">A downloadable version of the same plaque, ready to share on WhatsApp, social media, or directly with a prospective buyer or renter.</p>
-        </StaggerItem>
-      </Stagger>
+        </div>
+      </Rail>
+      </Reveal>
       <div className="mt-14 text-center">
         <p className="text-lg font-medium">Once your DPI is issued, you can request your plaque.</p>
         <ButtonLink to="/download" variant="dark" className="mt-5">
@@ -534,12 +548,21 @@ function Lifecycle() {
     { icon: Trash2, title: "Nothing gets erased", text: "Past tenancies and resolved disputes stay part of the record, timestamped, even after new tenants or owners come in." },
   ];
   return (
-    <section className="relative overflow-hidden bg-ink py-24 text-white sm:py-32">
+    <section className="relative overflow-hidden bg-ink py-16 text-white sm:py-24 lg:py-32">
       <div className="container-x">
         <Reveal>
           <SectionHeading dark eyebrow="A record for life" title="Lifecycle" />
         </Reveal>
-        <div className="relative mt-16">
+        <div className="relative mt-10 lg:mt-16">
+          {/* phones: vertical timeline spine */}
+          <motion.span
+            aria-hidden
+            className="absolute top-6 bottom-6 left-6 w-px origin-top bg-gradient-to-b from-urbn via-white/30 to-urbn sm:hidden"
+            initial={{ scaleY: 0 }}
+            whileInView={{ scaleY: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.6, ease: EASE }}
+          />
           <motion.div
             className="absolute top-6 left-[12.5%] hidden h-px origin-left bg-gradient-to-r from-urbn via-white/40 to-urbn lg:block"
             style={{ width: "75%" }}
@@ -548,12 +571,16 @@ function Lifecycle() {
             viewport={{ once: true }}
             transition={{ duration: 1.6, ease: EASE }}
           />
-          <Stagger className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4" stagger={0.18}>
+          <Stagger className="grid gap-8 sm:grid-cols-2 sm:gap-10 lg:grid-cols-4" stagger={0.18}>
             {items.map((it) => (
-              <StaggerItem key={it.title} className="relative flex flex-col items-center text-center">
-                <IconBadge icon={it.icon} dark />
-                <h3 className="mt-6 font-sans text-lg font-semibold tracking-normal">{it.title}</h3>
-                <p className="mt-3 max-w-xs text-sm leading-relaxed text-neutral-400">{it.text}</p>
+              <StaggerItem key={it.title} className="relative flex gap-5 sm:flex-col sm:items-center sm:gap-0 sm:text-center">
+                <span className="relative shrink-0 rounded-full ring-8 ring-ink">
+                  <IconBadge icon={it.icon} dark />
+                </span>
+                <div>
+                  <h3 className="pt-2.5 font-sans text-lg font-semibold tracking-normal sm:mt-6 sm:pt-0">{it.title}</h3>
+                  <p className="mt-2 max-w-xs text-sm leading-relaxed text-neutral-400 sm:mt-3">{it.text}</p>
+                </div>
               </StaggerItem>
             ))}
           </Stagger>

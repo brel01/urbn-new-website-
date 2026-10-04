@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { Form, Link } from "react-router";
 import { type ListingCard, formatPrice, listingPath, listingTypeLabel, roomCount } from "~/lib/marketplace/types";
 import { LIVE_AREAS } from "~/lib/places";
+import { Rail } from "./mobile";
 import { EASE } from "./motion";
 
 const ROADS = [
@@ -141,9 +142,22 @@ export function IbadanMap({ listings }: { listings: ListingCard[] }) {
 
   return (
     <div ref={ref} className="relative">
-      <MapFilters />
+      <div className="hidden md:block">
+        <MapFilters />
+      </div>
+      {/* phones: tap an area instead of filling a form */}
+      <div className="no-scrollbar flex gap-2 overflow-x-auto px-4 pb-4 md:hidden">
+        <Link to="/listings" className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-urbn px-4 py-2.5 text-[13px] font-semibold text-white active:scale-95">
+          <Search className="size-4" /> All of Ibadan
+        </Link>
+        {LIVE_AREAS.map((a) => (
+          <Link key={a.slug} to={`/listings/in/${a.slug}`} className="shrink-0 rounded-full border border-neutral-200 bg-white px-4 py-2.5 text-[13px] font-semibold active:scale-95 active:bg-mist">
+            {a.name}
+          </Link>
+        ))}
+      </div>
       <div
-        className="relative mt-[-1.75rem] aspect-[4/3] overflow-hidden bg-[#f3f4f1] sm:aspect-[16/8] lg:aspect-[1440/560]"
+        className="relative aspect-[4/3] overflow-hidden md:mt-[-1.75rem] bg-[#f3f4f1] sm:aspect-[16/8] lg:aspect-[1440/560]"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
       >
@@ -200,13 +214,13 @@ export function IbadanMap({ listings }: { listings: ListingCard[] }) {
           </AnimatePresence>
         </div>
       </div>
-      {/* active card (mobile, below map) */}
-      <div className="container-x -mt-10 md:hidden">
-        <AnimatePresence mode="wait">
-          {current && <motion.div key={current.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-            <MapCard listing={current} />
-          </motion.div>}
-        </AnimatePresence>
+      {/* phones: swipe through the pinned homes, map-app style */}
+      <div className="container-x relative z-10 -mt-14 md:hidden">
+        <Rail item="w-[72%] sm:w-[45%]" label="Homes on the map">
+          {pins.map((l) => (
+            <MapCard key={l.id} listing={l} />
+          ))}
+        </Rail>
       </div>
     </div>
   );

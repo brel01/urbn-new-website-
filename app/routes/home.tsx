@@ -9,6 +9,7 @@ import { FaqSection } from "~/components/faq";
 import { IbadanMap } from "~/components/ibadan-map";
 import { ListingCard } from "~/components/listing-card";
 import { CountUp, EASE, Reveal, Rings, Stagger, StaggerItem, WordsReveal } from "~/components/motion";
+import { Rail, useIsDesktop } from "~/components/mobile";
 import { ButtonLink, SectionHeading } from "~/components/ui";
 import { SAMPLE_DPI } from "~/lib/dpi";
 import { HOME_FAQS } from "~/lib/faqs";
@@ -59,32 +60,49 @@ function Hero() {
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "18%"]);
   const fade = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+  const desktop = useIsDesktop();
 
   return (
-    <section ref={ref} className="relative isolate overflow-hidden bg-[#9fc6ea]">
-      <motion.div className="absolute inset-0 -z-10" style={{ y }}>
-        <motion.img
-          src="/images/hero-lagos.webp"
-          srcSet="/images/hero-lagos-768.webp 768w, /images/hero-lagos.webp 1440w"
-          sizes="100vw"
-          alt="Illustrated Nigerian cityscape with Lagos landmarks, danfo buses and a billboard reading 'Don't pay before you verify'"
-          fetchPriority="high"
-          className="size-full object-cover object-[50%_70%]"
-          initial={{ scale: 1.12 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 2.4, ease: EASE }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-white/55 via-white/10 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/25 to-transparent" />
+    <section ref={ref} className="relative isolate overflow-hidden bg-white lg:bg-[#9fc6ea]">
+      <motion.div className="absolute inset-x-0 top-0 -z-10 h-[50svh] lg:inset-0 lg:h-auto" style={desktop ? { y } : undefined}>
+        <picture>
+          <source media="(max-width: 1023px)" srcSet="/images/hero-mobile.webp" />
+          <motion.img
+            src="/images/hero-lagos.webp"
+            srcSet="/images/hero-lagos-768.webp 768w, /images/hero-lagos.webp 1440w"
+            sizes="100vw"
+            alt="A modern home carrying an Urbn DPI plaque, set in an illustrated Nigerian city"
+            fetchPriority="high"
+            className="size-full object-cover object-[50%_80%] lg:object-[50%_70%]"
+            initial={{ scale: 1.12 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 2.4, ease: EASE }}
+          />
+        </picture>
+        {/* phones: art melts into a white "sheet" holding the content */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent from-60% to-white lg:hidden" />
+        <div className="absolute inset-0 hidden bg-gradient-to-b from-white/55 via-white/10 to-transparent lg:block" />
+        <div className="absolute inset-x-0 bottom-0 hidden h-1/3 bg-gradient-to-t from-black/25 to-transparent lg:block" />
       </motion.div>
 
-      <motion.div style={{ opacity: fade }} className="container-x flex min-h-[38rem] flex-col items-center pt-20 pb-40 text-center sm:min-h-[44rem] sm:pt-24 lg:min-h-[48rem]">
+      <motion.div
+        style={desktop ? { opacity: fade } : undefined}
+        className="container-x flex flex-col pt-[44svh] pb-10 lg:min-h-[48rem] lg:items-center lg:pt-24 lg:pb-40 lg:text-center"
+      >
+        <motion.span
+          className="mb-4 inline-flex w-fit items-center gap-2 rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold shadow-sm lg:hidden"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <span className="size-1.5 animate-pulse rounded-full bg-success" /> Live in Ibadan
+        </motion.span>
         <WordsReveal
           text="Can you trust this property?"
-          className="max-w-4xl text-[2.9rem] leading-[0.98] text-ink sm:text-7xl lg:text-[5.5rem]"
+          className="max-w-4xl text-[2.75rem] leading-[0.98] text-ink sm:text-7xl lg:text-[5.5rem]"
         />
         <motion.p
-          className="mt-5 max-w-xl text-base font-medium text-neutral-800 sm:text-lg"
+          className="mt-4 max-w-xl text-[15px] text-neutral-600 sm:text-lg lg:mt-5 lg:font-medium lg:text-neutral-800"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.8, ease: EASE }}
@@ -92,13 +110,25 @@ function Hero() {
           Check any property's Digital Property Identity before you pay a single naira. Free, instant, no account needed.
         </motion.p>
         <motion.div
-          className="mt-8 w-full max-w-2xl"
+          className="mt-6 w-full max-w-2xl lg:mt-8"
           initial={{ opacity: 0, y: 24, scale: 0.97 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ delay: 0.8, duration: 0.9, ease: EASE }}
         >
           <DpiSearch />
-          <p className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-white/90 px-4 py-2 text-sm text-neutral-700 shadow-sm backdrop-blur">
+          {/* phones: app-style quick actions */}
+          <div className="no-scrollbar -mx-4 mt-4 flex gap-2 overflow-x-auto px-4 lg:hidden">
+            {[
+              { to: "/listings", label: "Browse homes", icon: Search },
+              { to: "/dpi", label: "How DPI works", icon: ShieldCheck },
+              { to: "/for-owners", label: "Get a DPI", icon: House },
+            ].map((a) => (
+              <Link key={a.to} to={a.to} className="inline-flex shrink-0 items-center gap-2 rounded-full bg-mist px-4 py-2.5 text-[13px] font-semibold active:scale-95 active:bg-fog">
+                <a.icon className="size-4 text-urbn" /> {a.label}
+              </Link>
+            ))}
+          </div>
+          <p className="mt-4 hidden items-center gap-1.5 rounded-full bg-white/90 px-4 py-2 text-sm text-neutral-700 shadow-sm backdrop-blur lg:inline-flex">
             No code?
             <Link to="/listings" className="font-semibold text-urbn underline-offset-4 hover:underline">
               Browse verified homes in Ibadan →
@@ -135,17 +165,17 @@ function Problem() {
     },
   ];
   return (
-    <section className="container-x py-24 sm:py-32">
+    <section className="container-x py-16 sm:py-24 lg:py-32">
       <Reveal>
         <SectionHeading
           title="Real estate shouldn't require blind trust."
           lede="Real estate in Nigeria is broken. Urbn is here to change that."
         />
       </Reveal>
-      <Stagger className="mt-14 grid gap-5 md:grid-cols-3" stagger={0.12}>
+      <Reveal className="mt-8 md:mt-14">
+        <Rail grid="md:grid-cols-3 md:gap-5" item="w-[78%] sm:w-[55%]" label="Why trust is broken">
         {cards.map((c, i) => (
-          <StaggerItem key={i}>
-            <article className={clsx("group relative flex h-full flex-col overflow-hidden rounded-card", c.tone)}>
+            <article key={i} className={clsx("group relative flex h-full flex-col overflow-hidden rounded-card", c.tone)}>
               {i === 1 && <Rings className="-top-16 -right-16 size-48" />}
               <div className="relative p-7 pb-6">
                 <p className="font-display text-5xl leading-none sm:text-6xl">{c.big}</p>
@@ -158,9 +188,9 @@ function Problem() {
                 <img src={c.img} alt={c.alt} loading="lazy" className="aspect-[2/1] w-full object-cover transition-transform duration-700 group-hover:scale-105" />
               </div>
             </article>
-          </StaggerItem>
         ))}
-      </Stagger>
+        </Rail>
+      </Reveal>
     </section>
   );
 }
@@ -169,9 +199,10 @@ function Identity() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], [60, -60]);
+  const desktop = useIsDesktop();
   return (
     <section className="overflow-hidden bg-gradient-to-b from-white via-blue-50/60 to-white">
-      <div ref={ref} className="container-x grid items-center gap-10 py-20 lg:grid-cols-[1fr_1.15fr] lg:py-28">
+      <div ref={ref} className="container-x grid items-center gap-6 py-14 lg:grid-cols-[1fr_1.15fr] lg:gap-10 lg:py-28">
         <Reveal>
           <p className="eyebrow">
             <span className="size-2 rounded-full bg-urbn" /> What DPI is
@@ -183,19 +214,19 @@ function Identity() {
             A DPI is a permanent record tied to a property: not its owner, not its agent, not a listing. Once issued,
             it can never be faked, duplicated, or reassigned. Anyone can verify it in seconds.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <ButtonLink to="/dpi" variant="blue">
+          <div className="mt-6 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-3 lg:mt-8">
+            <ButtonLink to="/dpi" variant="blue" className="w-full sm:w-auto">
               Learn more about DPI
             </ButtonLink>
-            <ButtonLink to="/verify" variant="outline">
+            <ButtonLink to="/verify" variant="outline" className="w-full sm:w-auto">
               Verify a property
             </ButtonLink>
           </div>
         </Reveal>
-        <div className="relative">
+        <div className="relative order-first -mx-4 lg:order-none lg:mx-0">
           <Rings className="top-[58%] left-1/2 aspect-[2.6] w-[115%] -translate-x-1/2 -translate-y-1/2" count={4} />
           <motion.img
-            style={{ y }}
+            style={desktop ? { y } : undefined}
             src="/images/house-identity.webp"
             srcSet="/images/house-identity-640.webp 640w, /images/house-identity.webp 810w"
             sizes="(min-width: 1024px) 50vw, 100vw"
@@ -248,12 +279,13 @@ function HowItWorks() {
   }, [visible]);
 
   return (
-    <section className="bg-ink py-24 text-white sm:py-32">
+    <section className="bg-ink py-16 text-white sm:py-24 lg:py-32">
       <div className="container-x" ref={ref}>
         <Reveal>
           <SectionHeading dark eyebrow="How to get started" title="How It Works" lede="From submission to proof in three steps. Every property, every time." />
         </Reveal>
-        <div className="mt-14 grid gap-4 lg:grid-cols-[1fr_1fr_1fr]">
+        <HowItWorksDeck />
+        <div className="mt-14 hidden gap-4 lg:grid lg:grid-cols-[1fr_1fr_1fr]">
           <ol className="flex flex-col gap-4">
             {STEPS.map((s, i) => (
               <li key={s.title}>
@@ -329,6 +361,34 @@ function HowItWorks() {
   );
 }
 
+/** Phones: a swipe-through deck, one step per card, like an app onboarding. */
+function HowItWorksDeck() {
+  const cards = [
+    ...STEPS.map((s, i) => ({ ...s, n: i + 1, img: null as string | null })),
+    { icon: ShieldCheck, title: "Carry the proof", text: "Verified residents and owners can request a Property Card to prove their relationship to a property, anywhere.", n: 4, img: "/images/property-card-scene.webp" },
+  ];
+  return (
+    <Reveal className="mt-8 lg:hidden">
+      <Rail grid="md:grid-cols-2 md:gap-4" item="w-[82%] sm:w-[58%]" dark label="How it works">
+        {cards.map((c) => (
+          <article key={c.title} className={clsx("relative flex h-full min-h-[19rem] flex-col overflow-hidden rounded-[1.5rem] p-6", c.n === 4 ? "bg-graphite" : "bg-urbn")}>
+            <div className="flex items-center justify-between">
+              <span className="grid size-12 place-items-center rounded-full bg-white text-urbn">
+                <c.icon className="size-5" />
+              </span>
+              <span className="text-xs font-semibold tracking-widest text-white/60 uppercase">Step {c.n} of 4</span>
+            </div>
+            {c.img && <img src={c.img} alt="Urbn Property Card" loading="lazy" className="mt-5 aspect-[1.6] w-full rounded-xl object-cover" />}
+            <h3 className="mt-auto pt-6 font-display text-3xl">{c.title}</h3>
+            <p className="mt-2 text-[15px] leading-snug text-white/80">{c.text}</p>
+            <span className="pointer-events-none absolute -right-2 -bottom-8 font-display text-[9rem] leading-none text-white/10">{c.n}</span>
+          </article>
+        ))}
+      </Rail>
+    </Reveal>
+  );
+}
+
 function Audiences() {
   const items = [
     {
@@ -360,7 +420,7 @@ function Audiences() {
     },
   ];
   return (
-    <section className="container-x py-24 sm:py-32">
+    <section className="container-x py-16 sm:py-24 lg:py-32">
       <Reveal>
         <SectionHeading
           eyebrow="Who we built Urbn for"
@@ -368,13 +428,14 @@ function Audiences() {
           lede="Whether you own it, manage it or want to live in it, a DPI gives everyone the same source of truth."
         />
       </Reveal>
-      <Stagger className="mt-14 grid gap-5 md:grid-cols-3 md:items-center">
+      <Reveal className="mt-8 md:mt-14">
+        <Rail grid="md:grid-cols-3 md:items-center md:gap-5" item="w-[80%] sm:w-[55%]" label="Who Urbn is for">
         {items.map((it) => (
-          <StaggerItem key={it.title}>
             <Link
+              key={it.title}
               to={it.to}
               className={clsx(
-                "group flex h-full flex-col rounded-card p-7 transition-all duration-500 hover:-translate-y-1.5",
+                "group flex h-full flex-col rounded-card p-7 transition-all duration-500 active:scale-[0.98] lg:hover:-translate-y-1.5",
                 it.dark
                   ? "bg-ink text-white shadow-[0_30px_60px_-25px_rgba(0,0,0,0.6)] md:py-10"
                   : "bg-white shadow-[0_20px_60px_-30px_rgba(0,0,0,0.25)] ring-1 ring-black/5",
@@ -392,9 +453,9 @@ function Audiences() {
                 See how it works <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
               </span>
             </Link>
-          </StaggerItem>
         ))}
-      </Stagger>
+        </Rail>
+      </Reveal>
     </section>
   );
 }
@@ -406,16 +467,17 @@ function Growth({ listings }: { listings: Card[] }) {
     { icon: House, value: <CountUp to={50} />, label: "Properties currently in verification", text: "Every one checked for identity, title and condition before a DPI is issued." },
   ];
   return (
-    <section className="pt-8 pb-24 sm:pb-32">
+    <section className="pt-4 pb-16 sm:pb-24 lg:pt-8 lg:pb-32">
       <Reveal className="container-x">
         <SectionHeading title="Growing fast, city by city." lede="Live in Ibadan today. Search verified homes on the map, or pick an area to explore." />
       </Reveal>
-      <div className="mt-12">
+      <div className="mt-8 lg:mt-12">
         <IbadanMap listings={listings} />
       </div>
-      <Stagger className="container-x mt-16 grid gap-10 md:grid-cols-3">
+      <Reveal className="container-x mt-10 lg:mt-16">
+        <Rail grid="md:grid-cols-3 md:gap-10" item="w-[72%] sm:w-[48%]" label="Urbn in numbers">
         {stats.map((s, i) => (
-          <StaggerItem key={i} className="flex gap-4">
+          <div key={i} className="flex h-full gap-4 rounded-2xl bg-mist p-5 md:bg-transparent md:p-0">
             <span className="grid size-12 shrink-0 place-items-center rounded-full bg-urbn text-white">
               <s.icon className="size-5" />
             </span>
@@ -424,9 +486,10 @@ function Growth({ listings }: { listings: Card[] }) {
               <p className="mt-2 font-semibold">{s.label}</p>
               <p className="mt-1 text-sm text-neutral-500">{s.text}</p>
             </div>
-          </StaggerItem>
+          </div>
         ))}
-      </Stagger>
+        </Rail>
+      </Reveal>
     </section>
   );
 }
@@ -434,7 +497,7 @@ function Growth({ listings }: { listings: Card[] }) {
 function FeaturedListings({ listings }: { listings: Card[] }) {
   const featured = listings.slice(0, 4);
   return (
-    <section className="relative overflow-hidden bg-mist py-24 sm:py-32">
+    <section className="relative overflow-hidden bg-mist py-16 sm:py-24 lg:py-32">
       <div className="container-x">
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
           <Reveal>
@@ -445,17 +508,20 @@ function FeaturedListings({ listings }: { listings: Card[] }) {
               lede="Every home here has been checked: ownership confirmed, documents verified, and seen in person by our team."
             />
           </Reveal>
-          <ButtonLink to="/listings" variant="dark" className="shrink-0">
+          <ButtonLink to="/listings" variant="dark" className="hidden shrink-0 md:inline-flex">
             Search verified homes
           </ButtonLink>
         </div>
-        <Stagger className="no-scrollbar -mx-4 mt-12 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:grid-cols-4">
-          {featured.map((l) => (
-            <StaggerItem key={l.id} className="w-[82%] shrink-0 snap-start sm:w-auto">
-              <ListingCard listing={l} />
-            </StaggerItem>
-          ))}
-        </Stagger>
+        <Reveal className="mt-8 lg:mt-12">
+          <Rail grid="md:grid-cols-2 md:gap-5 lg:grid-cols-4" item="w-[82%] sm:w-[52%]" label="Featured verified listings">
+            {featured.map((l) => (
+              <ListingCard key={l.id} listing={l} />
+            ))}
+          </Rail>
+        </Reveal>
+        <ButtonLink to="/listings" variant="dark" size="lg" className="mt-6 w-full md:hidden">
+          Search verified homes
+        </ButtonLink>
       </div>
     </section>
   );
@@ -463,15 +529,15 @@ function FeaturedListings({ listings }: { listings: Card[] }) {
 
 function Stories() {
   return (
-    <section className="bg-ink py-24 text-white sm:py-32">
+    <section className="bg-ink py-16 text-white sm:py-24 lg:py-32">
       <div className="container-x">
         <Reveal>
           <SectionHeading dark title="Stories" lede="News, product updates and the people behind Nigeria's first Digital Property Identity system." />
         </Reveal>
-        <Stagger className="mt-14 grid gap-5 md:grid-cols-3">
+        <Reveal className="mt-8 md:mt-14">
+          <Rail grid="md:grid-cols-3 md:gap-5" item="w-[80%] sm:w-[55%]" dark label="Stories">
           {STORIES.map((s) => (
-            <StaggerItem key={s.slug} as="article">
-              <Link to={`/blog/${s.slug}`} className="group flex h-full flex-col rounded-card bg-white p-3 text-ink transition-transform duration-500 hover:-translate-y-1.5">
+              <Link key={s.slug} to={`/blog/${s.slug}`} className="group flex h-full flex-col rounded-card bg-white p-3 text-ink transition-transform duration-500 active:scale-[0.98] lg:hover:-translate-y-1.5">
                 <div className="overflow-hidden rounded-[0.9rem]">
                   <img src={s.image} alt={s.imageAlt} loading="lazy" className="aspect-[1.55] w-full object-cover transition-transform duration-700 group-hover:scale-105" />
                 </div>
@@ -483,9 +549,9 @@ function Stories() {
                   </span>
                 </div>
               </Link>
-            </StaggerItem>
           ))}
-        </Stagger>
+          </Rail>
+        </Reveal>
       </div>
     </section>
   );

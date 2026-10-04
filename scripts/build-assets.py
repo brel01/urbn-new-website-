@@ -52,6 +52,9 @@ hero = inpaint(home.crop((0, 77, 1440, 784)), [(405, 135, 1035, 285, 75)], [(402
 save(hero, "hero-lagos", (None, 768))
 vh = inpaint(verify.crop((0, 77, 1440, 690)), [(405, 125, 1050, 270, 90), (450, 285, 995, 345, 140)], [(398, 354, 1042, 498)])
 save(vh, "hero-verify", (None, 768))
+# Portrait art for the phone hero: the clean right side of the verify scene
+# (house + DPI plaque), clear of the inpainted area.
+save(verify.crop((1050, 77, 1440, 690)), "hero-mobile")
 save(feat.crop((448, 77, 1440, 605)), "hero-billboard", (None, 640))
 save(dpi.crop((648, 144, 1440, 672)), "house-plaque", (None, 640))
 

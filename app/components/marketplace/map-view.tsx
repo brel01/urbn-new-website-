@@ -27,7 +27,7 @@ export function MarketplaceMap({ listings }: { listings: Card[] }) {
   const current = listings.find((l) => l.id === selected);
 
   return (
-    <div className="relative h-[34rem] overflow-hidden rounded-2xl bg-[#f2f3ef] ring-1 ring-black/5 sm:h-[40rem]">
+    <div className="relative -mx-4 h-[calc(100svh-15rem)] min-h-[26rem] overflow-hidden bg-[#f2f3ef] ring-1 ring-black/5 sm:mx-0 sm:h-[40rem] sm:rounded-2xl">
       <div className="absolute inset-0">
         <MapBackdrop />
       </div>

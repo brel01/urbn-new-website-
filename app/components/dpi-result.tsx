@@ -31,7 +31,7 @@ export function VerifiedResult({ record, animate = true }: { record: DpiRecord; 
 
   return (
     <div className="grid gap-4 lg:grid-cols-[0.8fr_2fr_0.8fr]">
-      <div className="flex flex-col justify-between rounded-card bg-mist p-6">
+      <div className="flex flex-col justify-between rounded-card bg-mist p-5 lg:p-6">
         <p className="text-xs font-semibold tracking-wider text-neutral-500 uppercase">Verified result</p>
         <AnimatePresence mode="wait">
           {scanning ? (
@@ -39,7 +39,7 @@ export function VerifiedResult({ record, animate = true }: { record: DpiRecord; 
               <span className="size-5 animate-spin rounded-full border-2 border-urbn border-t-transparent" /> Checking record…
             </motion.p>
           ) : (
-            <motion.div key="v" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: "spring", stiffness: 260, damping: 18 }} className="mt-6" role="status">
+            <motion.div key="v" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: "spring", stiffness: 260, damping: 18 }} className="mt-3 lg:mt-6" role="status">
               <p className="flex items-center gap-2 font-display text-2xl">
                 <span className="grid size-8 place-items-center rounded-full bg-success text-white"><Check className="size-5" /></span>
                 Property Verified
@@ -119,7 +119,7 @@ export function VerifiedResult({ record, animate = true }: { record: DpiRecord; 
         </div>
       </div>
 
-      <div className="flex flex-col items-center justify-center rounded-card bg-mist p-6 text-center">
+      <div className="hidden flex-col items-center justify-center rounded-card bg-mist p-6 text-center lg:flex">
         <motion.span
           initial={animate ? { scale: 0, rotate: -30 } : false}
           animate={{ scale: scanning ? 0 : 1, rotate: 0 }}

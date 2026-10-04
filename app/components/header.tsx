@@ -1,30 +1,22 @@
 import { clsx } from "clsx";
-import { Menu, X } from "lucide-react";
-import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
-import { useEffect, useState } from "react";
-import { Link, NavLink, useLocation } from "react-router";
+import { motion, useMotionValueEvent, useScroll } from "motion/react";
+import { useState } from "react";
+import { Link, NavLink } from "react-router";
 import { NAV } from "~/lib/site";
 import { Logo } from "./logo";
 import { EASE } from "./motion";
 import { ButtonLink } from "./ui";
 
 export function Header() {
-  const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { scrollY } = useScroll();
-  const location = useLocation();
 
   useMotionValueEvent(scrollY, "change", (y) => {
     const prev = scrollY.getPrevious() ?? 0;
     setScrolled(y > 12);
-    setHidden(y > 240 && y > prev && !open);
+    setHidden(y > 240 && y > prev);
   });
-
-  useEffect(() => setOpen(false), [location.pathname]);
-  useEffect(() => {
-    document.documentElement.style.overflow = open ? "hidden" : "";
-  }, [open]);
 
   return (
     <>
@@ -38,13 +30,13 @@ export function Header() {
         animate={{ y: hidden ? "-110%" : "0%" }}
         transition={{ duration: 0.35, ease: EASE }}
         className={clsx(
-          "fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow] duration-300",
-          scrolled || open ? "bg-white/85 shadow-[0_1px_0_rgba(0,0,0,0.06)] backdrop-blur-xl" : "bg-white",
+          "fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top)] transition-[background-color,box-shadow] duration-300",
+          scrolled ? "bg-white/85 shadow-[0_1px_0_rgba(0,0,0,0.06)] backdrop-blur-xl" : "bg-white",
         )}
       >
-        <div className="container-x flex h-16 items-center justify-between gap-6 lg:h-[4.5rem]">
+        <div className="container-x flex h-14 items-center justify-between gap-6 lg:h-[4.5rem]">
           <Link to="/" aria-label="Urbn home" className="shrink-0">
-            <Logo className="w-[4.6rem] text-ink" />
+            <Logo className="w-[4.1rem] text-ink lg:w-[4.6rem]" />
           </Link>
 
           <nav aria-label="Main" className="hidden lg:block">
@@ -78,70 +70,21 @@ export function Header() {
             </ul>
           </nav>
 
-          <div className="flex items-center gap-2">
-            <span className="hidden sm:block">
-              <ButtonLink to="/download" variant="dark" arrow={false}>
-                Download App Now
-              </ButtonLink>
-            </span>
-            <button
-              type="button"
-              onClick={() => setOpen((o) => !o)}
-              aria-expanded={open}
-              aria-controls="mobile-menu"
-              aria-label={open ? "Close menu" : "Open menu"}
-              className="grid size-11 place-items-center rounded-full text-ink hover:bg-mist lg:hidden"
-            >
-              {open ? <X className="size-6" /> : <Menu className="size-6" />}
-            </button>
-          </div>
+          <span className="hidden lg:block">
+            <ButtonLink to="/download" variant="dark" arrow={false}>
+              Download App Now
+            </ButtonLink>
+          </span>
+          {/* phones/tablets: navigation lives in the bottom tab bar */}
+          <Link
+            to="/download"
+            className="inline-flex h-9 items-center gap-1.5 rounded-full bg-ink px-4 text-[13px] font-semibold text-white active:scale-95 lg:hidden"
+          >
+            Get the App
+          </Link>
         </div>
-
-        <AnimatePresence>
-          {open && (
-            <motion.nav
-              id="mobile-menu"
-              aria-label="Mobile"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "calc(100dvh - 4rem)", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.45, ease: EASE }}
-              className="overflow-hidden bg-white lg:hidden"
-            >
-              <motion.ul
-                className="container-x flex flex-col gap-1 pt-6"
-                initial="hidden"
-                animate="show"
-                variants={{ hidden: {}, show: { transition: { staggerChildren: 0.05, delayChildren: 0.1 } } }}
-              >
-                {[{ label: "Home", to: "/" }, ...NAV].map((item) => (
-                  <motion.li
-                    key={item.to}
-                    variants={{ hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0 } }}
-                    className="border-b border-neutral-100"
-                  >
-                    <NavLink
-                      to={item.to}
-                      end
-                      className={({ isActive }) =>
-                        clsx("block py-4 font-display text-3xl", isActive ? "text-urbn" : "text-ink")
-                      }
-                    >
-                      {item.label}
-                    </NavLink>
-                  </motion.li>
-                ))}
-                <motion.li variants={{ hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0 } }} className="pt-6">
-                  <ButtonLink to="/download" variant="blue" size="lg" className="w-full">
-                    Download App Now
-                  </ButtonLink>
-                </motion.li>
-              </motion.ul>
-            </motion.nav>
-          )}
-        </AnimatePresence>
       </motion.header>
-      <div aria-hidden className="h-16 lg:h-[4.5rem]" />
+      <div aria-hidden className="h-14 lg:h-[4.5rem]" />
     </>
   );
 }

@@ -159,7 +159,7 @@ export default function AudiencePage() {
         </div>
       </section>
 
-      <section className="bg-ink py-24 text-white">
+      <section className="bg-ink py-16 text-white sm:py-24">
         <div className="container-x">
           <Reveal>
             <SectionHeading dark title="Sound familiar?" />
@@ -176,7 +176,7 @@ export default function AudiencePage() {
         </div>
       </section>
 
-      <section className="container-x py-24 sm:py-32">
+      <section className="container-x py-16 sm:py-24 lg:py-32">
         <Reveal>
           <SectionHeading title="How Urbn helps" lede="One verified identity per property, plus the tools to actually use it." />
         </Reveal>
