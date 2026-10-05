@@ -144,3 +144,10 @@
 .leaflet-container {
   font: inherit;
 }
+
+/* Phones pinch to zoom; the +/- buttons would sit under the results strip and tab bar. */
+@media (max-width: 1023px) {
+  .leaflet-control-zoom {
+    display: none;
+  }
+}
