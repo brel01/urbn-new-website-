@@ -11,7 +11,8 @@ export default {
   ssr: true,
   async prerender({ getStaticPaths }) {
     return [
-      ...getStaticPaths().filter((p) => !p.startsWith("/api/")),
+      // sitemap.xml renders on request so new Nearby places and listings appear without a rebuild.
+      ...getStaticPaths().filter((p) => !p.startsWith("/api/") && p !== "/sitemap.xml"),
       // With a live API, listing pages render on demand (always fresh);
       // seed listings are pre-rendered for previews and offline builds.
       ...(process.env.URBN_API_URL ? [] : SEED_LISTINGS.map(listingPath)),

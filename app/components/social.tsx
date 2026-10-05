@@ -1,6 +1,6 @@
 import { SITE } from "~/lib/site";
 
-const ICONS = {
+export const ICONS = {
   whatsapp:
     "M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.2.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 12 12 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z",
   x: "M17.7 3h3.1l-6.8 7.7 8 10.3h-6.2l-4.9-6.3L5.3 21H2.2l7.2-8.3L1.7 3H8l4.4 5.8L17.7 3Zm-1.1 16.2h1.7L7.5 4.7H5.6l11 14.5Z",
@@ -19,6 +19,15 @@ const LABELS: Record<keyof typeof ICONS, string> = {
   facebook: "Facebook",
   linkedin: "LinkedIn",
 };
+
+/** A brand mark from the paths above, sized like a lucide icon. */
+export function BrandIcon({ name, className }: { name: keyof typeof ICONS; className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden>
+      <path d={ICONS[name]} />
+    </svg>
+  );
+}
 
 export function SocialLinks({ className = "" }: { className?: string }) {
   return (

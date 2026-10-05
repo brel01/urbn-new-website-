@@ -1,4 +1,4 @@
-export type Faq = { q: string; a: string };
+export type Faq = { q: string; a: string; link?: { label: string; to: string } };
 export type FaqGroup = { id: string; title: string; items: Faq[] };
 
 export const FAQ_GROUPS: FaqGroup[] = [
@@ -82,7 +82,8 @@ export const FAQ_GROUPS: FaqGroup[] = [
       },
       {
         q: "What Is Nearby?",
-        a: "Nearby shows the businesses, schools, clinics, restaurants and other places recorded at properties around you, nearest first. Open Near Me in the Urbn app to see what's close and filter by type.",
+        a: "Nearby shows the businesses, schools, clinics, restaurants and other places recorded at properties around you, nearest first. Use your location, search by name, filter by type and sort by Nearest, Newest or A–Z. Open a place for its details, contact options and directions. On the map, move around and tap Search this area. Nearby is on this website and in the Urbn app.",
+        link: { label: "Explore Nearby", to: "/nearby" },
       },
       {
         q: "What Is U-Beep?",

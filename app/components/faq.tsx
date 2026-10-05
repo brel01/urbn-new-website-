@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useId, useState } from "react";
 import type { Faq } from "~/lib/faqs";
 import { EASE, Reveal } from "./motion";
+import { Link } from "react-router";
 import { ButtonLink, SectionHeading } from "./ui";
 
 function FaqItem({ faq, open, onToggle }: { faq: Faq; open: boolean; onToggle: () => void }) {
@@ -37,7 +38,17 @@ function FaqItem({ faq, open, onToggle }: { faq: Faq; open: boolean; onToggle: (
             transition={{ duration: 0.4, ease: EASE }}
             className="overflow-hidden"
           >
-            <p className="px-5 pb-6 text-[15px] leading-relaxed text-neutral-300 sm:px-6">{faq.a}</p>
+            <p className="px-5 pb-6 text-[15px] leading-relaxed text-neutral-300 sm:px-6">
+              {faq.a}
+              {faq.link && (
+                <>
+                  {" "}
+                  <Link to={faq.link.to} className="font-semibold text-white underline underline-offset-4">
+                    {faq.link.label} →
+                  </Link>
+                </>
+              )}
+            </p>
           </motion.div>
         )}
       </AnimatePresence>

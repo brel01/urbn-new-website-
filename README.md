@@ -50,6 +50,21 @@ The website also exposes thin proxies for the browser: `GET /api/listings`, `POS
 
 Listing URLs are `/listings/:id/:slug`. A wrong or missing slug 301-redirects to the canonical URL.
 
+## Nearby (public place discovery)
+
+`/nearby` mirrors the app's Near Me (`urbn-mobile/src/app/(public)/activities-nearby.tsx`):
+- **Search centre:** the visitor's location (used automatically when they've already allowed it, otherwise on Use My Location), else central Ibadan or the area in `?area=`.
+- **Finding places:** "Search nearby...", Sort by (Nearest, Newest, A–Z), Filter by type, and category chips that show only the types present, as "Label · count".
+- **List mode (the default):** infinite scroll in pages of 20.
+- **Map mode:** an interactive Leaflet map with one marker per activity and a results strip. Pan the map, then tap **Search this area**; the radius is half the visible latitude span × 111 km, capped at 25 km, as in the app. Map mode loads one page of 50.
+- **Place detail:** opening a place shows the app's detail sheet content: photos (or the type tile), name, type · category, distance · city, address · unit, About, Contact (Call, WhatsApp, Instagram, Facebook, Twitter, Website) and Get Directions. `/nearby/activity/:id/:slug` is the shareable version.
+- **No property records:** Nearby is about the place, so it doesn't show DPIs or property records, as in the app.
+- **DPI records:** these show the app's compact "Activity Here" preview (up to three places, then "+N more").
+
+With `URBN_API_URL` set, Nearby uses the app's public endpoints: `GET /activities/nearby`, `GET /activities/categories`, `GET /activities/:id` and `GET /public/properties/:id/activity`. Closed and private activities 404 there, so they never appear on the site. Without it, labelled sample places in `app/lib/nearby/seed.ts` are served through the same filters. Map tiles default to CARTO's light basemap with OpenStreetMap data. Set `VITE_MAP_TILE_URL` and `VITE_MAP_ATTRIBUTION` to use your own provider.
+
+Privacy: device coordinates stay in browser state. They're never put in page URLs, and point searches are sent with `Cache-Control: no-store`.
+
 ## DPI codes
 
 DPI codes follow the backend and app format: `LGA-NNNN-C` (e.g. `IBADAN-NORTH-0041-U`), optionally followed by `/UNIT` (e.g. `/U01`). `C` is the mod-23 check character from `geo.service`/`dpi.helpers.ts`, so typos are caught before a lookup. `app/lib/dpi.ts` ports `computeDpiCheckChar`, `isValidDpiFormat` and `parseDpiIdentifier` exactly (it passes the app's `AKINYELE-0004-S` fixture).

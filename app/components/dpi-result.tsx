@@ -5,7 +5,10 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { appDeepLink, DPI_ERROR_COPY, SAMPLE_DPI, type DpiErrorCode, type DpiRecord } from "~/lib/dpi";
 import { formatPrice, listingTypeLabel, type ListingType, type RentPeriod } from "~/lib/marketplace/types";
+import type { NearbyPlace } from "~/lib/nearby/types";
 import { EASE } from "./motion";
+import { activityPath } from "~/lib/nearby/types";
+import { ActivityHere } from "./nearby";
 import { ButtonLink } from "./ui";
 
 // App date format: DD MMM YYYY
@@ -13,7 +16,7 @@ const fmtDate = (d: string) =>
   new Date(d).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
 
 /** Verified record card, matching the "Verified result" layout from the designs. */
-export function VerifiedResult({ record, animate = true }: { record: DpiRecord; animate?: boolean }) {
+export function VerifiedResult({ record, animate = true, activities = [] }: { record: DpiRecord; animate?: boolean; activities?: NearbyPlace[] }) {
   const [scanning, setScanning] = useState(animate);
   const [copied, setCopied] = useState(false);
   const sample = record.code === SAMPLE_DPI;
@@ -117,6 +120,11 @@ export function VerifiedResult({ record, animate = true }: { record: DpiRecord; 
               Open in Urbn
             </a>
           </div>
+          {activities.length > 0 && (
+            <div className="mt-5">
+              <ActivityHere activities={activities.map((a) => ({ ...a, href: activityPath(a) }))} />
+            </div>
+          )}
         </div>
       </div>
 

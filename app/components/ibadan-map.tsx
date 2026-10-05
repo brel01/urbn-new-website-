@@ -58,7 +58,8 @@ export function projectPins<T extends Pick<ListingCard, "latitude" | "longitude"
   }));
 }
 
-export function MapBackdrop({ inView = true }: { inView?: boolean }) {
+/** Illustrative city backdrop. Its district labels are decorative, so hide them where pins use real geography. */
+export function MapBackdrop({ inView = true, labels = true }: { inView?: boolean; labels?: boolean }) {
   return (
         <svg viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 size-full" aria-hidden>
       <rect width="1000" height="600" fill="#f2f3ef" />
@@ -103,7 +104,7 @@ export function MapBackdrop({ inView = true }: { inView?: boolean }) {
           />
         </g>
       ))}
-      {LABELS.map(([t, x, y], i) => (
+      {labels && LABELS.map(([t, x, y], i) => (
         <motion.text
           key={t}
           x={x}

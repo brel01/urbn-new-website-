@@ -14,6 +14,8 @@ import { ButtonLink, SectionHeading } from "~/components/ui";
 import { SAMPLE_DPI } from "~/lib/dpi";
 import { HOME_FAQS } from "~/lib/faqs";
 import { featuredListings } from "~/lib/marketplace/source.server";
+import { searchNearby } from "~/lib/nearby/source.server";
+import { NearbySection } from "~/components/nearby-section";
 import type { ListingCard as Card } from "~/lib/marketplace/types";
 import { faqJsonLd, seo } from "~/lib/seo";
 import { STORIES, coverFit } from "~/lib/stories";
@@ -29,16 +31,18 @@ export const meta: Route.MetaFunction = () =>
   });
 
 export async function loader() {
-  return { featured: await featuredListings(7) };
+  const [featured, nearby] = await Promise.all([featuredListings(7), searchNearby({ area: "bodija", limit: 2 })]);
+  return { featured, nearby };
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  const { featured } = loaderData;
+  const { featured, nearby } = loaderData;
   return (
     <>
       <Hero />
       <Problem />
       <Identity />
+      <NearbySection preview={nearby} />
       <HowItWorks />
       <Audiences />
       <Growth listings={featured} />
@@ -117,7 +121,7 @@ function Hero() {
           <div className="no-scrollbar -mx-4 mt-4 flex gap-2 overflow-x-auto px-4 lg:hidden">
             {[
               { to: "/listings", label: "Browse Listings", icon: Search },
-              { to: "/features#nearby", label: "Discover Nearby", icon: MapPin },
+              { to: "/nearby", label: "Explore Nearby", icon: MapPin },
               { to: "/dpi", label: "What Is DPI?", icon: ShieldCheck },
               { to: "/for-owners", label: "Add Your Property", icon: House },
             ].map((a) => (
@@ -130,6 +134,10 @@ function Hero() {
             No DPI code?
             <Link to="/listings" className="font-semibold text-urbn underline-offset-4 hover:underline">
               Browse Listings in Ibadan →
+            </Link>
+            <span className="text-neutral-300" aria-hidden>|</span>
+            <Link to="/nearby" className="font-semibold text-urbn underline-offset-4 hover:underline">
+              Explore Nearby →
             </Link>
           </p>
         </motion.div>
