@@ -1,12 +1,13 @@
+// Nearby UI, mirroring the app's Near Me components (urbn-mobile
+// src/components/property-activity): NearbyActivityCard (list / row / detail
+// variants), ActivityDetailSheet, ActivityCategoryChips and PublicActivityPreview.
 import { clsx } from "clsx";
-import { ChevronRight, MapPin, ShieldCheck, X } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
-import { useMemo, useState } from "react";
+import { ChevronRight, Globe, MapPin, Navigation2, Phone, X } from "lucide-react";
+import { type ReactNode, useState } from "react";
 import { Link } from "react-router";
-import { verifyPath } from "~/lib/dpi";
-import { ACTIVITY_META, placeSubtitle, placeTitle } from "~/lib/nearby/categories";
-import { type ActivityType, activityPath, formatDistance, type NearbyPlace, type NearbyOrigin } from "~/lib/nearby/types";
-import { MapBackdrop } from "./ibadan-map";
+import { ACTIVITY_META, placeTitle } from "~/lib/nearby/categories";
+import { type ActivityType, type CategoryCount, formatDistanceAway, locationLabel, type NearbyPlace } from "~/lib/nearby/types";
+import { BrandIcon } from "./social";
 
 export function SampleBadge({ className }: { className?: string }) {
   return (
@@ -16,241 +17,285 @@ export function SampleBadge({ className }: { className?: string }) {
   );
 }
 
-/** Category icon tile, also the neutral placeholder when a place has no image (never an invented photo). */
-export function PlaceIcon({ type, className, size = "md" }: { type: ActivityType; className?: string; size?: "sm" | "md" | "lg" }) {
+/** The app's ActivityTypeIcon: the type's icon on its tint. Also the placeholder when a place has no photo. */
+export function PlaceIcon({ type, className, size = "md" }: { type: ActivityType; className?: string; size?: "sm" | "md" | "lg" | "xl" }) {
   const m = ACTIVITY_META[type];
+  const box = { sm: "size-8 rounded-lg", md: "size-14 rounded-xl", lg: "size-16 rounded-2xl", xl: "size-20 rounded-2xl" }[size];
+  const icon = { sm: "size-4", md: "size-6", lg: "size-7", xl: "size-9" }[size];
   return (
-    <span className={clsx("grid shrink-0 place-items-center rounded-2xl", m.tint, size === "sm" ? "size-9 rounded-xl" : size === "lg" ? "size-20" : "size-12", className)}>
-      <m.icon className={size === "sm" ? "size-4" : size === "lg" ? "size-9" : "size-5"} aria-hidden />
+    <span className={clsx("grid shrink-0 place-items-center", m.tint, box, className)}>
+      <m.icon className={icon} aria-hidden />
     </span>
   );
 }
 
-/**
- * A discovery result. The title is the card's main link (stretched over the card);
- * the Property Record chip is a separate, real link above it.
- */
-export function PlaceCard({
-  place,
-  origin,
-  active,
-  onHover,
-  from,
-  compact,
-}: {
-  place: NearbyPlace;
-  origin?: NearbyOrigin | null;
-  active?: boolean;
-  onHover?: (id: string | null) => void;
-  /** search string to return to from the detail page */
-  from?: string;
-  compact?: boolean;
-}) {
-  const distance = formatDistance(place.distance);
+const Thumb = ({ place, size = "md" }: { place: NearbyPlace; size?: "sm" | "md" }) =>
+  place.imageUrl ? (
+    <img src={place.imageUrl} alt="" loading="lazy" className={clsx("shrink-0 object-cover", size === "sm" ? "size-9 rounded-xl" : "size-14 rounded-xl")} />
+  ) : (
+    <PlaceIcon type={place.activityType} size={size === "sm" ? "sm" : "md"} />
+  );
+
+const distanceCity = (p: NearbyPlace) => [formatDistanceAway(p.distance), p.property.city].filter(Boolean).join(" · ");
+
+/** The app's list-variant card. Opens the activity's detail. */
+export function NearbyListCard({ place, to, active, onHover }: { place: NearbyPlace; to: string; active?: boolean; onHover?: (id: string | null) => void }) {
   return (
-    <article
+    <Link
+      to={to}
+      preventScrollReset
       onMouseEnter={() => onHover?.(place.id)}
       onMouseLeave={() => onHover?.(null)}
       className={clsx(
-        "group relative flex h-full gap-4 rounded-2xl bg-white p-4 ring-1 transition-all duration-300 focus-within:ring-2 focus-within:ring-urbn",
-        active ? "ring-urbn shadow-[0_18px_40px_-20px_rgba(37,61,226,0.55)]" : "ring-black/5 hover:ring-neutral-300",
+        "flex items-center gap-3 rounded-2xl bg-white p-3 ring-1 transition-[box-shadow,transform] duration-300 active:scale-[0.99]",
+        active ? "shadow-[0_14px_34px_-18px_rgba(0,0,0,0.45)] ring-ink" : "ring-black/5 hover:ring-neutral-300",
       )}
     >
-      {place.imageUrl ? (
-        <img src={place.imageUrl} alt="" loading="lazy" className={clsx("shrink-0 rounded-2xl object-cover", compact ? "size-14" : "size-16 sm:size-20")} />
-      ) : (
-        <PlaceIcon type={place.activityType} className={compact ? "size-14" : "size-16 sm:size-20"} />
-      )}
-      <div className="flex min-w-0 flex-1 flex-col">
-        <div className="flex items-start justify-between gap-2">
-          <h3 className="min-w-0 font-sans text-[15px] leading-snug font-semibold tracking-normal">
-            <Link
-              to={activityPath(place)}
-              state={from != null ? { from } : undefined}
-              className="outline-none after:absolute after:inset-0 after:rounded-2xl after:content-['']"
-            >
-              {placeTitle(place)}
-            </Link>
-          </h3>
+      <Thumb place={place} />
+      <span className="min-w-0 flex-1">
+        <span className="flex min-w-0 items-center gap-2">
+          <b className="truncate text-sm font-semibold">{placeTitle(place)}</b>
           {place.sample && <SampleBadge className="shrink-0" />}
-        </div>
-        <p className="mt-0.5 truncate text-[13px] text-neutral-500">{placeSubtitle(place)}</p>
-        <div className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1.5 pt-2.5 text-xs">
-          {distance && (
-            <span className="inline-flex items-center gap-1 text-neutral-600" title={origin?.note}>
-              <MapPin className="size-3.5 text-urbn" /> {distance}
-              {origin?.kind === "device" ? " away" : origin?.kind === "area" ? " from centre" : ""}
-            </span>
-          )}
-          <Link
-            to={verifyPath(place.property.dpi, place.unit?.unitNumber)}
-            className="relative z-10 inline-flex items-center gap-1 rounded-full bg-mist px-2 py-1 font-medium text-neutral-700 transition hover:bg-fog"
-          >
-            <ShieldCheck className="size-3.5" /> Property Record{place.unit ? ` · ${place.unit.unitNumber}` : ""}
-          </Link>
-          {!compact && (
-            <span className="ml-auto hidden items-center gap-0.5 font-semibold text-urbn sm:inline-flex">
-              View Details <ChevronRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
-            </span>
-          )}
-        </div>
-      </div>
-    </article>
+        </span>
+        {place.businessCategory && <span className="block truncate text-xs text-neutral-500">{place.businessCategory}</span>}
+        <span className="mt-1 flex items-center gap-1 text-xs text-neutral-500">
+          <MapPin className="size-3 shrink-0" />
+          <span className="truncate">{locationLabel(place)}</span>
+        </span>
+        {distanceCity(place) && <span className="mt-0.5 block text-xs text-neutral-500">{distanceCity(place)}</span>}
+      </span>
+    </Link>
   );
 }
 
-// ---------------------------------------------------------------------------
-// Map: illustrated city backdrop with grouped markers. Several activities can
-// share one property coordinate; they're grouped, never merged or duplicated.
-
-type Group = { key: string; x: number; y: number; places: NearbyPlace[] };
-
-function project(places: NearbyPlace[], originPoint?: { lat: number; lng: number } | null) {
-  const pts = places.filter((p) => p.lat != null && p.lng != null);
-  const all = [...pts.map((p) => [p.lat!, p.lng!] as const), ...(originPoint ? [[originPoint.lat, originPoint.lng] as const] : [])];
-  if (!all.length) return { groups: [] as Group[], origin: null as null | { x: number; y: number } };
-  let minLat = Math.min(...all.map((a) => a[0])), maxLat = Math.max(...all.map((a) => a[0]));
-  let minLng = Math.min(...all.map((a) => a[1])), maxLng = Math.max(...all.map((a) => a[1]));
-  const padLat = Math.max((maxLat - minLat) * 0.2, 0.006), padLng = Math.max((maxLng - minLng) * 0.15, 0.006);
-  minLat -= padLat; maxLat += padLat; minLng -= padLng; maxLng += padLng;
-  const xy = (lat: number, lng: number) => ({ x: ((lng - minLng) / (maxLng - minLng)) * 100, y: ((maxLat - lat) / (maxLat - minLat)) * 100 });
-  const byProperty = new Map<string, Group>();
-  for (const p of pts) {
-    const key = p.property.id;
-    const g = byProperty.get(key) ?? { key, ...xy(p.lat!, p.lng!), places: [] };
-    if (!g.places.some((x) => x.id === p.id)) g.places.push(p);
-    byProperty.set(key, g);
-  }
-  return { groups: [...byProperty.values()], origin: originPoint ? xy(originPoint.lat, originPoint.lng) : null };
+/** The app's row-variant card, used in the map's bottom results strip. */
+export function NearbyRowCard({ place, selected, onSelect }: { place: NearbyPlace; selected?: boolean; onSelect: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      aria-pressed={selected}
+      className={clsx("flex w-52 shrink-0 snap-start items-center gap-2 rounded-2xl bg-white p-3 text-left shadow-lg ring-1 transition", selected ? "ring-ink" : "ring-black/5")}
+    >
+      <Thumb place={place} size="sm" />
+      <span className="min-w-0 flex-1">
+        <b className="block truncate text-sm font-semibold">{placeTitle(place)}</b>
+        {place.businessCategory && <span className="block truncate text-xs text-neutral-500">{place.businessCategory}</span>}
+        <span className="block truncate text-xs text-neutral-500">{distanceCity(place)}</span>
+      </span>
+    </button>
+  );
 }
 
-export function NearbyMap({
-  places,
-  originPoint,
-  originLabel,
-  activeId,
-  onSelect,
-  className,
-}: {
-  places: NearbyPlace[];
-  originPoint?: { lat: number; lng: number } | null;
-  originLabel?: string;
-  activeId?: string | null;
-  onSelect?: (id: string | null) => void;
-  className?: string;
-}) {
-  const { groups, origin } = useMemo(() => project(places, originPoint), [places, originPoint]);
-  const [open, setOpen] = useState<string | null>(null);
-  const openGroup = groups.find((g) => g.key === open);
+const directionsUrl = (p: NearbyPlace) =>
+  p.lat != null && p.lng != null ? `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}` : null;
+
+/** The app's detail-variant card: shown over the map for the selected place. */
+export function NearbySelectedCard({ place, to, onClose }: { place: NearbyPlace; to: string; onClose: () => void }) {
+  const m = ACTIVITY_META[place.activityType];
+  const dir = directionsUrl(place);
   return (
-    <div className={clsx("relative overflow-hidden bg-[#f2f3ef] ring-1 ring-black/5", className)} role="region" aria-label="Map of nearby places">
-      <div className="absolute inset-0">
-        <MapBackdrop labels={false} />
+    <div className="rounded-2xl bg-white p-4 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.35)] ring-1 ring-black/5">
+      <div className="flex items-start gap-3">
+        <Link to={to} preventScrollReset className="flex min-w-0 flex-1 items-start gap-3">
+          <Thumb place={place} />
+          <span className="min-w-0 flex-1">
+            <span className="flex min-w-0 items-center gap-2">
+              <b className="truncate text-base font-bold">{placeTitle(place)}</b>
+              {place.sample && <SampleBadge className="shrink-0" />}
+            </span>
+            <span className="block truncate text-xs text-neutral-500">
+              {place.businessCategory || m.label}
+              {distanceCity(place) && ` · ${distanceCity(place)}`}
+            </span>
+            <span className="mt-1 flex items-center gap-1 text-xs text-neutral-500">
+              <MapPin className="size-3 shrink-0" />
+              <span className="truncate">{locationLabel(place)}</span>
+            </span>
+          </span>
+        </Link>
+        <button type="button" onClick={onClose} aria-label="Close" className="-m-1 grid size-8 shrink-0 place-items-center rounded-full text-neutral-500 hover:bg-mist">
+          <X className="size-[18px]" />
+        </button>
       </div>
-      {origin && (
-        <span className="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2" style={{ left: `${origin.x}%`, top: `${origin.y}%` }}>
-          <span className="absolute top-1/2 left-1/2 size-40 -translate-x-1/2 -translate-y-1/2 animate-ping-slow rounded-full bg-urbn/10" />
-          <span className="relative block size-4 rounded-full border-[3px] border-white bg-urbn shadow-lg" />
-          {originLabel && (
-            <span className="absolute top-5 left-1/2 -translate-x-1/2 rounded-full bg-ink px-2 py-0.5 text-[10px] font-semibold whitespace-nowrap text-white">{originLabel}</span>
-          )}
-        </span>
+      {place.description && (
+        <Link to={to} preventScrollReset className="mt-3 line-clamp-2 block text-sm text-neutral-800">
+          {place.description}
+        </Link>
       )}
-      {groups.map((g) => {
-        const first = g.places[0];
-        const m = ACTIVITY_META[first.activityType];
-        const isActive = g.places.some((p) => p.id === activeId);
-        return (
-          <button
-            key={g.key}
-            type="button"
-            onClick={() => {
-              setOpen(open === g.key ? null : g.key);
-              onSelect?.(g.places.length === 1 ? first.id : null);
-            }}
-            aria-label={g.places.length > 1 ? `${g.places.length} places at ${first.property.address}` : placeTitle(first)}
-            aria-expanded={open === g.key}
-            className={clsx(
-              "absolute grid -translate-x-1/2 -translate-y-full place-items-center rounded-full border-[3px] border-white shadow-lg transition-transform duration-200",
-              isActive || open === g.key ? "z-20 scale-125 bg-ink text-white" : clsx("z-10 hover:scale-110", m.tint),
-            )}
-            style={{ left: `${g.x}%`, top: `${g.y}%`, width: 38, height: 38 }}
-          >
-            <m.icon className="size-4" aria-hidden />
-            {g.places.length > 1 && (
-              <span className="absolute -top-1.5 -right-1.5 grid size-5 place-items-center rounded-full bg-urbn text-[10px] font-bold text-white">{g.places.length}</span>
-            )}
-          </button>
-        );
-      })}
-      <AnimatePresence>
-        {openGroup && (
-          <motion.div
-            key={openGroup.key}
-            initial={{ opacity: 0, y: -12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            className="absolute inset-x-3 top-3 z-30 rounded-2xl bg-white p-3 shadow-xl sm:right-auto sm:w-80"
-          >
-            <div className="flex items-start justify-between gap-2 px-1">
-              <p className="text-xs text-neutral-500">
-                {openGroup.places.length > 1 ? `${openGroup.places.length} places at this property` : "Place"} · {openGroup.places[0].property.address}
-              </p>
-              <button type="button" onClick={() => setOpen(null)} aria-label="Close" className="-m-1 grid size-7 shrink-0 place-items-center rounded-full hover:bg-mist">
-                <X className="size-4" />
-              </button>
-            </div>
-            <ul className="mt-2 space-y-1">
-              {openGroup.places.map((p) => (
-                <li key={p.id}>
-                  <Link to={activityPath(p)} className="flex items-center gap-3 rounded-xl p-2 hover:bg-mist">
-                    <PlaceIcon type={p.activityType} size="sm" />
-                    <span className="min-w-0">
-                      <b className="block truncate text-sm">{placeTitle(p)}</b>
-                      <span className="block truncate text-xs text-neutral-500">{placeSubtitle(p)}{p.unit ? ` · Unit ${p.unit.unitNumber}` : ""}</span>
-                    </span>
-                    <ChevronRight className="ml-auto size-4 shrink-0 text-neutral-400" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
+      <div className="mt-3 flex items-center gap-2">
+        {contactActions(place).slice(0, 3).map((a) => (
+          <a key={a.id} href={a.href} target={a.id === "call" ? undefined : "_blank"} rel="noopener" aria-label={a.label} className="grid size-9 place-items-center rounded-full bg-mist hover:bg-fog">
+            <a.icon className="size-4" />
+          </a>
+        ))}
+        <Link to={to} preventScrollReset className="text-xs font-semibold text-neutral-600 hover:text-ink">
+          View Details
+        </Link>
+        {dir && (
+          <a href={dir} target="_blank" rel="noopener" className="ml-auto inline-flex items-center gap-2 rounded-xl bg-ink px-4 py-2.5 text-xs font-semibold text-white hover:bg-neutral-800">
+            <Navigation2 className="size-3.5" /> Get Directions
+          </a>
         )}
-      </AnimatePresence>
+      </div>
     </div>
   );
 }
 
-export function CategoryChip({
-  active,
-  onClick,
-  children,
-  icon: Icon,
-  count,
-  dark,
-}: {
-  active: boolean;
-  onClick?: () => void;
-  children: React.ReactNode;
-  icon?: React.ComponentType<{ className?: string }>;
-  count?: number;
-  dark?: boolean;
-}) {
+type ContactAction = { id: string; label: string; icon: (p: { className?: string }) => ReactNode; href: string };
+const brand = (name: "whatsapp" | "instagram" | "facebook" | "x") => (p: { className?: string }) => <BrandIcon name={name} className={p.className} />;
+const withScheme = (u: string) => (/^https?:\/\//.test(u) ? u : `https://${u}`);
+
+/** Same order and labels as the app's detail sheet: Call, WhatsApp, Instagram, Facebook, Twitter, Website. */
+function contactActions(p: NearbyPlace): ContactAction[] {
+  const s = p.socialLinks ?? {};
+  return [
+    p.contactPhone && { id: "call", label: "Call", icon: Phone, href: `tel:${p.contactPhone}` },
+    s.whatsapp && { id: "whatsapp", label: "WhatsApp", icon: brand("whatsapp"), href: withScheme(s.whatsapp) },
+    s.instagram && { id: "instagram", label: "Instagram", icon: brand("instagram"), href: withScheme(s.instagram) },
+    s.facebook && { id: "facebook", label: "Facebook", icon: brand("facebook"), href: withScheme(s.facebook) },
+    s.twitter && { id: "twitter", label: "Twitter", icon: brand("x"), href: withScheme(s.twitter) },
+    s.website && { id: "website", label: "Website", icon: Globe, href: withScheme(s.website) },
+  ].filter(Boolean) as ContactAction[];
+}
+
+/** Photo gallery with a counter, or the type tile when there are no photos (never an invented photo). */
+function HeroGallery({ place, images }: { place: NearbyPlace; images: string[] }) {
+  const urls = images.length ? images : place.imageUrl ? [place.imageUrl] : [];
+  const [index, setIndex] = useState(0);
+  if (urls.length === 0) {
+    return (
+      <div className={clsx("grid h-56 place-items-center rounded-2xl sm:h-64", ACTIVITY_META[place.activityType].tint)}>
+        <PlaceIcon type={place.activityType} size="xl" className="bg-white/60" />
+      </div>
+    );
+  }
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      className={clsx(
-        "inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full px-3.5 text-[13px] font-semibold transition active:scale-95",
-        active
-          ? dark ? "bg-white text-ink" : "bg-ink text-white"
-          : dark ? "bg-white/10 text-white/80 hover:bg-white/15" : "bg-white text-neutral-700 ring-1 ring-black/10 hover:ring-neutral-400",
+    <div className="relative h-56 overflow-hidden rounded-2xl sm:h-72">
+      <div
+        className="no-scrollbar flex h-full snap-x snap-mandatory overflow-x-auto"
+        onScroll={(e) => setIndex(Math.round(e.currentTarget.scrollLeft / e.currentTarget.clientWidth))}
+      >
+        {urls.map((u, i) => (
+          <img key={u} src={u} alt={`${placeTitle(place)}, photo ${i + 1}`} className="h-full w-full shrink-0 snap-start object-cover" />
+        ))}
+      </div>
+      {urls.length > 1 && (
+        <span className="absolute top-3 right-3 rounded-full bg-black/55 px-2.5 py-1 text-xs font-semibold text-white">
+          {index + 1}/{urls.length}
+        </span>
       )}
-    >
-      {Icon && <Icon className="size-4" />}
-      {children}
-      {count != null && <span className={clsx("text-xs font-medium", active ? "opacity-70" : "opacity-50")}>{count}</span>}
-    </button>
+    </div>
+  );
+}
+
+/** The app's ActivityDetailSheet content. No property record: Nearby is about the place. */
+export function NearbyDetail({ place, images = [], header }: { place: NearbyPlace; images?: string[]; header?: ReactNode }) {
+  const m = ACTIVITY_META[place.activityType];
+  const actions = contactActions(place);
+  const dir = directionsUrl(place);
+  return (
+    <div>
+      {header}
+      <HeroGallery place={place} images={images} />
+      <div className="space-y-5 pt-5">
+        <div>
+          <div className="flex flex-wrap items-center gap-2">
+            <h1 className="font-sans text-2xl font-bold tracking-tight sm:text-3xl">{placeTitle(place)}</h1>
+            {place.sample && <SampleBadge />}
+          </div>
+          <p className="mt-1 text-sm font-medium text-neutral-500">
+            {m.label}
+            {place.businessCategory ? ` · ${place.businessCategory}` : ""}
+          </p>
+          {distanceCity(place) && <p className="text-sm text-neutral-500">{distanceCity(place)}</p>}
+        </div>
+        <p className="flex items-start gap-2 text-sm">
+          <MapPin className="mt-0.5 size-4 shrink-0 text-neutral-500" />
+          {locationLabel(place)}
+        </p>
+        {place.description && (
+          <div>
+            <h2 className="font-sans text-sm font-semibold tracking-normal">About</h2>
+            <p className="mt-1 text-sm leading-relaxed text-neutral-600">{place.description}</p>
+          </div>
+        )}
+        {actions.length > 0 && (
+          <div>
+            <h2 className="font-sans text-sm font-semibold tracking-normal">Contact</h2>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {actions.map((a) => (
+                <a
+                  key={a.id}
+                  href={a.href}
+                  target={a.id === "call" ? undefined : "_blank"}
+                  rel="noopener nofollow"
+                  className="inline-flex items-center gap-2 rounded-full bg-mist px-4 py-2.5 text-sm font-semibold hover:bg-fog"
+                >
+                  <a.icon className="size-[15px]" /> {a.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+        {dir && (
+          <a href={dir} target="_blank" rel="noopener" className="flex items-center justify-center gap-2 rounded-xl bg-ink px-4 py-3.5 text-sm font-semibold text-white hover:bg-neutral-800">
+            <Navigation2 className="size-4" /> Get Directions
+          </a>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/** The app's ActivityCategoryChips: All, then only the types present here as "Label · count". */
+export function NearbyCategoryChips({
+  categories,
+  selected,
+  onChange,
+}: {
+  categories: CategoryCount[];
+  selected?: ActivityType;
+  onChange: (t?: ActivityType) => void;
+}) {
+  const chip = (active: boolean) =>
+    clsx(
+      "shrink-0 rounded-full px-4 py-2 text-xs font-semibold transition active:scale-95",
+      active ? "bg-ink text-white" : "border border-neutral-200 bg-white text-ink hover:border-neutral-400",
+    );
+  return (
+    <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:px-0" role="group" aria-label="Filter by type">
+      <button type="button" onClick={() => onChange(undefined)} aria-pressed={!selected} className={chip(!selected)}>
+        All
+      </button>
+      {categories.map((c) => (
+        <button key={c.value} type="button" onClick={() => onChange(c.value)} aria-pressed={selected === c.value} className={chip(selected === c.value)}>
+          {ACTIVITY_META[c.value].label} · {c.count}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/** The app's PublicActivityPreview ("Activity Here") on a DPI result: up to three, then "+N more". */
+export function ActivityHere({ activities }: { activities: (NearbyPlace & { href: string })[] }) {
+  if (activities.length === 0) return null;
+  const visible = activities.slice(0, 3);
+  const remaining = activities.length - visible.length;
+  return (
+    <div className="space-y-2 rounded-xl bg-mist px-3.5 py-3">
+      <p className="text-[10px] font-semibold tracking-widest text-neutral-500 uppercase">Activity Here</p>
+      {visible.map((a) => (
+        <Link key={a.id} to={a.href} className="group flex items-center gap-3" aria-label={`View ${placeTitle(a)} details`}>
+          <PlaceIcon type={a.activityType} size="sm" />
+          <span className="min-w-0 flex-1">
+            <b className="block truncate text-sm font-semibold">{placeTitle(a)}</b>
+            {a.businessCategory && <span className="block truncate text-xs text-neutral-500">{a.businessCategory}</span>}
+          </span>
+          <ChevronRight className="size-4 text-neutral-400 transition group-hover:translate-x-0.5" />
+        </Link>
+      ))}
+      {remaining > 0 && <p className="text-xs text-neutral-500">+{remaining} more</p>}
+    </div>
   );
 }

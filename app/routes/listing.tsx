@@ -43,9 +43,6 @@ import {
 } from "~/lib/marketplace/types";
 import { breadcrumbs, seo } from "~/lib/seo";
 import { absoluteUrl } from "~/lib/site";
-import { PlaceCard } from "~/components/nearby";
-import { placesAround, placesAtProperty } from "~/lib/nearby/source.server";
-import { PLACES } from "~/lib/places";
 import type { Route } from "./+types/listing";
 
 export async function loader({ params }: Route.LoaderArgs) {
@@ -54,16 +51,7 @@ export async function loader({ params }: Route.LoaderArgs) {
   // Compare route params, not request.url (v8 data requests carry a .data suffix).
   const canonical = listingPath(listing);
   if (params.slug !== canonical.split("/").pop()) throw redirect(canonical, 301);
-  const point = listing.latitude != null && listing.longitude != null ? { lat: listing.latitude, lng: listing.longitude } : null;
-  // The search origin is resolved here on the server; only results and distances reach the page.
-  const [similar, around, atProperty] = await Promise.all([
-    similarListings(listing.id, 3),
-    point ? placesAround(point, listing.dpi ?? null, 4) : null,
-    listing.dpi ? placesAtProperty({ propertyId: listing.propertyId ?? null, dpi: listing.dpi }) : [],
-  ]);
-  const addr = listing.propertyAddress.toLowerCase();
-  const nearbyArea = PLACES.find((p) => p.live && p.kind === "area" && [p.name.toLowerCase(), ...p.aliases].some((a) => addr.includes(a)))?.slug ?? "ibadan";
-  return { listing, similar, around: around?.places ?? [], atProperty, nearbyArea };
+  return { listing, similar: await similarListings(listing.id, 3) };
 }
 
 const fmtDate = (d?: string | null) =>
@@ -130,7 +118,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 export default function ListingPage({ loaderData }: Route.ComponentProps) {
-  const { listing: l, similar, around, atProperty, nearbyArea } = loaderData;
+  const { listing: l, similar } = loaderData;
   const [img, setImg] = useState(0);
   const [mode, setMode] = useState<"physical" | "virtual">(l.inspectionType === "VIRTUAL" ? "virtual" : "physical");
   const [saved, setSaved] = useState(false);
@@ -408,35 +396,6 @@ export default function ListingPage({ loaderData }: Route.ComponentProps) {
               </div>
             </div>
           </Reveal>
-
-          {(around.length > 0 || atProperty.length > 0) && (
-            <Reveal className="rounded-2xl bg-white p-5 sm:p-6">
-              {atProperty.length > 0 && (
-                <div className="mb-6">
-                  <SectionLabel>Activities at This Property</SectionLabel>
-                  <ul className="mt-3 grid gap-2 sm:grid-cols-2">
-                    {atProperty.map((p) => (
-                      <li key={p.id}><PlaceCard place={p} compact /></li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {around.length > 0 && (
-                <>
-                  <div className="flex items-end justify-between gap-3">
-                    <SectionLabel>Around This Property</SectionLabel>
-                    <Link to={`/nearby?area=${nearbyArea}`} className="text-sm font-semibold text-urbn hover:underline">Explore This Area →</Link>
-                  </div>
-                  <p className="mt-1 text-xs text-neutral-500">Places recorded at nearby properties. Distances are approximate, from this property.</p>
-                  <ul className="mt-3 grid gap-2 sm:grid-cols-2">
-                    {around.map((p) => (
-                      <li key={p.id}><PlaceCard place={p} origin={{ kind: "property", label: "Around this property" }} compact /></li>
-                    ))}
-                  </ul>
-                </>
-              )}
-            </Reveal>
-          )}
         </div>
 
         {/* Sticky CTA */}

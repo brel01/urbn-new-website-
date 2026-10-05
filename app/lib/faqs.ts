@@ -82,7 +82,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
       },
       {
         q: "What Is Nearby?",
-        a: "Nearby shows the businesses, schools, clinics, restaurants and other places recorded at properties around a location. Choose an area or use your location (your browser only asks when you choose it), then filter by category and distance. Results are nearest first, and each place links to its property record. Nearby covers areas in Ibadan today, with more as coverage grows. It's on this website and in the app as Near Me.",
+        a: "Nearby shows the businesses, schools, clinics, restaurants and other places recorded at properties around you, nearest first. Use your location, search by name, filter by type and sort by Nearest, Newest or A–Z. Open a place for its details, contact options and directions. On the map, move around and tap Search this area. Nearby is on this website and in the Urbn app.",
         link: { label: "Explore Nearby", to: "/nearby" },
       },
       {

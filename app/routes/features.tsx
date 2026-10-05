@@ -48,7 +48,7 @@ const FEATURES: Feature[] = [
     id: "nearby",
     icon: Compass,
     title: "Nearby",
-    body: "See the businesses, schools, clinics, restaurants and other places recorded at properties around you, sorted by distance. Each one is linked to its property's DPI.",
+    body: "See the businesses, schools, clinics, restaurants and other places recorded at properties around you, nearest first. Open one for its details, contact options and directions.",
     highlight: "Discover What Is Around You",
     cta: { label: "Explore Nearby", to: "/nearby" },
     sampleScreen: true,

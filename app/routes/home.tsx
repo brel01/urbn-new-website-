@@ -15,7 +15,7 @@ import { SAMPLE_DPI } from "~/lib/dpi";
 import { HOME_FAQS } from "~/lib/faqs";
 import { featuredListings } from "~/lib/marketplace/source.server";
 import { searchNearby } from "~/lib/nearby/source.server";
-import { NearbyRadar } from "~/components/nearby-radar";
+import { NearbySection } from "~/components/nearby-section";
 import type { ListingCard as Card } from "~/lib/marketplace/types";
 import { faqJsonLd, seo } from "~/lib/seo";
 import { STORIES, coverFit } from "~/lib/stories";
@@ -31,7 +31,7 @@ export const meta: Route.MetaFunction = () =>
   });
 
 export async function loader() {
-  const [featured, nearby] = await Promise.all([featuredListings(7), searchNearby({ area: "bodija", limit: 12 })]);
+  const [featured, nearby] = await Promise.all([featuredListings(7), searchNearby({ area: "bodija", limit: 2 })]);
   return { featured, nearby };
 }
 
@@ -42,7 +42,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       <Hero />
       <Problem />
       <Identity />
-      <NearbyRadar initial={nearby} initialArea="bodija" />
+      <NearbySection preview={nearby} />
       <HowItWorks />
       <Audiences />
       <Growth listings={featured} />

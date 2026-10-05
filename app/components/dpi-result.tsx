@@ -7,7 +7,8 @@ import { appDeepLink, DPI_ERROR_COPY, SAMPLE_DPI, type DpiErrorCode, type DpiRec
 import { formatPrice, listingTypeLabel, type ListingType, type RentPeriod } from "~/lib/marketplace/types";
 import type { NearbyPlace } from "~/lib/nearby/types";
 import { EASE } from "./motion";
-import { PlaceCard } from "./nearby";
+import { activityPath } from "~/lib/nearby/types";
+import { ActivityHere } from "./nearby";
 import { ButtonLink } from "./ui";
 
 // App date format: DD MMM YYYY
@@ -119,6 +120,11 @@ export function VerifiedResult({ record, animate = true, activities = [] }: { re
               Open in Urbn
             </a>
           </div>
+          {activities.length > 0 && (
+            <div className="mt-5">
+              <ActivityHere activities={activities.map((a) => ({ ...a, href: activityPath(a) }))} />
+            </div>
+          )}
         </div>
       </div>
 
@@ -140,26 +146,6 @@ export function VerifiedResult({ record, animate = true, activities = [] }: { re
           <p className="mt-4 text-sm text-neutral-600">Check the details against the property and its documents before you commit.</p>
         )}
       </div>
-
-      {activities.length > 0 && (
-        <div className="rounded-card border border-neutral-200 p-6 lg:col-span-3">
-          <div className="flex flex-wrap items-end justify-between gap-2">
-            <div>
-              <h3 className="font-display text-xl">Activities at This Property</h3>
-              <p className="text-sm text-neutral-500">Public places recorded here. A property can be in use without a public activity.</p>
-            </div>
-            <Link to="/nearby" className="text-sm font-semibold text-urbn hover:underline">Explore Nearby →</Link>
-          </div>
-          <ul className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {activities.map((a) => (
-              <li key={a.id}>
-                <PlaceCard place={a} compact />
-                {record.unitCode && !a.unit && <p className="mt-1 px-1 text-xs text-neutral-500">About the whole property</p>}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
 
       {record.history.length > 0 && (
         <div className="rounded-card border border-neutral-200 p-6 lg:col-span-3">

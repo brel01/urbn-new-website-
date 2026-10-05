@@ -14,7 +14,6 @@ import {
   type CategoryCount,
   DEFAULT_RADIUS,
   MAX_RADIUS,
-  type NearbyOrigin,
   type NearbyPlace,
   type NearbyPlaceDetail,
   type NearbyQuery,
@@ -45,22 +44,17 @@ export function parseNearbyQuery(sp: URLSearchParams): NearbyQuery {
     q: sp.get("q")?.slice(0, 100) || undefined,
     sort: sort === "NEWEST" || sort === "ALPHABETICAL" ? (sort as NearbySort) : "NEAREST",
     page: clamp(num("page") ?? 1, 1, 500),
-    limit: clamp(num("limit") ?? 12, 1, 50),
+    limit: clamp(num("limit") ?? 20, 1, 50),
   };
 }
 
-type Resolved = { lat: number; lng: number; origin: NearbyOrigin; radius: number } | null;
-
-/** Turns an area or device point into a search origin. Area-wide (city) searches use a wide radius from the centre. */
-export function resolveOrigin(q: NearbyQuery): Resolved {
-  const radius = clamp(q.radius ?? DEFAULT_RADIUS, 1, MAX_RADIUS);
-  if (q.lat != null && q.lng != null) return { lat: q.lat, lng: q.lng, radius, origin: { kind: "device", label: "Near your location" } };
+/** The search centre: a point (device location or a map area), else a named area's centre, else central Ibadan. */
+export function resolveOrigin(q: NearbyQuery): { lat: number; lng: number; radius: number } | null {
+  const radius = clamp(q.radius ?? DEFAULT_RADIUS, 0.5, MAX_RADIUS);
+  if (q.lat != null && q.lng != null) return { lat: q.lat, lng: q.lng, radius };
   const place = getPlace(q.area ?? "ibadan");
   if (!place?.live || !place.center) return null;
-  if (place.kind === "city") {
-    return { lat: place.center[0], lng: place.center[1], radius: q.radius ? radius : MAX_RADIUS, origin: { kind: "area", label: `In ${place.name}`, note: `Distances from central ${place.name}` } };
-  }
-  return { lat: place.center[0], lng: place.center[1], radius, origin: { kind: "area", label: `Around ${place.name}`, note: `Distances from the centre of ${place.name}` } };
+  return { lat: place.center[0], lng: place.center[1], radius };
 }
 
 // --- live API mapping ----------------------------------------------------------
@@ -106,7 +100,7 @@ export async function searchNearby(q: NearbyQuery): Promise<NearbyResult> {
   const empty = (extra?: Partial<NearbyResult>): NearbyResult => ({
     places: [],
     meta: { page, limit, total: 0, totalPages: 0 },
-    origin: o?.origin ?? null,
+    origin: o ? { lat: o.lat, lng: o.lng } : null,
     radius: o?.radius ?? DEFAULT_RADIUS,
     source: usingLiveApi ? "api" : "sample",
     ...extra,
@@ -125,7 +119,7 @@ export async function searchNearby(q: NearbyQuery): Promise<NearbyResult> {
       // Deduplicate by activity id so a property- and unit-linked record never shows twice.
       const seen = new Set<string>();
       const places = r.data.activities.map(fromApi).filter((p) => !seen.has(p.id) && seen.add(p.id));
-      return { places, meta, origin: o.origin, radius: o.radius, source: "api" };
+      return { places, meta, origin: { lat: o.lat, lng: o.lng }, radius: o.radius, source: "api" };
     } catch {
       return empty({ error: "UNAVAILABLE" });
     }
@@ -146,7 +140,7 @@ export async function searchNearby(q: NearbyQuery): Promise<NearbyResult> {
   return {
     places: rows.slice((page - 1) * limit, page * limit),
     meta: { page, limit, total, totalPages: Math.ceil(total / limit) },
-    origin: o.origin,
+    origin: { lat: o.lat, lng: o.lng },
     radius: o.radius,
     source: "sample",
   };
@@ -190,14 +184,7 @@ export async function getNearbyPlace(id: string): Promise<NearbyPlaceDetail | nu
   return p ? { ...p, images: [] } : null;
 }
 
-/** Places around a point that isn't sent to the browser (a listing's location), excluding activities at that same property. */
-export async function placesAround(point: { lat: number; lng: number }, excludeDpi: string | null, limit = 4): Promise<NearbyResult> {
-  const res = await searchNearby({ lat: point.lat, lng: point.lng, radius: DEFAULT_RADIUS, limit: limit + 4 });
-  const places = res.places.filter((p) => p.property.dpi !== excludeDpi).slice(0, limit);
-  return { ...res, places, origin: { kind: "property", label: "Around this property" } };
-}
-
-/** Publicly eligible activities recorded at one property (GET /public/properties/:id/activity). */
+/** "Activity Here" on a DPI record: public activities at one property (GET /public/properties/:id/activity). */
 export async function placesAtProperty(ref: { propertyId?: string | null; dpi: string }): Promise<NearbyPlace[]> {
   if (usingLiveApi) {
     if (!ref.propertyId) return [];
