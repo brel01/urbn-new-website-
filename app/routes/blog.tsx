@@ -2,7 +2,8 @@ import { Link } from "react-router";
 import { CtaBanner } from "~/components/cta-banner";
 import { Reveal, Stagger, StaggerItem, WordsReveal } from "~/components/motion";
 import { breadcrumbs, seo } from "~/lib/seo";
-import { STORIES } from "~/lib/stories";
+import { absoluteUrl } from "~/lib/site";
+import { STORIES, coverFit } from "~/lib/stories";
 import type { Route } from "./+types/blog";
 
 export const meta: Route.MetaFunction = () =>
@@ -15,7 +16,7 @@ export const meta: Route.MetaFunction = () =>
         "@context": "https://schema.org",
         "@type": "Blog",
         name: "Urbn Stories",
-        blogPost: STORIES.map((s) => ({ "@type": "BlogPosting", headline: s.title, datePublished: s.date, url: `https://urbn.ng/blog/${s.slug}` })),
+        blogPost: STORIES.map((s) => ({ "@type": "BlogPosting", headline: s.title, datePublished: s.date, url: absoluteUrl(`/blog/${s.slug}`) })),
       },
       breadcrumbs([
         { name: "Home", path: "/" },
@@ -37,7 +38,7 @@ export default function Blog() {
         <Reveal className="mt-14">
           <Link to={`/blog/${lead.slug}`} className="group grid overflow-hidden rounded-card bg-ink text-white md:grid-cols-2">
             <div className="overflow-hidden">
-              <img src={lead.image} alt={lead.imageAlt} className="aspect-[1.5] size-full object-cover transition-transform duration-700 group-hover:scale-105" />
+              <img src={lead.image} alt={lead.imageAlt} className={`aspect-[1.5] size-full ${coverFit(lead)} transition-transform duration-700 group-hover:scale-105`} />
             </div>
             <div className="flex flex-col justify-center p-8 sm:p-12">
               <p className="text-sm text-blue-400">{lead.category} · {fmt(lead.date)}</p>
@@ -53,7 +54,7 @@ export default function Blog() {
             <StaggerItem key={s.slug} as="article">
               <Link to={`/blog/${s.slug}`} className="group block">
                 <div className="overflow-hidden rounded-card">
-                  <img src={s.image} alt={s.imageAlt} loading="lazy" className="aspect-[1.55] w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <img src={s.image} alt={s.imageAlt} loading="lazy" className={`aspect-[1.55] w-full ${coverFit(s)} transition-transform duration-700 group-hover:scale-105`} />
                 </div>
                 <p className="mt-5 text-sm text-urbn">{s.category} · {fmt(s.date)} · {s.readMins} min read</p>
                 <h2 className="mt-2 text-2xl group-hover:text-urbn">{s.title}</h2>

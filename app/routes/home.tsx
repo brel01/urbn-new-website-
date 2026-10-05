@@ -16,7 +16,7 @@ import { HOME_FAQS } from "~/lib/faqs";
 import { featuredListings } from "~/lib/marketplace/source.server";
 import type { ListingCard as Card } from "~/lib/marketplace/types";
 import { faqJsonLd, seo } from "~/lib/seo";
-import { STORIES } from "~/lib/stories";
+import { STORIES, coverFit } from "~/lib/stories";
 import type { Route } from "./+types/home";
 
 export const meta: Route.MetaFunction = () =>
@@ -541,10 +541,10 @@ function Stories() {
         </Reveal>
         <Reveal className="mt-8 md:mt-14">
           <Rail grid="md:grid-cols-3 md:gap-5" item="w-[80%] sm:w-[55%]" dark label="Stories">
-          {STORIES.map((s) => (
+          {STORIES.slice(0, 6).map((s) => (
               <Link key={s.slug} to={`/blog/${s.slug}`} className="group flex h-full flex-col rounded-card bg-white p-3 text-ink transition-transform duration-500 active:scale-[0.98] lg:hover:-translate-y-1.5">
                 <div className="overflow-hidden rounded-[0.9rem]">
-                  <img src={s.image} alt={s.imageAlt} loading="lazy" className="aspect-[1.55] w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <img src={s.image} alt={s.imageAlt} loading="lazy" className={`aspect-[1.55] w-full ${coverFit(s)} transition-transform duration-700 group-hover:scale-105`} />
                 </div>
                 <div className="flex flex-1 flex-col px-2 pt-4 pb-2">
                   <h3 className="font-display text-xl leading-tight">{s.title}</h3>
