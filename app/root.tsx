@@ -65,10 +65,13 @@ export default function App() {
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   const notFound = isRouteErrorResponse(error) && error.status === 404;
   const listingGone = notFound && error.data === "Listing Unavailable";
-  const heading = listingGone ? "Listing Unavailable" : notFound ? "Page Not Found" : "Something Went Wrong";
+  const activityGone = notFound && error.data === "Activity Unavailable";
+  const heading = listingGone ? "Listing Unavailable" : activityGone ? "Activity Unavailable" : notFound ? "Page Not Found" : "Something Went Wrong";
   let details = listingGone
     ? "This listing may have expired or been removed."
-    : notFound
+    : activityGone
+      ? "This activity is no longer available to view."
+      : notFound
       ? "This page may have moved or the link may be incorrect."
       : "Something went wrong on our side. Try again in a moment.";
   let stack: string | undefined;
@@ -87,14 +90,22 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
           <h1 className="mt-4 text-3xl sm:text-4xl">{heading}</h1>
           <p className="lede mx-auto mt-4 max-w-md">{details}</p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            {!listingGone && (
-              <ButtonLink to="/" variant="dark">
-                Go Home
+            {activityGone ? (
+              <ButtonLink to="/nearby" variant="dark">
+                Back to Nearby
               </ButtonLink>
+            ) : (
+              <>
+                {!listingGone && (
+                  <ButtonLink to="/" variant="dark">
+                    Go Home
+                  </ButtonLink>
+                )}
+                <ButtonLink to="/listings" variant={listingGone ? "dark" : "outline"}>
+                  Browse Listings
+                </ButtonLink>
+              </>
             )}
-            <ButtonLink to="/listings" variant={listingGone ? "dark" : "outline"}>
-              Browse Listings
-            </ButtonLink>
           </div>
           {stack && <pre className="mt-10 max-w-3xl overflow-x-auto rounded-xl bg-mist p-4 text-left text-xs">{stack}</pre>}
         </div>

@@ -1,4 +1,4 @@
-export type Faq = { q: string; a: string };
+export type Faq = { q: string; a: string; link?: { label: string; to: string } };
 export type FaqGroup = { id: string; title: string; items: Faq[] };
 
 export const FAQ_GROUPS: FaqGroup[] = [
@@ -82,7 +82,8 @@ export const FAQ_GROUPS: FaqGroup[] = [
       },
       {
         q: "What Is Nearby?",
-        a: "Nearby shows the businesses, schools, clinics, restaurants and other places recorded at properties around you, nearest first. Open Near Me in the Urbn app to see what's close and filter by type.",
+        a: "Nearby shows the businesses, schools, clinics, restaurants and other places recorded at properties around a location. Choose an area or use your location (your browser only asks when you choose it), then filter by category and distance. Results are nearest first, and each place links to its property record. Nearby covers areas in Ibadan today, with more as coverage grows. It's on this website and in the app as Near Me.",
+        link: { label: "Explore Nearby", to: "/nearby" },
       },
       {
         q: "What Is U-Beep?",

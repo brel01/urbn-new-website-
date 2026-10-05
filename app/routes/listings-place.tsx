@@ -81,6 +81,9 @@ export default function PlacePage({ loaderData }: Route.ComponentProps) {
             <ButtonLink to={`/listings?search=${encodeURIComponent(place.kind === "area" ? place.name : place.city)}#search`} variant="outline" size="sm">
               Filter & Search
             </ButtonLink>
+            <ButtonLink to={`/nearby?area=${place.kind === "city" ? "ibadan" : place.slug}`} variant="outline" size="sm">
+              Explore Nearby in {place.name}
+            </ButtonLink>
           </div>
           {listings.length > 0 ? (
             <Stagger className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3" as="ul">

@@ -76,6 +76,8 @@ export type DpiErrorCode =
 export type DpiEvent = { date: string; label: string };
 
 export type DpiRecord = {
+  /** Urbn property id, used to load the activities recorded at this property */
+  propertyId?: string;
   code: string;
   unitCode: string | null;
   name: string;

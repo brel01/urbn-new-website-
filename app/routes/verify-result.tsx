@@ -5,6 +5,7 @@ import { Reveal } from "~/components/motion";
 import { CheckBeforeCommit, VerifyHero } from "~/components/verify-sections";
 import { verifyPath } from "~/lib/dpi";
 import { lookupDpi } from "~/lib/marketplace/source.server";
+import { placesAtProperty } from "~/lib/nearby/source.server";
 import { seo } from "~/lib/seo";
 import type { Route } from "./+types/verify-result";
 
@@ -12,7 +13,10 @@ import type { Route } from "./+types/verify-result";
 // /p/dpi/:code[/:unit] (the https form of urbn://property/dpi/:code/:unit).
 export async function loader({ params }: Route.LoaderArgs) {
   const result = await lookupDpi(decodeURIComponent(params.code), params.unit ? decodeURIComponent(params.unit) : null);
-  return data(result, { status: result.status === "verified" ? 200 : result.error === "INVALID_DPI_FORMAT" ? 400 : 404 });
+  let activities = result.status === "verified" ? await placesAtProperty({ propertyId: result.record.propertyId, dpi: result.code }) : [];
+  // On a unit, keep that unit's activities plus property-level ones (labelled as about the property); never other units'.
+  if (result.status === "verified" && result.unitCode) activities = activities.filter((a) => !a.unit || a.unit.unitNumber === result.unitCode);
+  return data({ ...result, activities }, { status: result.status === "verified" ? 200 : result.error === "INVALID_DPI_FORMAT" ? 400 : 404 });
 }
 
 export const meta: Route.MetaFunction = ({ loaderData, params }) => {
@@ -42,7 +46,7 @@ export default function VerifyResultPage({ loaderData }: Route.ComponentProps) {
         )}
         <Reveal key={code}>
           {loaderData.status === "verified" ? (
-            <VerifiedResult record={loaderData.record} />
+            <VerifiedResult record={loaderData.record} activities={loaderData.activities} />
           ) : (
             <NoMatch code={code} error={loaderData.error} />
           )}
