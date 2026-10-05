@@ -11,7 +11,7 @@ export const meta: Route.MetaFunction = () =>
   seo({
     title: "Get the Urbn App | iOS & Android",
     description:
-      "Explore property records, browse listings, request inspections and manage housing activities with Urbn.",
+      "Explore property records, browse listings, discover what's nearby, request inspections and manage property activities with Urbn.",
     path: "/download",
     jsonLd: breadcrumbs([
       { name: "Home", path: "/" },
@@ -52,13 +52,13 @@ export default function Download() {
       <div className="absolute top-1/3 right-0 size-[40rem] rounded-full bg-urbn/30 blur-[120px]" aria-hidden />
       <div className="container-x relative grid items-center gap-16 py-20 lg:grid-cols-2 lg:py-28">
         <div>
-          <WordsReveal text="Your Housing Activities. One App." highlight={["One", "App."]} className="text-5xl leading-[1] sm:text-7xl" />
+          <WordsReveal text="Properties, Places and People. One App." highlight={["One", "App."]} className="text-5xl leading-[1] sm:text-7xl" />
           <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.8, ease: EASE }}>
             <p className="mt-6 max-w-lg text-lg text-neutral-400">
-              Find a home, check a property record or manage your property with Urbn.
+              Find a property, check its record, discover what's around you or manage what you own with Urbn.
             </p>
             <ul className="mt-8 space-y-3">
-              {["Check a property's Urbn record", "Watch available video walkthroughs", "Request physical or virtual inspections", "Message owners or managers", "Send property alerts with U-Beep"].map((t) => (
+              {["Check a property's Urbn record", "Discover places and activities nearby", "Watch available video walkthroughs", "Request physical or virtual inspections", "Message owners or managers", "Send property alerts with U-Beep"].map((t) => (
                 <li key={t} className="flex items-center gap-3">
                   <span className="grid size-6 place-items-center rounded-full bg-urbn"><Check className="size-3.5" /></span>
                   {t}

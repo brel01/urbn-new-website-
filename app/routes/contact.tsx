@@ -85,7 +85,7 @@ export default function Contact() {
             <label className="mt-5 block text-sm font-medium">
               What is your enquiry about?
               <select name="topic" className={field} defaultValue="renter">
-                <option value="renter">Finding a home</option>
+                <option value="renter">Finding a property</option>
                 <option value="owner">Managing a property</option>
                 <option value="agent">Agent support</option>
                 <option value="partner">Partnership or investment</option>

@@ -67,9 +67,9 @@ const AUDIENCES: Record<string, Audience> = {
     label: "For Property Owners",
     title: "Keep Your Property in View",
     highlight: "in View",
-    lede: "Connect your property's details, people and tenancy activities in one place.",
+    lede: "Connect your property's details, spaces, people and activities in one place.",
     metaTitle: "For Property Owners | Manage Your Property With Urbn",
-    metaDescription: "Connect property details, occupants, listings and tenancy records in one place with Urbn.",
+    metaDescription: "Connect property details, spaces, occupants, listings and tenancy records in one place with Urbn.",
     image: "/images/illus-owners.webp",
     pains: [
       { icon: UserX, title: "Property Details in Different Places", text: "Important information is hard to find." },
@@ -175,7 +175,7 @@ export default function AudiencePage() {
 
       <section className="container-x py-16 sm:py-24 lg:py-32">
         <Reveal>
-          <SectionHeading title="How Urbn Helps" lede="Property records, people and housing activities, connected in one place." />
+          <SectionHeading title="How Urbn Helps" lede="Property records, people and activities, connected in one place." />
         </Reveal>
         <Stagger className="mt-14 grid gap-5 sm:grid-cols-2">
           {a.gains.map((g) => (

@@ -86,7 +86,7 @@ export default function BlogPost({ loaderData }: Route.ComponentProps) {
           ))}
           <div className="flex flex-wrap gap-3 pt-6">
             <ButtonLink to="/verify" variant="dark">Check a DPI</ButtonLink>
-            <ButtonLink to="/listings" variant="outline">Browse Homes</ButtonLink>
+            <ButtonLink to="/listings" variant="outline">Browse Listings</ButtonLink>
           </div>
         </div>
       </article>

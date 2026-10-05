@@ -8,14 +8,15 @@ import type { AiQuota } from "~/lib/marketplace/types";
 const TIPS = [
   'Location: neighbourhood, city, or area (e.g. "Bodija", "Akobo, Ibadan")',
   'Budget: a range works best (e.g. "between 1 and 2 million naira per year")',
-  "Size: number of bedrooms and bathrooms",
-  "Property type: flat, duplex, detached house, mini flat, etc.",
-  "Purpose: renting, buying, short stay",
+  "Size: bedrooms, bathrooms or floor area",
+  "Property type: flat, duplex, mini flat, shop, office, warehouse, etc.",
+  "Purpose: renting, buying, leasing, short stay",
   "Must-haves: parking, 24hr security, borehole, furnished",
 ];
 const EXAMPLES = [
   "A 3-bedroom flat in Bodija, up to ₦2M a year, with parking.",
   "A 4-bedroom duplex in Samonda to buy, between ₦150M and ₦200M.",
+  "A shop on Ring Road to rent, up to ₦1.5M a year.",
   "A furnished apartment in Bodija for one week, up to ₦60k a night.",
 ];
 
@@ -42,7 +43,7 @@ export function AiSearchPanel({
 
   const submit = (value = q) => {
     const v = value.trim();
-    if (v.length < 5) return setLocalError("Describe the home you want using at least 5 characters.");
+    if (v.length < 5) return setLocalError("Describe the property you want using at least 5 characters.");
     setLocalError(null);
     onSearch(v);
   };
@@ -53,7 +54,7 @@ export function AiSearchPanel({
         <p className="flex items-center gap-1.5 text-sm font-bold">
           <Sparkles className="size-4 text-urbn" /> AI Search
         </p>
-        <p className="mt-0.5 text-[13px] text-neutral-500">Describe the home you're looking for.</p>
+        <p className="mt-0.5 text-[13px] text-neutral-500">Describe the property you're looking for.</p>
       </div>
 
       <form
@@ -63,7 +64,7 @@ export function AiSearchPanel({
         }}
         className="rounded-2xl bg-white p-2 ring-1 ring-black/5 focus-within:ring-2 focus-within:ring-urbn"
       >
-        <label htmlFor="ai-q" className="sr-only">Describe the home you're looking for</label>
+        <label htmlFor="ai-q" className="sr-only">Describe the property you're looking for</label>
         <div className="flex items-start gap-2">
           <span className="mt-1 grid size-9 shrink-0 place-items-center rounded-xl bg-urbn text-white">
             <Sparkles className="size-4" />
@@ -89,7 +90,7 @@ export function AiSearchPanel({
             disabled={busy || exhausted}
             className="mt-1 h-10 shrink-0 rounded-xl bg-ink px-4 text-sm font-semibold text-white transition hover:bg-neutral-800 active:scale-95 disabled:opacity-60"
           >
-            {busy ? "Searching…" : "Search Homes"}
+            {busy ? "Searching…" : "Search Listings"}
           </button>
         </div>
       </form>

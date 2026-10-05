@@ -73,7 +73,7 @@ export const meta: Route.MetaFunction = () =>
   seo({
     title: "What Is a DPI? Digital Property Identity Explained | Urbn",
     description:
-      "Learn how Digital Property Identity connects a property to its Urbn record, verification status and housing activities.",
+      "Learn how Digital Property Identity connects a property, from a home to a shop, school or office, to its Urbn record, verification status and activities.",
     path: "/dpi",
     jsonLd: [
       {
@@ -124,7 +124,7 @@ function Hero() {
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.8, ease: EASE }}>
             <p className="lede mt-6 max-w-xl">
               A Digital Property Identity (DPI) connects a property to its record on Urbn. It brings property details,
-              verification status and housing activities together, so the record can continue as people change.
+              verification status and the activities in its spaces together, so the record can continue as people change.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <ButtonLink to="/download" variant="dark">
@@ -489,8 +489,9 @@ function CodeExplained() {
             ))}
           </div>
           <p className="mx-auto mt-12 max-w-xl text-center text-sm text-neutral-400">
-            Individual units may have their own identifier linked to the property, for example{" "}
-            <span className="font-mono text-white">{SAMPLE_DPI}/U01</span>. Enter the full unit code to view that unit's
+            Individual spaces in a building, such as a flat, a shop or an office suite, may have their own unit identifier linked
+            to the property, for example{" "}
+            <span className="font-mono text-white">{SAMPLE_DPI}/U01</span>. Enter the full unit code to view that space's
             available record.
           </p>
         </div>

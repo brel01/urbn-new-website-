@@ -8,7 +8,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
     items: [
       {
         q: "What Is a DPI?",
-        a: "A Digital Property Identity (DPI) links a property to its record on Urbn. That record can include property details, verification status and housing activities.",
+        a: "A Digital Property Identity (DPI) links a property to its record on Urbn. That record can include property details, verification status, spaces and the activities that take place there, from homes to shops, schools and clinics.",
       },
       {
         q: "How Do I Check That a DPI Is Genuine?",
@@ -66,7 +66,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
   },
   {
     id: "features",
-    title: "Finding & Renting",
+    title: "Finding & Discovering",
     items: [
       {
         q: "Should I Inspect Before Renting?",
@@ -79,6 +79,10 @@ export const FAQ_GROUPS: FaqGroup[] = [
       {
         q: "How Do I Join a Community?",
         a: "Open the Community tab in the Urbn app to see the property or area communities available to your account, then join the one you need.",
+      },
+      {
+        q: "What Is Nearby?",
+        a: "Nearby shows the businesses, schools, clinics, restaurants and other places recorded at properties around you, nearest first. Open Near Me in the Urbn app to see what's close and filter by type.",
       },
       {
         q: "What Is U-Beep?",
@@ -124,6 +128,7 @@ export const VERIFY_FAQS = faqsFor(
 export const FEATURE_FAQS = faqsFor(
   "Should I Inspect Before Renting?",
   "Is AI Search Free?",
+  "What Is Nearby?",
   "How Do I Join a Community?",
   "What Is U-Beep?",
 );

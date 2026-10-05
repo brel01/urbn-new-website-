@@ -24,7 +24,7 @@ export const PLACES: Place[] = [
     aliases: ["ibadan", "oyo"],
     live: true,
     blurb:
-      "Urbn's first city. Browse homes across Ibadan and check each property's current Urbn record.",
+      "Urbn's first city. Browse properties across Ibadan and check each property's current Urbn record.",
   },
   {
     slug: "bodija",

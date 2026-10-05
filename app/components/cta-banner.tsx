@@ -30,7 +30,7 @@ export function CtaBanner({
   );
   body ??= waitlist
     ? "Find out when Urbn becomes available in your city."
-    : "Find a home, check a property record or bring your own property onto Urbn. Start with what you need today.";
+    : "Find a property, check its record or bring your own property onto Urbn. Start with what you need today.";
   return (
     <section className="container-x pb-20 sm:pb-28">
       <Reveal className="relative overflow-hidden rounded-[1.75rem] bg-ink px-6 pt-12 pb-40 sm:px-12 sm:py-16 lg:px-16">

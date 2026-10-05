@@ -23,7 +23,7 @@ export const meta: Route.MetaFunction = () =>
   seo({
     title: "Urbn | The Digital Infrastructure for Housing",
     description:
-      "Find homes in Ibadan, check property records and manage housing activities with Urbn, the digital infrastructure for housing.",
+      "Find properties in Ibadan, check property records and discover what's around you with Urbn, the digital infrastructure for housing.",
     path: "/",
     jsonLd: faqJsonLd(HOME_FAQS),
   });
@@ -95,7 +95,7 @@ function Hero() {
           <span className="size-1.5 animate-pulse rounded-full bg-success" /> Live in Ibadan
         </motion.span>
         <WordsReveal
-          text="A Home Has More Than an Address."
+          text="A Property Has More Than an Address."
           className="max-w-4xl text-[2.75rem] leading-[0.98] text-ink sm:text-7xl lg:text-[5.5rem]"
         />
         <motion.p
@@ -104,7 +104,7 @@ function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.8, ease: EASE }}
         >
-          Urbn connects a property's identity, people and housing activities. Find a home, check its record or manage yours.
+          Urbn connects a property's identity, people and activities, from homes and shops to offices, schools and clinics. Find a property, check its record or manage yours.
         </motion.p>
         <motion.div
           className="mt-6 w-full max-w-2xl lg:mt-8"
@@ -116,7 +116,8 @@ function Hero() {
           {/* phones: app-style quick actions */}
           <div className="no-scrollbar -mx-4 mt-4 flex gap-2 overflow-x-auto px-4 lg:hidden">
             {[
-              { to: "/listings", label: "Browse Homes", icon: Search },
+              { to: "/listings", label: "Browse Listings", icon: Search },
+              { to: "/features#nearby", label: "Discover Nearby", icon: MapPin },
               { to: "/dpi", label: "What Is DPI?", icon: ShieldCheck },
               { to: "/for-owners", label: "Add Your Property", icon: House },
             ].map((a) => (
@@ -128,7 +129,7 @@ function Hero() {
           <p className="mt-4 hidden items-center gap-1.5 rounded-full bg-white/90 px-4 py-2 text-sm text-neutral-700 shadow-sm backdrop-blur lg:inline-flex">
             No DPI code?
             <Link to="/listings" className="font-semibold text-urbn underline-offset-4 hover:underline">
-              Browse Homes in Ibadan →
+              Browse Listings in Ibadan →
             </Link>
           </p>
         </motion.div>
@@ -148,7 +149,7 @@ function Problem() {
     },
     {
       big: "Records That Stay Connected",
-      text: "Keep a property's details and housing activities linked as people come and go.",
+      text: "Keep a property's details and activities linked as people come and go.",
       img: "/images/stat-skyline.webp",
       alt: "Blue line illustration of a city skyline",
       tone: "bg-urbn text-white",
@@ -166,7 +167,7 @@ function Problem() {
       <Reveal>
         <SectionHeading
           title="Property Details Shouldn't Get Lost."
-          lede="Listings in one place. Agreements in another. Payment records buried in chats. Urbn brings housing activities into one connected record."
+          lede="Listings in one place. Agreements in another. Payment records buried in chats. Urbn brings property activities into one connected record."
         />
       </Reveal>
       <Reveal className="mt-8 md:mt-14">
@@ -392,7 +393,7 @@ function Audiences() {
       icon: House,
       title: "Property Owners",
       kicker: "Keep Your Property in View",
-      text: "Bring property details, occupants and tenancy records into one place.",
+      text: "Bring property details, spaces, occupants and tenancy records into one place.",
       link: "Explore Owner Tools",
       img: "/images/illus-owners.webp",
       to: "/for-owners",
@@ -425,7 +426,7 @@ function Audiences() {
         <SectionHeading
           eyebrow="Who Urbn Is For"
           title="Built for the People Around Every Property"
-          lede="Owners, renters and managers can keep their housing activities connected."
+          lede="Owners, renters, managers and the businesses and services inside every building can keep their property activities connected."
         />
       </Reveal>
       <Reveal className="mt-8 md:mt-14">
@@ -469,7 +470,7 @@ function Growth({ listings }: { listings: Card[] }) {
   return (
     <section className="pt-4 pb-16 sm:pb-24 lg:pt-8 lg:pb-32">
       <Reveal className="container-x">
-        <SectionHeading title="Start With Ibadan" lede="Explore homes by area or see available listings on the map." />
+        <SectionHeading title="Start With Ibadan" lede="Explore properties by area or see available listings on the map." />
       </Reveal>
       <div className="mt-8 lg:mt-12">
         <IbadanMap listings={listings} />
@@ -508,7 +509,7 @@ function FeaturedListings({ listings }: { listings: Card[] }) {
             <SectionHeading
               align="left"
               eyebrow="Listings"
-              title="Homes to Explore"
+              title="Properties to Explore"
               lede="Browse available listings and check each property's current Urbn verification status."
             />
           </Reveal>
@@ -536,7 +537,7 @@ function Stories() {
     <section className="bg-ink py-16 text-white sm:py-24 lg:py-32">
       <div className="container-x">
         <Reveal>
-          <SectionHeading dark title="Stories From Urbn" lede="Product updates, housing insights and the people building Urbn." />
+          <SectionHeading dark title="Stories From Urbn" lede="Product updates, property insights and the people building Urbn." />
         </Reveal>
         <Reveal className="mt-8 md:mt-14">
           <Rail grid="md:grid-cols-3 md:gap-5" item="w-[80%] sm:w-[55%]" dark label="Stories">

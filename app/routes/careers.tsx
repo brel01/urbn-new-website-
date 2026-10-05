@@ -26,11 +26,11 @@ export default function Careers() {
   return (
     <>
       <section className="container-x py-16 sm:py-24">
-        <WordsReveal text="Help Build What Housing Needs Next." highlight={["Housing"]} className="max-w-4xl text-5xl leading-[1] sm:text-7xl" />
+        <WordsReveal text="Build the Digital Infrastructure for Housing." highlight={["Housing."]} className="max-w-4xl text-5xl leading-[1] sm:text-7xl" />
         <Reveal className="mt-6 max-w-xl">
           <p className="lede">
-            We're connecting properties to their people, records and everyday activities. Join us in building the digital
-            infrastructure for housing.
+            We're connecting every kind of property, from homes and shops to schools and clinics, to its people, records
+            and everyday activities. Come and build it with us.
           </p>
         </Reveal>
         <Stagger className="mt-14 grid gap-5 md:grid-cols-3">

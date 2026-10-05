@@ -7,7 +7,7 @@ export const SITE = {
   url: import.meta.env.VITE_SITE_URL ?? "https://urbn.ng",
   tagline: "The digital infrastructure for housing",
   description:
-    "Urbn connects property records, listings and housing activities in one app. Find a home, check its identity and manage your property.",
+    "Urbn connects property records, listings and everyday property activities in one app. Find a property, check its identity, discover what's nearby and manage what you own.",
   email: "hello@urbn.ng", // TODO: confirm inbox
   locale: "en_NG",
   twitter: "@urbn_hq",

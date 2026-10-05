@@ -386,3 +386,46 @@ export function AppHomeScreen() {
     </div>
   );
 }
+
+/** Nearby: businesses, schools, clinics and other activities recorded at nearby properties, nearest first. */
+export function NearbyScreen() {
+  const { ref, step } = useLoop(4, 1600);
+  const chips = ["All", "Business", "School", "Clinic", "Restaurant"];
+  const places = [
+    ["Mama Tunde's Kitchen", "Restaurant", "0.3 km"],
+    ["Bright Future Academy", "School", "0.6 km"],
+    ["Bodija Family Clinic", "Clinic", "0.9 km"],
+    ["Adeola Pharmacy", "Business", "1.2 km"],
+  ];
+  return (
+    <div ref={ref} className="flex h-full flex-col px-4">
+      <Title>Near Me</Title>
+      <div className="no-scrollbar mt-4 flex gap-1.5 overflow-hidden">
+        {chips.map((c, i) => (
+          <span key={c} className={clsx("shrink-0 rounded-full px-2.5 py-1 text-[9.5px] font-semibold", i === 0 ? "bg-white text-ink" : "bg-white/10 text-white/70")}>
+            {c}
+          </span>
+        ))}
+      </div>
+      <div className="mt-3 space-y-2">
+        {places.map(([name, type, km], i) => (
+          <motion.div
+            key={name}
+            animate={{ opacity: step >= Math.min(i, 3) ? 1 : 0.25, y: step >= Math.min(i, 3) ? 0 : 6 }}
+            className="flex items-center gap-2.5 rounded-xl bg-white/[0.07] p-2.5 text-[10px]"
+          >
+            <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-urbn">
+              <MapPin className="size-3.5" />
+            </span>
+            <span className="min-w-0">
+              <b className="block truncate">{name}</b>
+              <span className="text-white/60">{type}</span>
+            </span>
+            <span className="ml-auto shrink-0 text-white/60">{km}</span>
+          </motion.div>
+        ))}
+      </div>
+      <p className="mt-auto mb-6 text-center text-[10px] text-white/50">Nearest First · Bodija</p>
+    </div>
+  );
+}

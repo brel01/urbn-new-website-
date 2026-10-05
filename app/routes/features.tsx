@@ -1,5 +1,5 @@
 import { clsx } from "clsx";
-import { BellRing, CalendarCheck, MapPin, MessageSquareText, Play, Sparkles, Users } from "lucide-react";
+import { BellRing, CalendarCheck, Compass, MapPin, MessageSquareText, Play, Sparkles, Users } from "lucide-react";
 import { motion } from "motion/react";
 import type { ComponentType, ReactNode } from "react";
 import { CtaBanner } from "~/components/cta-banner";
@@ -11,6 +11,7 @@ import {
   ChatScreen,
   CommunityScreen,
   LocationScreen,
+  NearbyScreen,
   Phone,
   UBeepScreen,
   VideoScreen,
@@ -41,6 +42,14 @@ const FEATURES: Feature[] = [
     screen: <UBeepScreen />,
   },
   {
+    id: "nearby",
+    icon: Compass,
+    title: "Nearby",
+    body: "See the businesses, schools, clinics, restaurants and other places recorded at properties around you, sorted by distance. Each one is linked to its property's DPI.",
+    highlight: "Discover What's Around You",
+    screen: <NearbyScreen />,
+  },
+  {
     id: "video-listings",
     icon: Play,
     title: "Video Listings",
@@ -69,7 +78,7 @@ const FEATURES: Feature[] = [
     icon: Sparkles,
     title: "AI Search",
     body: "Enter an area, budget and must-haves in your own words. Urbn searches the available listings for matches.",
-    highlight: "Describe the Home You Want",
+    highlight: "Describe the Property You Want",
     screen: <AiScreen />,
   },
   {
@@ -92,9 +101,9 @@ const FEATURES: Feature[] = [
 
 export const meta: Route.MetaFunction = () =>
   seo({
-    title: "Urbn Features | Property Records, Inspections & More",
+    title: "Urbn Features | Property Records, Nearby, Inspections & More",
     description:
-      "Explore Urbn's tools for property records, listings, inspection booking, direct messaging and everyday housing activities.",
+      "Explore Urbn's tools for property records, listings, Nearby discovery, inspection booking, direct messaging and everyday property activities.",
     path: "/features",
     jsonLd: [
       {
@@ -103,7 +112,7 @@ export const meta: Route.MetaFunction = () =>
         name: "Urbn",
         operatingSystem: "iOS, Android",
         applicationCategory: "LifestyleApplication",
-        description: "Check property records, find homes, request inspections and manage everyday housing activities with Urbn.",
+        description: "Check property records, find properties, discover what's nearby, request inspections and manage everyday property activities with Urbn.",
         featureList: FEATURES.map((f) => f.title).join(", "),
         offers: { "@type": "Offer", price: "0", priceCurrency: "NGN" },
       },
@@ -196,7 +205,7 @@ function Hero() {
         <div className="absolute inset-0 bg-mist/75 lg:hidden" />
       </motion.div>
       <div className="container-x flex min-h-[22rem] flex-col justify-end pt-20 pb-10 sm:min-h-[34rem] sm:pt-24 sm:pb-14 lg:justify-center lg:py-28">
-        <WordsReveal text="Housing Has More Than One Moving Part." highlight={["Moving", "Part."]} className="max-w-xl text-[2.75rem] leading-[1] sm:text-6xl" />
+        <WordsReveal text="Every Property Has More Than One Moving Part." highlight={["Moving", "Part."]} className="max-w-xl text-[2.75rem] leading-[1] sm:text-6xl" />
         <motion.p
           className="mt-6 max-w-sm text-lg text-neutral-700"
           initial={{ opacity: 0, y: 10 }}
@@ -254,7 +263,7 @@ function ExploreBand() {
           viewport={{ once: true }}
           transition={{ delay: 0.3, duration: 0.8, ease: EASE }}
         >
-          <h2 className="font-display text-2xl sm:text-3xl">Bring Your Housing Activities Together</h2>
+          <h2 className="font-display text-2xl sm:text-3xl">Bring Your Property Activities Together</h2>
           <p className="mt-2 text-sm text-neutral-600">
             Find a property, arrange an inspection and keep track of what comes next.
           </p>

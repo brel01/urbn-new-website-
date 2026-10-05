@@ -22,9 +22,9 @@ export const meta: Route.MetaFunction = ({ loaderData }) => {
   const { place, listings } = loaderData;
   const where = place.kind === "area" ? `${place.name}, ${place.city}` : place.name;
   return seo({
-    title: place.live ? `Homes for Rent & Sale in ${where} | Urbn` : `Urbn in ${where} | Get Launch Updates`,
+    title: place.live ? `Property for Rent & Sale in ${where} | Urbn` : `Urbn in ${where} | Get Launch Updates`,
     description: place.live
-      ? `Browse homes in ${where}. Compare listing details and check property records on Urbn.`
+      ? `Browse homes, shops, offices and other spaces in ${where}. Compare listing details and check property records on Urbn.`
       : `Get updates when Urbn becomes available in ${where}.`,
     path: `/listings/in/${place.slug}`,
     jsonLd: breadcrumbs([
@@ -49,7 +49,7 @@ export default function PlacePage({ loaderData }: Route.ComponentProps) {
             </p>
             <h1 className="mt-4 max-w-3xl text-5xl leading-[1] sm:text-7xl">
               {place.live ? (
-                <>Find a Home in <span className="text-blue-400">{place.name}</span></>
+                <>Find a Property in <span className="text-blue-400">{place.name}</span></>
               ) : (
                 <>Urbn Is Coming to <span className="text-blue-400">{place.name}</span></>
               )}
@@ -76,7 +76,7 @@ export default function PlacePage({ loaderData }: Route.ComponentProps) {
         <section className="container-x py-16 sm:py-24">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <h2 className="text-3xl">
-              {listings.length} {listings.length === 1 ? "home" : "homes"} in {where}
+              {listings.length} {listings.length === 1 ? "property" : "properties"} in {where}
             </h2>
             <ButtonLink to={`/listings?search=${encodeURIComponent(place.kind === "area" ? place.name : place.city)}#search`} variant="outline" size="sm">
               Filter & Search
