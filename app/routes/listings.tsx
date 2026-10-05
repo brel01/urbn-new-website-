@@ -53,9 +53,9 @@ export function shouldRevalidate({ currentUrl, nextUrl, defaultShouldRevalidate 
 
 export const meta: Route.MetaFunction = ({ loaderData }) =>
   seo({
-    title: "Homes for Rent & Sale in Ibadan | Urbn",
+    title: "Property for Rent & Sale in Ibadan | Urbn",
     description:
-      "Browse homes for rent or sale in Ibadan. Search by area, compare listing details and check each property's Urbn record.",
+      "Browse homes, shops, offices and other spaces for rent or sale in Ibadan. Search by area, compare listing details and check each property's Urbn record.",
     path: "/listings",
     jsonLd: [
       {
@@ -363,15 +363,15 @@ function Hero() {
         <div className="absolute inset-0 bg-mist/75 lg:hidden" />
       </motion.div>
       <div className="container-x flex min-h-[18rem] flex-col justify-end pt-16 pb-8 sm:min-h-[30rem] sm:pt-24 sm:pb-12 lg:min-h-[32rem] lg:justify-center lg:py-20">
-        <WordsReveal text="Find a Home That Fits." className="max-w-xl text-[2.6rem] leading-[1] sm:text-7xl" />
+        <WordsReveal text="Find the Right Property for You." className="max-w-xl text-[2.6rem] leading-[1] sm:text-7xl" />
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.8, ease: EASE }}>
           <p className="mt-3 max-w-md text-[15px] text-neutral-700 sm:mt-6 sm:text-lg">
-            Explore available homes, compare the details and check each property's current verification status before
-            taking the next step.
+            Explore available homes, shops, offices and other spaces, compare the details and check each property's
+            current verification status before taking the next step.
           </p>
           <div className="mt-8 hidden flex-wrap gap-3 sm:flex">
             <a href="#search" className="inline-flex h-11 items-center rounded-[10px] bg-ink px-5 text-[15px] font-medium text-white transition hover:bg-neutral-800">
-              Search Homes
+              Search Listings
             </a>
             <ButtonLink to="/dpi" variant="dark" arrow={false}>
               What Is DPI?
@@ -501,7 +501,7 @@ function EmptyState({
     <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-neutral-300 px-6 py-20 text-center">
       {mode === "ai" ? (
         <>
-          <p className="font-semibold">{searched ? "No homes match your search." : "Describe the home you're looking for above."}</p>
+          <p className="font-semibold">{searched ? "No properties match your search." : "Describe the property you're looking for above."}</p>
           {searched && <p className="text-sm text-neutral-500">Try a different area, budget or feature.</p>}
         </>
       ) : filterCount > 0 ? (

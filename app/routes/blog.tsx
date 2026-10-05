@@ -8,7 +8,7 @@ import type { Route } from "./+types/blog";
 export const meta: Route.MetaFunction = () =>
   seo({
     title: "Stories & Updates From Urbn",
-    description: "Housing insights, product updates and news from the team building the digital infrastructure for housing.",
+    description: "Property insights, product updates and news from the team building the digital infrastructure for housing.",
     path: "/blog",
     jsonLd: [
       {
@@ -32,7 +32,7 @@ export default function Blog() {
     <>
       <section className="container-x pt-16 pb-24 sm:pt-24">
         <WordsReveal text="Stories From Urbn" className="text-6xl sm:text-8xl" />
-        <p className="lede mt-4 max-w-xl">Housing insights, product updates and the people behind Urbn.</p>
+        <p className="lede mt-4 max-w-xl">Property insights, product updates and the people behind Urbn.</p>
 
         <Reveal className="mt-14">
           <Link to={`/blog/${lead.slug}`} className="group grid overflow-hidden rounded-card bg-ink text-white md:grid-cols-2">

@@ -29,7 +29,7 @@ export const STORIES: Story[] = [
       },
       {
         h: "What you can do today",
-        p: "Browse homes for rent and sale across Ibadan, check a property's record, request physical or virtual inspections and message owners or managers in the app. Owners and managers can register a property and follow its verification status in Urbn.",
+        p: "Browse homes, shops and offices for rent and sale across Ibadan, check a property's record, discover businesses and services nearby, request physical or virtual inspections and message owners or managers in the app. Owners and managers can register a property and follow its verification status in Urbn.",
       },
       {
         h: "Why we're starting in Ibadan",

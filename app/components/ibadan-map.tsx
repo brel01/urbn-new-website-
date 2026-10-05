@@ -214,9 +214,9 @@ export function IbadanMap({ listings }: { listings: ListingCard[] }) {
           </AnimatePresence>
         </div>
       </div>
-      {/* phones: swipe through the pinned homes, map-app style */}
+      {/* phones: swipe through the pinned listings, map-app style */}
       <div className="container-x relative z-10 -mt-14 md:hidden">
-        <Rail item="w-[72%] sm:w-[45%]" label="Homes on the Map">
+        <Rail item="w-[72%] sm:w-[45%]" label="Properties on the Map">
           {pins.map((l) => (
             <MapCard key={l.id} listing={l} />
           ))}
@@ -303,7 +303,7 @@ function MapFilters() {
       </label>
       <button
         type="submit"
-        aria-label="Search Homes"
+        aria-label="Search Listings"
         className="m-1 grid h-12 shrink-0 place-items-center gap-2 rounded-xl bg-urbn px-4 text-white transition hover:bg-blue-600 active:scale-95 sm:size-12 sm:rounded-full sm:px-0"
       >
         <Search className="size-5" />

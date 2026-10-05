@@ -139,7 +139,8 @@ export const LISTING_TYPE_CHIPS: { label: string; value: ListingType | undefined
   { label: "Short Term", value: "ShortTermRental" },
 ];
 
-export const BUILDING_TYPES = ["Apartment", "Duplex", "Terrace", "Bungalow", "MiniFlat", "Penthouse", "Detached", "SemiDetached", "BlockOfFlats", "Townhouse"];
+// Mirrors the app filter (residential, then OfficeBuilding/Warehouse/Shop), plus the residential types seed data uses.
+export const BUILDING_TYPES = ["Apartment", "Duplex", "Terrace", "Bungalow", "MiniFlat", "Penthouse", "Detached", "SemiDetached", "BlockOfFlats", "Townhouse", "OfficeBuilding", "Warehouse", "Shop"];
 export const SECURITY_FEATURES = ["AlarmSystem", "GatedEntry", "SecurityCameras", "MotionLights", "GuardHouse"];
 export const OUTDOOR_FEATURES = ["Pool", "Deck", "Patio", "Porch", "Gazebo", "Shed"];
 export const NEARBY_PLACES = ["school", "hospital", "gas_station", "police", "restaurant", "bank", "place_of_worship", "shopping_mall", "bus_station", "pharmacy"];

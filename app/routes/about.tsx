@@ -10,7 +10,7 @@ import type { Route } from "./+types/about";
 export const meta: Route.MetaFunction = () =>
   seo({
     title: "About Urbn | The Digital Infrastructure for Housing",
-    description: "Urbn connects property identities, people and housing activities, starting with Ibadan.",
+    description: "Urbn connects property identities, people and the activities in every space, from homes and shops to schools and clinics, starting with Ibadan.",
     path: "/about",
     jsonLd: breadcrumbs([
       { name: "Home", path: "/" },
@@ -53,12 +53,13 @@ export default function About() {
       <section className="bg-ink py-16 text-white sm:py-24 lg:py-32">
         <div className="container-x grid gap-12 lg:grid-cols-2">
           <Reveal>
-            <h2 className="text-4xl leading-[1.05] sm:text-5xl">Housing Information Is Scattered.</h2>
+            <h2 className="text-4xl leading-[1.05] sm:text-5xl">Property Information Is Scattered.</h2>
           </Reveal>
           <Reveal delay={0.1} className="space-y-5 text-lg leading-relaxed text-neutral-400">
             <p>An agreement in a folder. A payment receipt in a chat. An update known only to the manager.</p>
             <p className="text-white">
-              Urbn connects these housing activities around the property, with Digital Property Identity as the foundation.
+              Urbn connects them around the property, whether it's a home, a shop, an office or a school, with Digital
+              Property Identity as the foundation.
             </p>
           </Reveal>
         </div>
@@ -66,7 +67,7 @@ export default function About() {
           {[
             { v: "Ibadan", l: "Our Starting Point" },
             { v: "Digital Property Identity", l: "Our Foundation" },
-            { v: "Connecting Properties, People and Housing Activities", l: "Our Focus" },
+            { v: "Connecting Properties, People and Activities", l: "Our Focus" },
           ].map((s, i) => (
             <Reveal key={i} delay={i * 0.1}>
               <p className="font-display text-3xl leading-tight">{s.v}</p>

@@ -34,6 +34,9 @@ export function interpretQuery(raw: string): { filters: ListingFilters; understo
     [/terrace/, "Terrace"],
     [/penthouse/, "Penthouse"],
     [/town\s?house/, "Townhouse"],
+    [/\boffices?\b|office space/, "OfficeBuilding"],
+    [/\bwarehouses?\b/, "Warehouse"],
+    [/\b(shops?|stores?|kiosks?)\b/, "Shop"],
     [/\b(flat|apartment)s?\b/, "Apartment"],
   ];
   for (const [re, t] of types) {
