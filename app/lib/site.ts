@@ -33,9 +33,15 @@ export const NAV = [
   { label: "Property Identity", to: "/dpi" },
   { label: "Verify a Property", to: "/verify" },
   { label: "Listings", to: "/listings" },
+  { label: "Nearby", to: "/nearby" },
   { label: "Features", to: "/features" },
+] as const;
+
+/** Secondary links grouped under "More" in the desktop header (still in the footer). */
+export const NAV_MORE = [
   { label: "Blog", to: "/blog" },
   { label: "FAQs", to: "/faq" },
+  { label: "Contact", to: "/contact" },
 ] as const;
 
 export const FOOTER = [
@@ -57,6 +63,7 @@ export const FOOTER = [
       { label: "Property Identity", to: "/dpi" },
       { label: "Verify a Property", to: "/verify" },
       { label: "Browse Listings", to: "/listings" },
+      { label: "Nearby", to: "/nearby" },
       { label: "Features", to: "/features" },
       { label: "For Renters", to: "/for-renters" },
       { label: "For Owners", to: "/for-owners" },

@@ -50,6 +50,16 @@ The website also exposes thin proxies for the browser: `GET /api/listings`, `POS
 
 Listing URLs are `/listings/:id/:slug`. A wrong or missing slug 301-redirects to the canonical URL.
 
+## Nearby (public place discovery)
+
+`/nearby` lets anyone choose an area (or use their location, only when they tap it) and discover the businesses, schools, clinics and other activities recorded at properties around it. `/nearby/activity/:id/:slug` shows one place and links to its property record at `/verify/{dpi}`. The same data powers the homepage radar, "Around This Property" on listings and "Activities at This Property" on DPI records.
+
+With `URBN_API_URL` set, it uses the app's public Near Me endpoints: `GET /activities/nearby` (radius 1–25 km, nearest first), `GET /activities/categories`, `GET /activities/:id` and `GET /public/properties/:id/activity`. Closed and private activities 404 there, so they never appear on the site. Without it, labelled sample places in `app/lib/nearby/seed.ts` are served through the same filters.
+
+Privacy: device coordinates stay in browser state. They're never put in page URLs, and point searches are sent with `Cache-Control: no-store`. Manual area searches use shareable `?area=` links, and distances say what they're measured from.
+
+To confirm with the backend before launch: area centres (`center` in `app/lib/places.ts`), public category mapping, an activity deep link for "Open in Urbn" (the site links to the app download until one exists), and whether property coordinates may be shown on maps and directions.
+
 ## DPI codes
 
 DPI codes follow the backend and app format: `LGA-NNNN-C` (e.g. `IBADAN-NORTH-0041-U`), optionally followed by `/UNIT` (e.g. `/U01`). `C` is the mod-23 check character from `geo.service`/`dpi.helpers.ts`, so typos are caught before a lookup. `app/lib/dpi.ts` ports `computeDpiCheckChar`, `isValidDpiFormat` and `parseDpiIdentifier` exactly (it passes the app's `AKINYELE-0004-S` fixture).

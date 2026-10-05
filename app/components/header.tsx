@@ -1,8 +1,9 @@
 import { clsx } from "clsx";
 import { motion, useMotionValueEvent, useScroll } from "motion/react";
-import { useState } from "react";
-import { Link, NavLink } from "react-router";
-import { NAV } from "~/lib/site";
+import { ChevronDown } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Link, NavLink, useLocation } from "react-router";
+import { NAV, NAV_MORE } from "~/lib/site";
 import { Logo } from "./logo";
 import { EASE } from "./motion";
 import { ButtonLink } from "./ui";
@@ -67,6 +68,9 @@ export function Header() {
                   </NavLink>
                 </li>
               ))}
+              <li>
+                <MoreMenu />
+              </li>
             </ul>
           </nav>
 
@@ -86,5 +90,49 @@ export function Header() {
       </motion.header>
       <div aria-hidden className="h-14 lg:h-[4.5rem]" />
     </>
+  );
+}
+
+/** "More" dropdown for secondary links. Closes on outside click, Escape and navigation. */
+function MoreMenu() {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const { pathname } = useLocation();
+  const active = NAV_MORE.some((l) => pathname.startsWith(l.to));
+  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: PointerEvent) => !ref.current?.contains(e.target as Node) && setOpen(false);
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("pointerdown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        aria-haspopup="true"
+        className={clsx("inline-flex items-center gap-1 rounded-full px-3.5 py-2 text-[14.5px] transition-colors", active || open ? "text-ink" : "text-neutral-600 hover:text-ink")}
+      >
+        More <ChevronDown className={clsx("size-4 transition-transform", open && "rotate-180")} />
+      </button>
+      {open && (
+        <ul className="absolute top-full right-0 mt-2 w-44 rounded-2xl bg-white p-1.5 shadow-xl ring-1 ring-black/5">
+          {NAV_MORE.map((l) => (
+            <li key={l.to}>
+              <NavLink to={l.to} className={({ isActive }) => clsx("block rounded-xl px-3 py-2 text-sm hover:bg-mist", isActive && "bg-mist font-semibold")}>
+                {l.label}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }

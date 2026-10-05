@@ -8,6 +8,7 @@ const STATIC: [string, string, number][] = [
   ["/dpi", "monthly", 0.9],
   ["/verify", "monthly", 0.9],
   ["/listings", "daily", 0.9],
+  ["/nearby", "daily", 0.8],
   ["/features", "monthly", 0.8],
   ["/for-renters", "monthly", 0.7],
   ["/for-owners", "monthly", 0.7],

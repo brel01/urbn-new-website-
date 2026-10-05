@@ -6,6 +6,7 @@
 import { type DpiLookup, type DpiErrorCode, isValidDpiFormat } from "../dpi";
 import { PLACES } from "../places";
 import { interpretQuery } from "./interpret";
+import { SAMPLE_PROPERTIES } from "../nearby/seed";
 import { SEED_LISTINGS } from "./seed";
 import type { AiSearchResult, ListingCard, ListingDetail, ListingFilters, Paged } from "./types";
 import { listingPath, roomCount } from "./types";
@@ -14,7 +15,7 @@ const API = process.env.URBN_API_URL?.replace(/\/$/, "");
 const TOKEN = process.env.URBN_API_TOKEN; // optional service token for AI search
 export const usingLiveApi = Boolean(API);
 
-async function api<T>(path: string, init?: RequestInit & { query?: Record<string, unknown> }): Promise<T> {
+export async function api<T>(path: string, init?: RequestInit & { query?: Record<string, unknown> }): Promise<T> {
   const url = new URL(API + path);
   for (const [k, v] of Object.entries(init?.query ?? {})) if (v !== undefined && v !== "" && v !== null) url.searchParams.set(k, String(v));
   const res = await fetch(url, {
@@ -29,7 +30,7 @@ async function api<T>(path: string, init?: RequestInit & { query?: Record<string
 // ---------------------------------------------------------------------------
 // Local query engine over seed data (mirrors the API's filter semantics).
 
-const haversineKm = (a: [number, number], b: [number, number]) => {
+export const haversineKm = (a: [number, number], b: [number, number]) => {
   const R = 6371, toRad = (d: number) => (d * Math.PI) / 180;
   const dLat = toRad(b[0] - a[0]), dLng = toRad(b[1] - a[1]);
   const h = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(a[0])) * Math.cos(toRad(b[0])) * Math.sin(dLng / 2) ** 2;
@@ -103,6 +104,8 @@ export async function featuredListings(limit = 6): Promise<ListingCard[]> {
 }
 
 type PublicProperty = {
+  /** Present in PUBLIC mode only; TRACEABLE records don't expose it. */
+  id: string;
   title: string; address: string; houseNumber: string | null; city: string; state: string; lga: string | null;
   dpi: string | null; isVerified: boolean; thumbnailUrl: string | null; description: string | null;
   mediaSections: { images: { fileUrl: string }[] }[]; securityFeatures: string[]; outdoorFeatures: string[];
@@ -183,7 +186,7 @@ export async function aiSearch(query: string): Promise<AiSearchResult> {
 
 function seedLookup(code: string, unitCode: string | null): DpiLookup {
   const l = SEED_LISTINGS.find((x) => x.dpi === code);
-  if (!l) return { status: "error", code, unitCode, error: "PROPERTY_NOT_FOUND" };
+  if (!l) return sampleActivityPropertyLookup(code, unitCode);
   if (unitCode && !/^U\d{2}$/.test(unitCode)) return { status: "error", code, unitCode, error: "UNIT_NOT_FOUND" };
   const registered = l.createdAt.slice(0, 10);
   const day = (offset: number) => new Date(Date.parse(registered) - offset * 864e5).toISOString().slice(0, 10);
@@ -194,6 +197,7 @@ function seedLookup(code: string, unitCode: string | null): DpiLookup {
     record: {
       code,
       unitCode,
+      propertyId: l.id,
       name: l.propertyTitle,
       houseNo: l.propertyAddress.match(/^\d+\w?/)?.[0] ?? null,
       address: l.propertyAddress,
@@ -212,6 +216,39 @@ function seedLookup(code: string, unitCode: string | null): DpiLookup {
         { date: day(3), label: "Documents reviewed" },
         { date: day(1), label: "Property checks completed" },
         { date: registered, label: "Verification complete" },
+      ],
+    },
+  };
+}
+
+/** Sample properties that only carry Nearby activities (no listing). */
+function sampleActivityPropertyLookup(code: string, unitCode: string | null): DpiLookup {
+  const p = SAMPLE_PROPERTIES.find((x) => x.dpi === code);
+  if (!p) return { status: "error", code, unitCode, error: "PROPERTY_NOT_FOUND" };
+  if (unitCode && !p.units?.includes(unitCode)) return { status: "error", code, unitCode, error: "UNIT_NOT_FOUND" };
+  return {
+    status: "verified",
+    code,
+    unitCode,
+    record: {
+      propertyId: p.id,
+      code,
+      unitCode,
+      name: p.name,
+      houseNo: p.address.match(/^\d+\w?/)?.[0] ?? null,
+      address: p.address,
+      lga: p.lga,
+      city: "Ibadan",
+      state: "Oyo",
+      image: null,
+      unitType: unitCode ? `Unit ${unitCode}` : p.units ? "Multi-Unit" : "Whole Property",
+      registeredOn: p.registeredOn,
+      ownership: null,
+      listing: null,
+      history: [
+        { date: "2026-06-05", label: "Property submitted" },
+        { date: "2026-06-10", label: "Documents reviewed" },
+        { date: p.registeredOn, label: "Verification complete" },
       ],
     },
   };
@@ -240,6 +277,7 @@ export async function lookupDpi(rawCode: string, rawUnit: string | null = null):
       record: {
         code,
         unitCode,
+        propertyId: p.id,
         name: p.title ?? p.name ?? "Verified property",
         houseNo: p.houseNumber ?? null,
         address: p.address ?? [p.city, p.state].filter(Boolean).join(", "),

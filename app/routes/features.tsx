@@ -29,6 +29,9 @@ type Feature = {
   body: string;
   kicker?: string;
   highlight?: string;
+  cta?: { label: string; to: string };
+  /** The phone shows illustrative content. */
+  sampleScreen?: boolean;
   screen: ReactNode;
 };
 
@@ -46,7 +49,9 @@ const FEATURES: Feature[] = [
     icon: Compass,
     title: "Nearby",
     body: "See the businesses, schools, clinics, restaurants and other places recorded at properties around you, sorted by distance. Each one is linked to its property's DPI.",
-    highlight: "Discover What's Around You",
+    highlight: "Discover What Is Around You",
+    cta: { label: "Explore Nearby", to: "/nearby" },
+    sampleScreen: true,
     screen: <NearbyScreen />,
   },
   {
@@ -150,6 +155,7 @@ export default function Features() {
                   <h2 className="mt-4 text-2xl">{f.title}</h2>
                   <p className="mt-2 text-[15px] leading-relaxed text-neutral-600">{f.body}</p>
                   {(f.highlight || f.kicker) && <p className="mt-3 text-[15px] leading-snug font-medium text-urbn">{f.highlight ?? f.kicker}</p>}
+                  {f.cta && <ButtonLink to={f.cta.to} variant="dark" size="sm" className="mt-4">{f.cta.label}</ButtonLink>}
                 </div>
               </article>
             ))}
@@ -236,9 +242,11 @@ function FeatureCard({ feature, wide }: { feature: Feature; wide?: boolean }) {
         <p className="mt-4 leading-relaxed text-neutral-600">{feature.body}</p>
         {feature.kicker && <p className="mt-4 leading-relaxed text-neutral-600">{feature.kicker}</p>}
         {feature.highlight && <p className="mt-4 text-lg leading-snug font-medium text-urbn">{feature.highlight}</p>}
+        {feature.cta && <ButtonLink to={feature.cta.to} variant="dark" className="mt-6">{feature.cta.label}</ButtonLink>}
       </div>
       <div className="mx-auto w-full max-w-[15rem] sm:translate-y-10 sm:transition-transform sm:duration-700 sm:group-hover:translate-y-6">
         <Phone>{feature.screen}</Phone>
+        {feature.sampleScreen && <p className="mt-2 text-center text-xs text-neutral-500">Sample screen. Live places are on the Nearby page.</p>}
       </div>
     </article>
   );

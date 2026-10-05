@@ -9,6 +9,8 @@ export type Place = {
   aliases: string[];
   live: boolean;
   blurb: string;
+  /** Approximate area centre [lat, lng]; Nearby measures distances from here for manual area searches. */
+  center?: [number, number];
 };
 
 // Ibadan is live; the rest are on the roadmap ("Ibadan, with Lagos,
@@ -23,6 +25,7 @@ export const PLACES: Place[] = [
     lga: null,
     aliases: ["ibadan", "oyo"],
     live: true,
+    center: [7.3964, 3.9167],
     blurb:
       "Urbn's first city. Browse properties across Ibadan and check each property's current Urbn record.",
   },
@@ -35,6 +38,7 @@ export const PLACES: Place[] = [
     lga: "Ibadan North",
     aliases: ["new bodija", "old bodija"],
     live: true,
+    center: [7.4325, 3.9120],
     blurb: "Quiet, central and close to the University of Ibadan and Bodija Market.",
   },
   {
@@ -46,6 +50,7 @@ export const PLACES: Place[] = [
     lga: "Lagelu",
     aliases: ["kolapo ishola", "odejayi"],
     live: true,
+    center: [7.4330, 3.9640],
     blurb: "Newer estates, family-sized homes and quick access to the Lagos–Ibadan corridor.",
   },
   {
@@ -57,6 +62,7 @@ export const PLACES: Place[] = [
     lga: "Ibadan North-West",
     aliases: ["jericho gra", "dugbe"],
     live: true,
+    center: [7.4010, 3.8705],
     blurb: "Established, green and well-serviced. Jericho is popular with professionals and families alike.",
   },
   {
@@ -68,6 +74,7 @@ export const PLACES: Place[] = [
     lga: "Ibadan South-West",
     aliases: ["oluyole estate", "ring road", "challenge"],
     live: true,
+    center: [7.3590, 3.8790],
     blurb: "Oluyole Estate pairs wide streets with good-value apartments and duplexes.",
   },
   {
@@ -79,6 +86,7 @@ export const PLACES: Place[] = [
     lga: "Akinyele",
     aliases: ["aerodrome", "sango", "ui", "agbowo", "poly"],
     live: true,
+    center: [7.4375, 3.8935],
     blurb: "Minutes from UI and The Polytechnic, Ibadan, Samonda is a favourite with students and young professionals.",
   },
   { slug: "lagos", name: "Lagos", kind: "city", city: "Lagos", state: "Lagos", lga: null, aliases: ["lagos"], live: false, blurb: "Urbn isn't available in Lagos yet." },

@@ -7,6 +7,7 @@ import {
   Compass,
   House,
   LayoutGrid,
+  MapPin,
   Mail,
   ScanLine,
   Search,
@@ -130,7 +131,7 @@ const TABS = [
   { to: "/", label: "Home", icon: House, end: true },
   { to: "/listings", label: "Listings", icon: Search },
   { to: "/verify", label: "Verify", icon: ScanLine, primary: true },
-  { to: "/features", label: "Features", icon: Sparkles },
+  { to: "/nearby", label: "Nearby", icon: MapPin },
 ] as const;
 
 export function TabBar() {
@@ -207,6 +208,7 @@ export function TabBar() {
 }
 
 const MENU = [
+  { to: "/features", label: "Features", icon: Sparkles },
   { to: "/dpi", label: "What Is DPI?", icon: ShieldCheck },
   { to: "/about", label: "About Urbn", icon: Building2 },
   { to: "/for-renters", label: "For Renters", icon: Compass },
