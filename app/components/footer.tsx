@@ -12,9 +12,12 @@ export function Footer() {
             <Logo className="w-36 text-white" />
           </Link>
           <p className="mt-6 max-w-xs text-[15px] leading-relaxed">
-            The digital infrastructure for housing. Get updates as we launch in new cities, plus early
-            access when we do.
+            The digital infrastructure for housing. Connecting properties to their records, people and
+            everyday activities.
           </p>
+          <Link to="/download#launch-updates" className="mt-3 inline-block text-[15px] font-semibold text-white underline-offset-4 hover:underline">
+            Get updates on new cities and product releases →
+          </Link>
           <SocialLinks className="mt-6 -ml-2.5 text-neutral-400" />
         </div>
         <nav aria-label="Footer">

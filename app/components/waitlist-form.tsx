@@ -28,7 +28,7 @@ export function WaitlistForm({ className, dark = true }: { className?: string; d
             <span className="grid size-8 place-items-center rounded-full bg-success text-white">
               <Check className="size-4" />
             </span>
-            <span className={dark ? "text-white" : "text-ink"}>You're on the list. We'll be in touch soon.</span>
+            <span className={dark ? "text-white" : "text-ink"}>You're on the list. We'll email you with city launch updates.</span>
           </motion.div>
         ) : (
           <motion.div key="form" exit={{ opacity: 0, y: -8 }}>
@@ -48,7 +48,7 @@ export function WaitlistForm({ className, dark = true }: { className?: string; d
               <button
                 type="submit"
                 disabled={busy}
-                aria-label="Join the waitlist"
+                aria-label="Get Launch Updates"
                 className="grid size-12 shrink-0 place-items-center rounded-lg bg-urbn text-white transition hover:bg-blue-600 active:scale-95 disabled:opacity-60"
               >
                 <ChevronRight className={clsx("size-5", busy && "animate-pulse")} />

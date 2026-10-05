@@ -35,7 +35,7 @@ export function MarketplaceMap({ listings }: { listings: Card[] }) {
         <div className="absolute inset-0 grid place-items-center text-center text-sm text-neutral-500">
           <span>
             <MapPinOff className="mx-auto mb-2 size-6" />
-            No location set
+            Location unavailable
           </span>
         </div>
       )}
@@ -72,7 +72,7 @@ export function MarketplaceMap({ listings }: { listings: Card[] }) {
             <button
               type="button"
               onClick={() => setSelected(null)}
-              aria-label="Close preview"
+              aria-label="Close Preview"
               className="absolute -top-3 -right-3 z-10 grid size-8 place-items-center rounded-full bg-white shadow ring-1 ring-black/5"
             >
               <X className="size-4" />

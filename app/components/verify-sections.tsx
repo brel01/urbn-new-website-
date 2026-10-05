@@ -22,9 +22,9 @@ export function VerifyHero({ defaultValue = "", compact = false }: { defaultValu
       <div className="absolute inset-x-0 bottom-0 -z-10 h-2/5 bg-gradient-to-t from-white via-white/60 to-transparent" />
       <div className={`container-x flex flex-col items-center text-center ${compact ? "py-14 sm:py-20" : "pt-16 pb-28 sm:pt-24 sm:pb-36"}`}>
         {compact ? (
-          <h1 className="text-4xl sm:text-5xl">Check any property's identity</h1>
+          <h1 className="text-4xl sm:text-5xl">Check a Property Record</h1>
         ) : (
-          <WordsReveal text="Check any property's identity" className="max-w-3xl text-[2.7rem] leading-[1] sm:text-6xl lg:text-7xl" />
+          <WordsReveal text="Check a Property Record" className="max-w-3xl text-[2.7rem] leading-[1] sm:text-6xl lg:text-7xl" />
         )}
         <motion.p
           className="mt-5 max-w-xl text-base font-medium text-neutral-800 sm:text-lg"
@@ -32,7 +32,7 @@ export function VerifyHero({ defaultValue = "", compact = false }: { defaultValu
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          Enter a DPI code or scan the plaque's QR code to see the verified record. Instant, and no account needed.
+          Enter its DPI code or scan an Urbn plaque to view the available record and verification status.
         </motion.p>
         <motion.div
           className="mt-8 w-full max-w-xl rounded-2xl bg-white p-5 text-left shadow-[0_30px_70px_-25px_rgba(0,0,0,0.45)]"
@@ -52,13 +52,11 @@ export function CheckBeforeCommit() {
     <section className="container-x pb-8">
       <Reveal className="grid gap-6 lg:grid-cols-2 lg:gap-16">
         <h2 className="text-5xl leading-[0.98] sm:text-6xl lg:text-7xl">
-          Check before you commit
+          Check Before You Commit
         </h2>
         <p className="lede self-end">
-          Most property disputes happen because no one checked anything before money changed hands. A verified DPI takes
-          seconds to check and can save you from a deal that was never legitimate in the first place. Before you pay a
-          deposit, sign an agreement, or hand over rent, verify. It costs you nothing, and it's the one step that
-          protects you if anything goes wrong later.
+          Before paying or signing, check the property's current Urbn record, review the available details and ask about
+          anything that does not match.
         </p>
       </Reveal>
       <Reveal className="relative mt-12 overflow-hidden rounded-card">
@@ -77,13 +75,12 @@ export function CheckBeforeCommit() {
           viewport={{ once: true }}
           transition={{ delay: 0.3, duration: 0.8, ease: EASE }}
         >
-          <h3 className="font-display text-2xl">Get your own DPI</h3>
+          <h3 className="font-display text-2xl">Add Your Property to Urbn</h3>
           <p className="mt-2 text-sm text-neutral-600">
-            Own a property that isn't verified yet? Now's a good time to get it. It protects your ownership, and it's the
-            fastest way to prove a listing is genuinely yours.
+            Create a connected property record and complete the required verification checks.
           </p>
           <ButtonLink to="/dpi" variant="dark" className="mt-5" arrow={false}>
-            Get Started
+            Add Your Property
           </ButtonLink>
         </motion.div>
       </Reveal>

@@ -41,75 +41,72 @@ type Audience = {
 const AUDIENCES: Record<string, Audience> = {
   "for-renters": {
     path: "/for-renters",
-    label: "For renters & home seekers",
-    title: "Never guess again.",
-    highlight: "guess",
-    lede: "Check a property's identity before you send a single naira. No more taking anyone's word for it.",
-    metaTitle: "For Renters: Find Verified Homes & Avoid Rental Scams",
-    metaDescription:
-      "Avoid fake listings and rental scams in Nigeria. Check any property's DPI, browse verified homes, book inspections and track your agent's live location with Urbn.",
+    label: "For Renters & Home Seekers",
+    title: "A Clearer Way to Find Your Next Home",
+    highlight: "Next Home",
+    lede: "Explore listings, ask questions and check the property record before you commit.",
+    metaTitle: "For Renters | Find Homes & Manage Your Tenancy",
+    metaDescription: "Explore homes, check property records, book inspections and follow your tenancy in Urbn.",
     image: "/images/illus-renters.webp",
     pains: [
-      { icon: FileWarning, title: "Fake and duplicate listings", text: "The same flat, five different 'agents', five different prices." },
-      { icon: UserX, title: "Agents who never show up", text: "Wasted transport, wasted days, and no way to know who's real." },
-      { icon: Banknote, title: "Deposits that disappear", text: "Money sent before anyone checked who actually owns the property." },
+      { icon: FileWarning, title: "Conflicting Listings", text: "One flat, different descriptions and prices." },
+      { icon: UserX, title: "Unclear Inspection Plans", text: "Time and transport spent without a confirmed visit." },
+      { icon: Banknote, title: "Scattered Tenancy Details", text: "Agreements and payment records spread across chats." },
     ],
     gains: [
-      { icon: ShieldCheck, title: "Verify before you pay", text: "Enter a DPI or scan the plaque to see the verified record instantly, free and with no account." },
-      { icon: Sparkles, title: "Search in plain English", text: "Tell the AI assistant “2-bedroom in Bodija under ₦800k” and let it do the searching." },
-      { icon: Video, title: "Video walkthroughs", text: "See a space the way you'd actually experience it, before you ever visit." },
-      { icon: CalendarCheck, title: "Confirmed inspections", text: "Book physical or virtual visits and track your agent's live location on the day." },
+      { icon: ShieldCheck, title: "Check Property Records", text: "Review available details and status." },
+      { icon: Sparkles, title: "Search Your Way", text: "Use filters or AI Search." },
+      { icon: CalendarCheck, title: "Arrange Inspections", text: "Request a slot and follow confirmation." },
+      { icon: Video, title: "Track Your Tenancy", text: "Keep tenancy details in view." },
     ],
-    cta: { label: "Browse verified homes", to: "/listings" },
-    secondary: { label: "Verify a property", to: "/verify" },
+    cta: { label: "Browse Homes", to: "/listings" },
+    secondary: { label: "Check a DPI", to: "/verify" },
   },
   "for-owners": {
     path: "/for-owners",
-    label: "For property owners",
-    title: "Protect what's yours.",
-    highlight: "yours.",
-    lede: "Get your property a permanent identity, and prove it's legitimately yours to anyone, instantly.",
-    metaTitle: "For Property Owners: Get Your Property a DPI",
-    metaDescription:
-      "Give your property a permanent Digital Property Identity. Protect your ownership, stop fake listings of your home, and log every tenancy and payment on one record.",
+    label: "For Property Owners",
+    title: "Keep Your Property in View",
+    highlight: "in View",
+    lede: "Connect your property's details, people and tenancy activities in one place.",
+    metaTitle: "For Property Owners | Manage Your Property With Urbn",
+    metaDescription: "Connect property details, occupants, listings and tenancy records in one place with Urbn.",
     image: "/images/illus-owners.webp",
     pains: [
-      { icon: UserX, title: "Strangers listing your property", text: "Anyone can claim to represent your home, and there's nothing to check them against." },
-      { icon: History, title: "History that walks away", text: "When an agent or tenant leaves, the records leave with them." },
-      { icon: MessageSquareWarning, title: "Disputes with no paper trail", text: "Rent and complaints handled over cash and WhatsApp, with nothing to point back to." },
+      { icon: UserX, title: "Property Details in Different Places", text: "Important information is hard to find." },
+      { icon: MessageSquareWarning, title: "Updates That Depend on Calls", text: "Knowing what's happening takes repeated follow-up." },
+      { icon: History, title: "Tenancy Records That Get Lost", text: "Changes become harder to trace over time." },
     ],
     gains: [
-      { icon: BadgeCheck, title: "A permanent DPI", text: "Issued once, after identity, title and physical checks. It can never be faked, duplicated or reassigned." },
-      { icon: QrCode, title: "Physical & virtual plaques", text: "A plaque on your gate anyone can scan, plus a shareable version for online listings." },
-      { icon: History, title: "A record that never resets", text: "Tenancies, payments and disputes are logged against the property, timestamped, permanently." },
-      { icon: ShieldCheck, title: "Proof on demand", text: "Show buyers, tenants and estate managers the verified record in seconds." },
+      { icon: BadgeCheck, title: "A Connected Property Record", text: "Keep details linked to the property." },
+      { icon: QrCode, title: "Occupants in View", text: "See the relationships recorded in Urbn." },
+      { icon: History, title: "Tenancy Tracking", text: "Follow available tenancy and rent records." },
+      { icon: ShieldCheck, title: "Listing Management", text: "Manage eligible spaces from the same property." },
     ],
-    cta: { label: "Get your property a DPI", to: "/dpi" },
-    secondary: { label: "How verification works", to: "/dpi#how-to-get-a-dpi" },
+    cta: { label: "Add Your Property", to: "/download" },
+    secondary: { label: "How Verification Works", to: "/dpi#how-to-get-a-dpi" },
   },
   "for-agents": {
     path: "/for-agents",
-    label: "For agents & property managers",
-    title: "Close faster. Prove it's real.",
-    highlight: "real.",
-    lede: "Give every listing a verified identity that builds trust before you even show up.",
-    metaTitle: "For Agents & Property Managers: List Verified Properties",
-    metaDescription:
-      "Stand out from fake listings. Verify your portfolio with Urbn DPIs, prove your authority to list, and close faster with renters and buyers who already trust what they see.",
+    label: "For Agents & Property Managers",
+    title: "More Properties. Less Scattered Work.",
+    highlight: "Less Scattered Work.",
+    lede: "Keep listings, inspection requests and property conversations organised in Urbn.",
+    metaTitle: "For Agents & Property Managers | Organise Your Portfolio",
+    metaDescription: "Manage property listings, inspection requests and client conversations through Urbn.",
     image: "/images/illus-agents.webp",
     pains: [
-      { icon: FileWarning, title: "Competing with fakes", text: "Genuine listings get lost among duplicates and bait prices." },
-      { icon: UserX, title: "Clients who don't trust you", text: "Every new client starts from suspicion, not confidence." },
-      { icon: ClipboardCheck, title: "Admin that never ends", text: "Inspections, follow-ups and records scattered across chats and notebooks." },
+      { icon: FileWarning, title: "Repeated Questions", text: "Explaining the same details to each prospect." },
+      { icon: UserX, title: "Inspection Follow-Up", text: "Requests and confirmations spread across chats." },
+      { icon: ClipboardCheck, title: "Portfolio Admin", text: "Keeping property updates and records aligned." },
     ],
     gains: [
-      { icon: BadgeCheck, title: "Verified authority", text: "Your right to list is logged against each property's DPI, so clients know who they're dealing with." },
-      { icon: TrendingUp, title: "Listings that convert", text: "Verified listings with video tours give serious renters and buyers a reason to choose you." },
-      { icon: CalendarCheck, title: "Inspections, organised", text: "Bookings, confirmations and live location sharing in one place. No more no-shows." },
-      { icon: Building2, title: "Portfolio-ready", text: "Manage multi-unit buildings, with each unit logged under one DPI." },
+      { icon: BadgeCheck, title: "Property Records", text: "Link listings to their Urbn record." },
+      { icon: TrendingUp, title: "Organised Listings", text: "Keep available properties in view." },
+      { icon: CalendarCheck, title: "Inspection Management", text: "Review requests and upcoming visits." },
+      { icon: Building2, title: "Connected Conversations", text: "Discuss property details in the app." },
     ],
-    cta: { label: "Get started", to: "/download" },
-    secondary: { label: "See all features", to: "/features" },
+    cta: { label: "Apply as an Agent", to: "/download" },
+    secondary: { label: "Explore Features", to: "/features" },
   },
 };
 
@@ -138,7 +135,7 @@ export default function AudiencePage() {
         <div className="container-x grid items-center gap-10 pt-16 pb-20 lg:grid-cols-[1.1fr_0.9fr] lg:pt-24">
           <div>
             <p className="eyebrow"><span className="size-2 rounded-full bg-urbn" /> {a.label}</p>
-            <WordsReveal key={a.path} text={a.title} highlight={[a.highlight]} className="mt-4 text-5xl leading-[1] sm:text-7xl" />
+            <WordsReveal key={a.path} text={a.title} highlight={a.highlight.split(" ")} className="mt-4 text-5xl leading-[1] sm:text-6xl" />
             <motion.p key={`${a.path}-l`} className="lede mt-6 max-w-lg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
               {a.lede}
             </motion.p>
@@ -162,7 +159,7 @@ export default function AudiencePage() {
       <section className="bg-ink py-16 text-white sm:py-24">
         <div className="container-x">
           <Reveal>
-            <SectionHeading dark title="Sound familiar?" />
+            <SectionHeading dark title="Sound Familiar?" />
           </Reveal>
           <Stagger className="mt-12 grid gap-4 md:grid-cols-3">
             {a.pains.map((p) => (
@@ -178,7 +175,7 @@ export default function AudiencePage() {
 
       <section className="container-x py-16 sm:py-24 lg:py-32">
         <Reveal>
-          <SectionHeading title="How Urbn helps" lede="One verified identity per property, plus the tools to actually use it." />
+          <SectionHeading title="How Urbn Helps" lede="Property records, people and housing activities, connected in one place." />
         </Reveal>
         <Stagger className="mt-14 grid gap-5 sm:grid-cols-2">
           {a.gains.map((g) => (

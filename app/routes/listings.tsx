@@ -53,15 +53,15 @@ export function shouldRevalidate({ currentUrl, nextUrl, defaultShouldRevalidate 
 
 export const meta: Route.MetaFunction = ({ loaderData }) =>
   seo({
-    title: "Verified Homes for Rent & Sale in Ibadan",
+    title: "Homes for Rent & Sale in Ibadan | Urbn",
     description:
-      "Search homes that have been checked by Urbn: ownership confirmed, documents verified, and seen in person. Search by area, filter like the app, or describe your ideal home to AI search.",
+      "Browse homes for rent or sale in Ibadan. Search by area, compare listing details and check each property's Urbn record.",
     path: "/listings",
     jsonLd: [
       {
         "@context": "https://schema.org",
         "@type": "ItemList",
-        name: "Verified listings on Urbn",
+        name: "Listings on Urbn",
         itemListElement: (loaderData?.page?.data ?? loaderData?.featured ?? []).map((l, i) => ({
           "@type": "ListItem",
           position: i + 1,
@@ -78,7 +78,7 @@ export const meta: Route.MetaFunction = ({ loaderData }) =>
 
 async function fetchPage(key: string, page: number): Promise<Paged<Card>> {
   const res = await fetch(`/api/listings?${key}${key ? "&" : ""}page=${page}`);
-  if (!res.ok) throw new Error("Something went wrong. Try again.");
+  if (!res.ok) throw new Error("We couldn't load the listings. Try again.");
   return res.json();
 }
 
@@ -89,7 +89,7 @@ async function fetchAi(query: string): Promise<AiSearchResult> {
     body: JSON.stringify({ query }),
   });
   const json = await res.json().catch(() => null);
-  if (!json) throw new Error("AI search is temporarily unavailable. Use the standard search instead.");
+  if (!json) throw new Error("AI Search is temporarily unavailable. Use search filters instead.");
   return json;
 }
 
@@ -183,7 +183,7 @@ export default function Listings({ loaderData }: Route.ComponentProps) {
                     type="button"
                     onClick={() => setParams((p) => (v === "map" ? p.set("view", "map") : p.delete("view")))}
                     aria-pressed={view === v}
-                    aria-label={v === "list" ? "List view" : "Map view"}
+                    aria-label={v === "list" ? "List View" : "Map View"}
                     className={clsx("rounded-lg px-3 py-2 transition-colors", view === v ? "bg-white text-ink shadow-sm" : "text-neutral-500")}
                   >
                     {v === "list" ? <List className="size-[18px]" /> : <MapIcon className="size-[18px]" />}
@@ -328,12 +328,12 @@ export default function Listings({ loaderData }: Route.ComponentProps) {
       <FilterPanel open={panelOpen} onClose={() => setPanelOpen(false)} value={filters} onApply={applyFilters} />
       <div className="h-20" />
       <CtaBanner
-        title={<>List it. <span className="text-urbn">Prove it.</span></>}
-        body="Own or manage a property? Get it verified, issue its DPI, and list it where renters and buyers already trust what they see."
+        title={<>Give Your Listing a <span className="text-urbn">Connected Record</span></>}
+        body="Own or manage a property? Add its details, complete the required checks and publish eligible listings through Urbn."
       >
         <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
           <ButtonLink to="/for-owners" variant="light">For Owners</ButtonLink>
-          <ButtonLink to="/for-agents" variant="light">For Agents</ButtonLink>
+          <ButtonLink to="/for-agents" variant="light">For Agents & Managers</ButtonLink>
         </div>
       </CtaBanner>
     </>
@@ -363,18 +363,18 @@ function Hero() {
         <div className="absolute inset-0 bg-mist/75 lg:hidden" />
       </motion.div>
       <div className="container-x flex min-h-[18rem] flex-col justify-end pt-16 pb-8 sm:min-h-[30rem] sm:pt-24 sm:pb-12 lg:min-h-[32rem] lg:justify-center lg:py-20">
-        <WordsReveal text="Verified. Not just listed." className="max-w-xl text-[2.6rem] leading-[1] sm:text-7xl" />
+        <WordsReveal text="Find a Home That Fits." className="max-w-xl text-[2.6rem] leading-[1] sm:text-7xl" />
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.8, ease: EASE }}>
           <p className="mt-3 max-w-md text-[15px] text-neutral-700 sm:mt-6 sm:text-lg">
-            Every property on Urbn has been checked: ownership confirmed, documents verified, and someone from our team
-            has actually seen it. Search with confidence, not crossed fingers.
+            Explore available homes, compare the details and check each property's current verification status before
+            taking the next step.
           </p>
           <div className="mt-8 hidden flex-wrap gap-3 sm:flex">
             <a href="#search" className="inline-flex h-11 items-center rounded-[10px] bg-ink px-5 text-[15px] font-medium text-white transition hover:bg-neutral-800">
-              Search Verified Homes
+              Search Homes
             </a>
             <ButtonLink to="/dpi" variant="dark" arrow={false}>
-              What is DPI?
+              What Is DPI?
             </ButtonLink>
           </div>
         </motion.div>
@@ -383,7 +383,7 @@ function Hero() {
   );
 }
 
-/** "Search city, area, property..." with neighbourhood/LGA suggestions; debounced like the app (500ms). */
+/** "Search by area or property" with neighbourhood/LGA suggestions; debounced like the app (500ms). */
 function AreaSearch({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const [text, setText] = useState(value);
   const [focused, setFocused] = useState(false);
@@ -412,7 +412,7 @@ function AreaSearch({ value, onChange }: { value: string; onChange: (v: string) 
         className="flex items-center gap-3 rounded-xl bg-white px-4 py-3 ring-1 ring-black/5 focus-within:ring-2 focus-within:ring-urbn"
       >
         <Search className="size-4 text-neutral-500" />
-        <label htmlFor="area-search" className="sr-only">Search city, area or property</label>
+        <label htmlFor="area-search" className="sr-only">Search by area or property</label>
         <input
           id="area-search"
           value={text}
@@ -425,7 +425,7 @@ function AreaSearch({ value, onChange }: { value: string; onChange: (v: string) 
             const v = e.target.value;
             timer.current = setTimeout(() => onChange(v.trim()), 500);
           }}
-          placeholder="Search city, area, property..."
+          placeholder="Search by area or property"
           className="flex-1 bg-transparent text-sm outline-none placeholder:text-neutral-400"
         />
         {text && (
@@ -501,19 +501,19 @@ function EmptyState({
     <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-neutral-300 px-6 py-20 text-center">
       {mode === "ai" ? (
         <>
-          <p className="font-semibold">{searched ? "No properties matched your description" : "Describe what you're looking for above"}</p>
-          {searched && <p className="text-sm text-neutral-500">Try adjusting your budget, location, or features.</p>}
+          <p className="font-semibold">{searched ? "No homes match your search." : "Describe the home you're looking for above."}</p>
+          {searched && <p className="text-sm text-neutral-500">Try a different area, budget or feature.</p>}
         </>
       ) : filterCount > 0 ? (
         <>
-          <p className="font-semibold">No listings match your filters</p>
+          <p className="font-semibold">No listings match these filters.</p>
           <div className="mt-2 flex gap-2">
-            <button onClick={onAdjust} className="rounded-xl bg-ink px-6 py-3 text-sm font-semibold text-white">Adjust filters</button>
-            <button onClick={onClear} className="rounded-xl px-4 py-3 text-sm font-semibold text-neutral-600 hover:bg-mist">Clear all</button>
+            <button onClick={onAdjust} className="rounded-xl bg-ink px-6 py-3 text-sm font-semibold text-white">Adjust Filters</button>
+            <button onClick={onClear} className="rounded-xl px-4 py-3 text-sm font-semibold text-neutral-600 hover:bg-mist">Clear Filters</button>
           </div>
         </>
       ) : (
-        <p className="font-semibold">No listings yet</p>
+        <p className="font-semibold">No listings available here yet. Check another area.</p>
       )}
     </div>
   );
@@ -524,9 +524,9 @@ function AppStrip() {
     <div className="mt-16 flex flex-col items-start justify-between gap-6 rounded-2xl bg-ink p-7 text-white sm:flex-row sm:items-center sm:p-10">
       <div>
         <p className="text-[10px] tracking-widest text-neutral-400 uppercase">In the Urbn App</p>
-        <h3 className="mt-2 text-2xl sm:text-3xl">Save listings, book inspections and chat with the AI Advisor.</h3>
+        <h3 className="mt-2 text-2xl sm:text-3xl">Keep Your Search With You</h3>
         <p className="mt-2 max-w-xl text-neutral-400">
-          Everything here works the same in the app, plus video reels, live agent tracking and your saved listings on every device.
+          Use the Urbn app to save listings, request inspections and message owners or managers.
         </p>
       </div>
       <ButtonLink to="/download" variant="light" className="shrink-0">Get the App</ButtonLink>

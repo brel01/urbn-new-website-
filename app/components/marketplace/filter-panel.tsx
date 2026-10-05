@@ -127,7 +127,7 @@ export function FilterPanel({
       },
       () => {
         setLocating(false);
-        setGeoError("Location permission denied");
+        setGeoError("Location access is off. Enable it in your device settings or choose an area.");
       },
       { timeout: 8000 },
     );
@@ -157,8 +157,8 @@ export function FilterPanel({
                 <SectionTitle>Listed By</SectionTitle>
                 <div className="flex flex-wrap gap-2">
                   <Chip active={!f.listedBy} onClick={() => set({ listedBy: undefined })}>All</Chip>
-                  <Chip active={f.listedBy === "OWNER"} onClick={() => set({ listedBy: "OWNER" })}>By Owner</Chip>
-                  <Chip active={f.listedBy === "AGENT"} onClick={() => set({ listedBy: "AGENT" })}>By Agent</Chip>
+                  <Chip active={f.listedBy === "OWNER"} onClick={() => set({ listedBy: "OWNER" })}>Owner</Chip>
+                  <Chip active={f.listedBy === "AGENT"} onClick={() => set({ listedBy: "AGENT" })}>Agent</Chip>
                 </div>
               </section>
 
@@ -172,7 +172,7 @@ export function FilterPanel({
                       onChange={(e) => set({ state: e.target.value || undefined, lga: undefined, lat: undefined, lng: undefined })}
                       className="mt-1.5 h-11 w-full rounded-lg border border-neutral-200 bg-white px-3 text-sm outline-none focus:border-urbn"
                     >
-                      <option value="">Select state</option>
+                      <option value="">Select State</option>
                       {STATES.map((s) => <option key={s}>{s}</option>)}
                     </select>
                   </label>
@@ -184,7 +184,7 @@ export function FilterPanel({
                       onChange={(e) => set({ lga: e.target.value || undefined, lat: undefined, lng: undefined })}
                       className="mt-1.5 h-11 w-full rounded-lg border border-neutral-200 bg-white px-3 text-sm outline-none focus:border-urbn disabled:bg-mist disabled:text-neutral-400"
                     >
-                      <option value="">{f.state === "Oyo" ? "All LGAs" : f.state ? "Coming soon" : "Select state first"}</option>
+                      <option value="">{f.state === "Oyo" ? "All LGAs" : f.state ? "Not available here yet" : "Choose a state first"}</option>
                       {IBADAN_LGAS.map((l) => <option key={l}>{l}</option>)}
                     </select>
                   </label>
@@ -196,7 +196,7 @@ export function FilterPanel({
                   className={clsx("inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold", nearMe ? "bg-urbn text-white" : "border border-neutral-200")}
                 >
                   <LocateFixed className={clsx("size-3.5", locating && "animate-spin")} />
-                  {nearMe ? `Near me (${f.radius ?? 10}km)` : locating ? "Locating…" : "Near me"}
+                  {nearMe ? `Near Me (${f.radius ?? 10}km)` : locating ? "Locating…" : "Near Me"}
                 </button>
                 {nearMe && (
                   <label className="block text-xs text-neutral-500">
@@ -208,7 +208,7 @@ export function FilterPanel({
               </section>
 
               <section className="space-y-3">
-                <SectionTitle>Type</SectionTitle>
+                <SectionTitle>Rent or Buy</SectionTitle>
                 <div className="flex flex-wrap gap-2">
                   {LISTING_TYPE_CHIPS.map((c) => (
                     <Chip key={c.label} active={f.listingType === c.value} onClick={() => set({ listingType: c.value })}>{c.label}</Chip>
@@ -263,14 +263,14 @@ export function FilterPanel({
                   ))}
                 </div>
                 <label className="flex items-center justify-between rounded-xl border border-neutral-200 px-4 py-3 text-sm font-medium">
-                  Featured only
+                  Featured Only
                   <input type="checkbox" checked={!!f.featuredOnly} onChange={(e) => set({ featuredOnly: e.target.checked || undefined })} className="size-5 accent-[var(--color-urbn)]" />
                 </label>
               </section>
 
               <section className="space-y-3">
                 <SectionTitle>Features</SectionTitle>
-                <Collapsible title="Security Features" count={csvCount(f.securityFeatures)}>
+                <Collapsible title="Security" count={csvCount(f.securityFeatures)}>
                   {SECURITY_FEATURES.map((x) => (
                     <Chip key={x} active={!!f.securityFeatures?.split(",").includes(x)} onClick={() => set({ securityFeatures: toggleCsv(f.securityFeatures, x) })}>{formatTextCase(x)}</Chip>
                   ))}

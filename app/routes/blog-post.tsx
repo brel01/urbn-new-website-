@@ -85,14 +85,14 @@ export default function BlogPost({ loaderData }: Route.ComponentProps) {
             </Reveal>
           ))}
           <div className="flex flex-wrap gap-3 pt-6">
-            <ButtonLink to="/verify" variant="dark">Verify a property</ButtonLink>
-            <ButtonLink to="/listings" variant="outline">Browse verified homes</ButtonLink>
+            <ButtonLink to="/verify" variant="dark">Check a DPI</ButtonLink>
+            <ButtonLink to="/listings" variant="outline">Browse Homes</ButtonLink>
           </div>
         </div>
       </article>
       <section className="bg-mist py-20">
         <div className="container-x">
-          <h2 className="text-3xl">More stories</h2>
+          <h2 className="text-3xl">More Stories</h2>
           <div className="mt-8 grid gap-6 md:grid-cols-2">
             {more.map((m) => (
               <Link key={m.slug} to={`/blog/${m.slug}`} className="group flex gap-5 rounded-card bg-white p-4">

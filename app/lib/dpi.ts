@@ -87,7 +87,7 @@ export type DpiRecord = {
   image: string | null;
   unitType: string;
   registeredOn: string | null;
-  ownership: string;
+  ownership: string | null;
   /** website listing path, when the property has an active listing */
   listingPath?: string;
   listing?: { type: string; price: number; rentPeriod: string | null } | null;
@@ -100,28 +100,28 @@ export type DpiLookup =
 
 export const DPI_ERROR_COPY: Record<DpiErrorCode, { title: string; body: string }> = {
   INVALID_DPI_FORMAT: {
-    title: "That code doesn't look right",
-    body: "DPI codes look like IBADAN-NORTH-0041-U. The last character is a check letter, so a single typo will show up here.",
+    title: "Check the DPI code",
+    body: "Enter the complete code exactly as it appears on the plaque or property record.",
   },
   PROPERTY_NOT_FOUND: {
-    title: "No match",
-    body: "No match doesn't always mean something's wrong. It usually means the property hasn't been verified by Urbn yet.",
+    title: "No matching record",
+    body: "We couldn't find a record for this code. Check it and try again, or ask the owner or manager for the current DPI.",
   },
   NOT_VERIFIED: {
-    title: "Not verified yet",
-    body: "This property is on Urbn but hasn't finished verification. Don't treat it as verified until it has.",
+    title: "Verification incomplete",
+    body: "This property is registered on Urbn but has not completed the required verification checks.",
   },
   NOT_TRACEABLE: {
-    title: "Record is private",
-    body: "This property exists on Urbn, but its owner hasn't made the record publicly traceable.",
+    title: "Record unavailable to view",
+    body: "This record is not publicly accessible. Contact the owner or manager for the information you need.",
   },
   ARCHIVED: {
     title: "Record archived",
-    body: "This DPI belongs to a record that has been archived. Ask whoever is showing you the property for an up-to-date code.",
+    body: "This property record is archived. Ask the owner or manager about its current status before proceeding.",
   },
   UNIT_NOT_FOUND: {
     title: "Unit not found",
-    body: "The property exists, but we couldn't find that unit code under it. Check the unit code on the plaque.",
+    body: "We found the property, but not this unit. Check the full property and unit code, then try again.",
   },
 };
 

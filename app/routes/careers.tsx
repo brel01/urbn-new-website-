@@ -8,7 +8,7 @@ import type { Route } from "./+types/careers";
 export const meta: Route.MetaFunction = () =>
   seo({
     title: "Careers at Urbn",
-    description: "Help build Nigeria's Digital Property Identity system. See how to join the Urbn team.",
+    description: "Help build the digital infrastructure for housing. Explore opportunities to join the Urbn team.",
     path: "/careers",
     jsonLd: breadcrumbs([
       { name: "Home", path: "/" },
@@ -17,20 +17,20 @@ export const meta: Route.MetaFunction = () =>
   });
 
 const TEAMS = [
-  { t: "Verification & Field Ops", d: "The people who visit every property before a DPI is issued." },
-  { t: "Engineering & Product", d: "Building the identity layer, the app and everything in between." },
-  { t: "Partnerships & Growth", d: "Bringing owners, agencies and estates onto Urbn, city by city." },
+  { t: "Field Operations", d: "Supporting property checks and local onboarding." },
+  { t: "Engineering", d: "Building connected records and the tools around them." },
+  { t: "Growth & Partnerships", d: "Helping owners, managers and communities get started with Urbn." },
 ];
 
 export default function Careers() {
   return (
     <>
       <section className="container-x py-16 sm:py-24">
-        <WordsReveal text="Build the trust layer for Nigerian real estate." highlight={["trust"]} className="max-w-4xl text-5xl leading-[1] sm:text-7xl" />
+        <WordsReveal text="Help Build What Housing Needs Next." highlight={["Housing"]} className="max-w-4xl text-5xl leading-[1] sm:text-7xl" />
         <Reveal className="mt-6 max-w-xl">
           <p className="lede">
-            We're a small team with a big job: making sure every property in Nigeria has an identity anyone can check. If
-            that sounds like work worth doing, we'd like to hear from you.
+            We're connecting properties to their people, records and everyday activities. Join us in building the digital
+            infrastructure for housing.
           </p>
         </Reveal>
         <Stagger className="mt-14 grid gap-5 md:grid-cols-3">
@@ -42,13 +42,13 @@ export default function Careers() {
           ))}
         </Stagger>
         <Reveal className="mt-14 rounded-card bg-ink p-8 text-white sm:p-12">
-          <h2 className="text-3xl">No open roles listed right now</h2>
+          <h2 className="text-3xl">No Open Roles Right Now</h2>
           <p className="mt-3 max-w-xl text-neutral-400">
-            We're growing as we launch new cities. Send your CV and a few lines about what you'd like to work on, and
-            we'll reach out when there's a fit.
+            Interested in working with Urbn? Send your CV and a short note about what you'd like to contribute. We'll
+            contact you if a suitable opportunity opens.
           </p>
           <ButtonLink to={`mailto:${SITE.email}?subject=Careers%20at%20Urbn`} reloadDocument variant="light" className="mt-6">
-            Email the team
+            Email the Team
           </ButtonLink>
         </Reveal>
       </section>

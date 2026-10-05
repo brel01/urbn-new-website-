@@ -19,11 +19,11 @@ export const meta: Route.MetaFunction = ({ loaderData, params }) => {
   const r = loaderData;
   const code = [params.code, params.unit].filter(Boolean).join("/");
   return seo({
-    title: r?.status === "verified" ? `${r.record.name}: Verified DPI ${code}` : `DPI ${code}`,
+    title: r?.status === "verified" ? `${r.record.name}: DPI ${code}` : `DPI ${code}`,
     description:
       r?.status === "verified"
-        ? `${r.record.name} in ${r.record.city || r.record.state} is a verified Urbn property. Check its DPI record before you pay anything.`
-        : "We couldn't find a verified Urbn record for this DPI code. Here's what to do next.",
+        ? `View the Urbn record and current verification status for ${r.record.name} in ${r.record.city || r.record.state}.`
+        : "We couldn't find a public Urbn record for this DPI code. Check the code and try again.",
     path: verifyPath(params.code, params.unit),
     // individual records stay out of search indexes
     noindex: true,
@@ -38,7 +38,7 @@ export default function VerifyResultPage({ loaderData }: Route.ComponentProps) {
       <VerifyHero compact defaultValue={code} />
       <section className="container-x py-12 sm:py-20" aria-live="polite">
         {fromPlaque && (
-          <p className="mb-6 text-sm text-neutral-500">You scanned an Urbn plaque. Here is the live record for this property.</p>
+          <p className="mb-6 text-sm text-neutral-500">This QR code links to the property record below. Check its details and current status.</p>
         )}
         <Reveal key={code}>
           {loaderData.status === "verified" ? (

@@ -207,11 +207,11 @@ export function TabBar() {
 }
 
 const MENU = [
-  { to: "/dpi", label: "What is DPI", icon: ShieldCheck },
+  { to: "/dpi", label: "What Is DPI?", icon: ShieldCheck },
   { to: "/about", label: "About Urbn", icon: Building2 },
   { to: "/for-renters", label: "For Renters", icon: Compass },
   { to: "/for-owners", label: "For Owners", icon: House },
-  { to: "/for-agents", label: "For Agents", icon: Briefcase },
+  { to: "/for-agents", label: "For Agents & Managers", icon: Briefcase },
   { to: "/blog", label: "Stories", icon: BookOpen },
   { to: "/faq", label: "FAQs", icon: CircleHelp },
   { to: "/careers", label: "Careers", icon: Users },
@@ -273,8 +273,8 @@ export function MenuSheet({ open, onClose }: { open: boolean; onClose: () => voi
             </motion.ul>
             <Link to="/download" className="mt-4 flex items-center justify-between rounded-2xl bg-urbn px-5 py-4 text-white active:scale-[0.98]">
               <span>
-                <span className="block font-semibold">Get the Urbn app</span>
-                <span className="text-sm text-blue-100">Verify, search and book on the go</span>
+                <span className="block font-semibold">Get the Urbn App</span>
+                <span className="text-sm text-blue-100">Check property records, find listings and book inspections.</span>
               </span>
               <span aria-hidden>→</span>
             </Link>

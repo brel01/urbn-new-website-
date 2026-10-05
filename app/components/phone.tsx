@@ -77,7 +77,7 @@ export function UBeepScreen() {
           <BellRing className="size-6" />
         </motion.span>
       </div>
-      <p className="mt-4 text-[11px] font-semibold">Scan QR code</p>
+      <p className="mt-4 text-[11px] font-semibold">Scan Property QR Code</p>
       <div className="relative mt-3 size-24 overflow-hidden rounded-lg bg-white p-1.5">
         <div className="grid size-full grid-cols-7 grid-rows-7 gap-px">
           {Array.from({ length: 49 }).map((_, i) => (
@@ -86,7 +86,7 @@ export function UBeepScreen() {
         </div>
         <span className="absolute inset-x-0 h-6 animate-scan bg-gradient-to-b from-transparent via-urbn/50 to-transparent" />
       </div>
-      <p className="mt-2 text-[10px] text-white/60">Tap to verify</p>
+      <p className="mt-2 text-[10px] text-white/60">Send a U-Beep</p>
       <AnimatePresence mode="wait">
         <motion.div
           key={step}
@@ -95,8 +95,8 @@ export function UBeepScreen() {
           exit={{ opacity: 0, y: -10 }}
           className="mt-auto mb-6 w-full rounded-xl bg-white/10 p-3 text-[10.5px] backdrop-blur"
         >
-          <p className="font-semibold">{["📦 Delivery at the gate", "👋 Visitor for Flat 2", "🔧 Plumber has arrived"][step]}</p>
-          <p className="mt-0.5 text-white/60">Owner notified · no phone number shared</p>
+          <p className="font-semibold">{["Delivery at the Gate", "Visitor for Flat 2", "Plumber Has Arrived"][step]}</p>
+          <p className="mt-0.5 text-white/60">Alert Sent</p>
         </motion.div>
       </AnimatePresence>
     </div>
@@ -183,8 +183,8 @@ export function LocationScreen() {
             <Navigation className="size-4" />
           </span>
           <div className="text-[10.5px]">
-            <p className="font-semibold">Kunle is on his way</p>
-            <p className="text-neutral-500">Arriving in 4 min · Jericho GRA</p>
+            <p className="font-semibold">Kunle Is on His Way</p>
+            <p className="text-neutral-500">Estimated Arrival: 4 Min · Jericho GRA</p>
           </div>
         </div>
       </div>
@@ -198,10 +198,10 @@ export function BookingScreen() {
   const slots = ["10:00", "12:30", "14:00", "16:30"];
   return (
     <div ref={ref} className="flex h-full flex-col px-4">
-      <Title>Book Inspection</Title>
+      <Title>Request Inspection</Title>
       <div className="mt-4 grid grid-cols-2 gap-1 rounded-xl bg-white/10 p-1 text-[10px] font-semibold">
-        <span className="rounded-lg bg-white py-1.5 text-center text-ink">Physical visit</span>
-        <span className="py-1.5 text-center text-white/70">Virtual tour</span>
+        <span className="rounded-lg bg-white py-1.5 text-center text-ink">Physical</span>
+        <span className="py-1.5 text-center text-white/70">Virtual</span>
       </div>
       <div className="mt-4 grid grid-cols-5 gap-1.5">
         {days.map((d, i) => (
@@ -234,7 +234,7 @@ export function BookingScreen() {
               <Check className="size-4" />
             </span>
             <span>
-              <b className="block">Confirmed by owner</b>
+              <b className="block">Accepted by Owner</b>
               <span className="text-white/70">Wed 16 · 12:30 · Bodija</span>
             </span>
           </motion.div>
@@ -246,7 +246,7 @@ export function BookingScreen() {
 
 export function AiScreen() {
   const { ref, step } = useLoop(4, 1700);
-  const q = "2-bedroom in Bodija under ₦800k";
+  const q = "2-bedroom flat in Bodija, up to ₦800k a year";
   return (
     <div ref={ref} className="flex h-full flex-col px-4">
       <Title>AI Search</Title>
@@ -271,7 +271,7 @@ export function AiScreen() {
           </motion.div>
         ))}
       </div>
-      <p className="mt-auto mb-6 text-center text-[10px] text-white/50">3 verified matches · no filters needed</p>
+      <p className="mt-auto mb-6 text-center text-[10px] text-white/50">3 Matching Listings · Refine Search</p>
     </div>
   );
 }
@@ -279,10 +279,10 @@ export function AiScreen() {
 export function ChatScreen() {
   const { ref, step } = useLoop(5, 1400);
   const msgs: [boolean, string][] = [
-    [true, "Hi! Is the 3-bed in Akobo still available?"],
-    [false, "Yes it is. Want to inspect this week?"],
-    [true, "Saturday 11am works for me 👍"],
-    [false, "Booked ✅ See you then."],
+    [true, "Hi, is the 3-bedroom flat in Akobo still available?"],
+    [false, "Yes. You can request an inspection in the app."],
+    [true, "I've requested Saturday at 11am."],
+    [false, "I've accepted it. See you then."],
   ];
   return (
     <div ref={ref} className="flex h-full flex-col px-4">
@@ -290,7 +290,7 @@ export function ChatScreen() {
         <span className="grid size-8 place-items-center rounded-full bg-urbn font-display text-xs">TH</span>
         <div className="text-[10.5px]">
           <p className="font-semibold">Tayo Homes</p>
-          <p className="text-success">● Verified property manager</p>
+          <p className="text-white/60">Property Manager</p>
         </div>
       </div>
       <div className="mt-3 flex flex-1 flex-col gap-2">
@@ -316,15 +316,15 @@ export function ChatScreen() {
 
 export function CommunityScreen() {
   const posts = [
-    ["Adaeze · Bodija", "Anyone know a reliable electrician around Bodija market?", "12 replies"],
-    ["Femi · Akobo", "Water supply restored on Kolapo Ishola road 🙌", "34 likes"],
-    ["Estate Admin", "Residents' meeting this Saturday, 10am at the clubhouse.", "Pinned"],
+    ["Adaeze · Bodija", "Does anyone know a reliable electrician near Bodija Market?", "12 replies"],
+    ["Femi · Akobo", "Water supply is back on Kolapo Ishola Road.", "34 likes"],
+    ["Estate Admin", "Residents' meeting this Saturday at 10am, at the clubhouse.", "Pinned"],
   ];
   return (
     <div className="flex h-full flex-col px-4">
       <Title>Bodija Community</Title>
       <p className="mt-1 flex items-center justify-center gap-1 text-[10px] text-white/60">
-        <Users className="size-3" /> 1,204 neighbours
+        <Users className="size-3" /> Residents & neighbours
       </p>
       <div className="mt-4 space-y-2">
         {posts.map(([who, text, meta], i) => (

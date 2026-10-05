@@ -66,7 +66,7 @@ export function FaqList({ faqs, columns = 2 }: { faqs: Faq[]; columns?: 1 | 2 })
 
 export function FaqSection({
   faqs,
-  lede = "Urbn is building Nigeria's first Digital Property Identity system. Every property that comes onto our platform is verified and issued a permanent DPI, so anyone can confirm who really owns it without depending on anyone's word.",
+  lede = "Questions about property identity, inspections or getting started? Find out how Urbn works.",
 }: {
   faqs: Faq[];
   lede?: string;
@@ -74,14 +74,14 @@ export function FaqSection({
   return (
     <section className="container-x py-16 sm:py-24 lg:py-32" aria-labelledby="faq-heading">
       <Reveal>
-        <SectionHeading title={<span id="faq-heading">FAQs.</span>} lede={lede} />
+        <SectionHeading title={<span id="faq-heading">FAQs</span>} lede={lede} />
       </Reveal>
       <Reveal className="mx-auto mt-8 max-w-5xl md:mt-14" delay={0.1}>
         <FaqList faqs={faqs} />
       </Reveal>
       <div className="mt-8 md:mt-10 md:text-center">
         <ButtonLink to="/faq" variant="dark" size="lg" className="w-full md:h-11 md:w-auto md:px-5 md:text-[15px]">
-          See all FAQs
+          See All FAQs
         </ButtonLink>
       </div>
     </section>

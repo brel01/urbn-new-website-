@@ -7,7 +7,7 @@ export const SITE = {
   url: import.meta.env.VITE_SITE_URL ?? "https://urbn.ng",
   tagline: "The digital infrastructure for housing",
   description:
-    "Urbn is the digital infrastructure for housing in Nigeria. Every property gets a permanent, verifiable Digital Property Identity (DPI), so you can verify homes in seconds, find verified listings, and rent or buy without blind trust.",
+    "Urbn connects property records, listings and housing activities in one app. Find a home, check its identity and manage your property.",
   email: "hello@urbn.ng", // TODO: confirm inbox
   locale: "en_NG",
   twitter: "@urbn_hq",
@@ -29,51 +29,48 @@ export const SITE = {
 } as const;
 
 export const NAV = [
-  { label: "About us", to: "/about" },
-  { label: "DPI", to: "/dpi" },
+  { label: "About Urbn", to: "/about" },
+  { label: "Property Identity", to: "/dpi" },
   { label: "Verify a Property", to: "/verify" },
   { label: "Listings", to: "/listings" },
   { label: "Features", to: "/features" },
   { label: "Blog", to: "/blog" },
-  { label: "FAQ", to: "/faq" },
+  { label: "FAQs", to: "/faq" },
 ] as const;
 
 export const FOOTER = [
   {
     title: "Company",
     links: [
-      { label: "About", to: "/about" },
+      { label: "About Urbn", to: "/about" },
       { label: "Careers", to: "/careers" },
       { label: "FAQs", to: "/faq" },
       { label: "Blog & Press", to: "/blog" },
       { label: "Contact", to: "/contact" },
-      { label: "Terms of Use", to: "/terms" },
+      { label: "Terms of Service", to: "/terms" },
       { label: "Privacy Policy", to: "/privacy" },
     ],
   },
   {
     title: "Product",
     links: [
-      { label: "DPI", to: "/dpi" },
+      { label: "Property Identity", to: "/dpi" },
       { label: "Verify a Property", to: "/verify" },
-      { label: "Verified Listings", to: "/listings" },
+      { label: "Browse Listings", to: "/listings" },
       { label: "Features", to: "/features" },
       { label: "For Renters", to: "/for-renters" },
-      { label: "For Property Owners", to: "/for-owners" },
-      { label: "For Agents & Property Managers", to: "/for-agents" },
+      { label: "For Owners", to: "/for-owners" },
+      { label: "For Agents & Managers", to: "/for-agents" },
     ],
   },
   {
-    title: "Popular",
+    title: "Explore Areas",
+    // Only areas with active coverage. Future cities are reached through launch updates.
     links: [
       { label: "Ibadan", to: "/listings/in/ibadan" },
       { label: "Bodija", to: "/listings/in/bodija" },
       { label: "Akobo", to: "/listings/in/akobo" },
-      { label: "Lagos", to: "/listings/in/lagos" },
-      { label: "Abuja", to: "/listings/in/abuja" },
-      { label: "Port Harcourt", to: "/listings/in/port-harcourt" },
-      { label: "Lekki", to: "/listings/in/lekki" },
-      { label: "Yaba", to: "/listings/in/yaba" },
+      { label: "New Cities: Get Launch Updates", to: "/download#launch-updates" },
     ],
   },
 ] as const;
