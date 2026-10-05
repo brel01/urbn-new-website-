@@ -6,7 +6,7 @@
  * engine: server-side geo filtering, nearest first, stable id tie-break.
  */
 import { api, haversineKm, usingLiveApi } from "../marketplace/source.server";
-import { getPlace } from "../places";
+import { areaFromAddress, getPlace } from "../places";
 import { SAMPLE_PLACES, SAMPLE_PROPERTIES } from "./seed";
 import {
   ACTIVITY_TYPES,
@@ -84,7 +84,7 @@ const fromApi = (r: { activity: ApiActivity; property: ApiProperty; unit: ApiNea
     imageUrl: r.activity.profilePictureUrl ?? null,
     contactPhone: r.activity.contactPhone ?? null,
     socialLinks: r.activity.socialLinks ?? null,
-    property: { id: r.property.id, dpi: r.property.dpi, address: r.property.address, city: r.property.city, area: null },
+    property: { id: r.property.id, dpi: r.property.dpi, address: r.property.address, city: r.property.city, area: areaFromAddress(r.property.address ?? "")?.name ?? null },
     unit: r.unit,
     distance: Number.isFinite(d) ? d : undefined,
     lat: Number.isFinite(lat) ? lat : undefined,
@@ -200,3 +200,37 @@ export async function placesAtProperty(ref: { propertyId?: string | null; dpi: s
 }
 
 export const sampleProperty = (dpi: string) => SAMPLE_PROPERTIES.find((p) => p.dpi === dpi);
+
+// --- sitemap ----------------------------------------------------------------------
+
+type SitemapEntry = { path: string; lastmod?: string; image?: string | null };
+let sitemapCache: { at: number; entries: SitemapEntry[] } | null = null;
+
+/**
+ * Every public place page plus every non-empty area/category page, for sitemap.xml.
+ * Only with live data: sample places are illustrative and stay out of search engines.
+ * Walks each live area (paged, 50 at a time, as the API allows) and caches for an hour.
+ */
+export async function nearbySitemapEntries(): Promise<SitemapEntry[]> {
+  if (!usingLiveApi) return [];
+  if (sitemapCache && Date.now() - sitemapCache.at < 3_600_000) return sitemapCache.entries;
+  const { PLACES } = await import("../places");
+  const { HUB_TYPES, hubPath } = await import("./seo");
+  const { activityPath } = await import("./types");
+  const places = new Map<string, NearbyPlace>();
+  const hubs: SitemapEntry[] = [];
+  for (const area of PLACES.filter((p) => p.live && p.center)) {
+    const radius = area.kind === "city" ? MAX_RADIUS : 3;
+    const cats = await nearbyCategories({ area: area.slug, radius });
+    if (cats.length) hubs.push({ path: hubPath(area.slug) });
+    for (const c of cats) if (HUB_TYPES.includes(c.value)) hubs.push({ path: hubPath(area.slug, c.value) });
+    for (let page = 1; page <= 10; page++) {
+      const r = await searchNearby({ area: area.slug, radius, limit: 50, page });
+      for (const p of r.places) places.set(p.id, p);
+      if (r.error || page >= r.meta.totalPages) break;
+    }
+  }
+  const entries = [...hubs, ...[...places.values()].map((p) => ({ path: activityPath(p), image: p.imageUrl }))];
+  sitemapCache = { at: Date.now(), entries };
+  return entries;
+}

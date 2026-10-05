@@ -3,7 +3,7 @@
 // variants), ActivityDetailSheet, ActivityCategoryChips and PublicActivityPreview.
 import { clsx } from "clsx";
 import { ChevronRight, Globe, MapPin, Navigation2, Phone, X } from "lucide-react";
-import { type ReactNode, useState } from "react";
+import { type MouseEvent, type ReactNode, useState } from "react";
 import { Link } from "react-router";
 import { ACTIVITY_META, placeTitle } from "~/lib/nearby/categories";
 import { type ActivityType, type CategoryCount, formatDistanceAway, locationLabel, type NearbyPlace } from "~/lib/nearby/types";
@@ -36,13 +36,24 @@ const Thumb = ({ place, size = "md" }: { place: NearbyPlace; size?: "sm" | "md" 
     <PlaceIcon type={place.activityType} size={size === "sm" ? "sm" : "md"} />
   );
 
+/** Plain clicks run `onOpen` (e.g. open the sheet); modified clicks and crawlers follow the real page URL. */
+const intercept = (onOpen?: () => void) =>
+  onOpen
+    ? (e: MouseEvent) => {
+        if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        e.preventDefault();
+        onOpen();
+      }
+    : undefined;
+
 const distanceCity = (p: NearbyPlace) => [formatDistanceAway(p.distance), p.property.city].filter(Boolean).join(" · ");
 
 /** The app's list-variant card. Opens the activity's detail. */
-export function NearbyListCard({ place, to, active, onHover }: { place: NearbyPlace; to: string; active?: boolean; onHover?: (id: string | null) => void }) {
+export function NearbyListCard({ place, to, onOpen, active, onHover }: { place: NearbyPlace; to: string; onOpen?: () => void; active?: boolean; onHover?: (id: string | null) => void }) {
   return (
     <Link
       to={to}
+      onClick={intercept(onOpen)}
       preventScrollReset
       onMouseEnter={() => onHover?.(place.id)}
       onMouseLeave={() => onHover?.(null)}
@@ -91,13 +102,13 @@ const directionsUrl = (p: NearbyPlace) =>
   p.lat != null && p.lng != null ? `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}` : null;
 
 /** The app's detail-variant card: shown over the map for the selected place. */
-export function NearbySelectedCard({ place, to, onClose }: { place: NearbyPlace; to: string; onClose: () => void }) {
+export function NearbySelectedCard({ place, to, onOpen, onClose }: { place: NearbyPlace; to: string; onOpen?: () => void; onClose: () => void }) {
   const m = ACTIVITY_META[place.activityType];
   const dir = directionsUrl(place);
   return (
     <div className="rounded-2xl bg-white p-4 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.35)] ring-1 ring-black/5">
       <div className="flex items-start gap-3">
-        <Link to={to} preventScrollReset className="flex min-w-0 flex-1 items-start gap-3">
+        <Link to={to} onClick={intercept(onOpen)} preventScrollReset className="flex min-w-0 flex-1 items-start gap-3">
           <Thumb place={place} />
           <span className="min-w-0 flex-1">
             <span className="flex min-w-0 items-center gap-2">
@@ -119,7 +130,7 @@ export function NearbySelectedCard({ place, to, onClose }: { place: NearbyPlace;
         </button>
       </div>
       {place.description && (
-        <Link to={to} preventScrollReset className="mt-3 line-clamp-2 block text-sm text-neutral-800">
+        <Link to={to} onClick={intercept(onOpen)} preventScrollReset className="mt-3 line-clamp-2 block text-sm text-neutral-800">
           {place.description}
         </Link>
       )}
@@ -129,7 +140,7 @@ export function NearbySelectedCard({ place, to, onClose }: { place: NearbyPlace;
             <a.icon className="size-4" />
           </a>
         ))}
-        <Link to={to} preventScrollReset className="text-xs font-semibold text-neutral-600 hover:text-ink">
+        <Link to={to} onClick={intercept(onOpen)} preventScrollReset className="text-xs font-semibold text-neutral-600 hover:text-ink">
           View Details
         </Link>
         {dir && (

@@ -77,6 +77,7 @@ export const FOOTER = [
       { label: "Ibadan", to: "/listings/in/ibadan" },
       { label: "Bodija", to: "/listings/in/bodija" },
       { label: "Akobo", to: "/listings/in/akobo" },
+      { label: "Places Nearby in Ibadan", to: "/nearby/in/ibadan" },
       { label: "New Cities: Get Launch Updates", to: "/download#launch-updates" },
     ],
   },

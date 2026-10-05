@@ -4,6 +4,8 @@ export function loader() {
   const body = `User-agent: *
 Allow: /
 Disallow: /api/
+# The Nearby sheet state; each place has its own page.
+Disallow: /*?*place=
 
 Sitemap: ${absoluteUrl("/sitemap.xml")}
 `;
