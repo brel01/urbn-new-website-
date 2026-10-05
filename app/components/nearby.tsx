@@ -58,21 +58,26 @@ export function NearbyListCard({ place, to, onOpen, active, onHover }: { place: 
       onMouseEnter={() => onHover?.(place.id)}
       onMouseLeave={() => onHover?.(null)}
       className={clsx(
-        "flex items-center gap-3 rounded-2xl bg-white p-3 ring-1 transition-[box-shadow,transform] duration-300 active:scale-[0.99]",
+        "flex w-full min-w-0 items-center gap-3 rounded-2xl bg-white p-3 ring-1 transition-[box-shadow,transform] duration-300 active:scale-[0.99]",
         active ? "shadow-[0_14px_34px_-18px_rgba(0,0,0,0.45)] ring-ink" : "ring-black/5 hover:ring-neutral-300",
       )}
     >
       <Thumb place={place} />
       <span className="min-w-0 flex-1">
-        <span className="flex min-w-0 items-center gap-2">
-          <b className="truncate text-sm font-semibold">{placeTitle(place)}</b>
+        {/* Long names wrap to two lines rather than widening the card on phones. */}
+        <span className="flex min-w-0 items-start gap-2">
+          <b className="line-clamp-2 min-w-0 text-sm leading-snug font-semibold break-words">{placeTitle(place)}</b>
           {place.socialLinks?.whatsapp && (
-            <span title="On WhatsApp" className="shrink-0 text-[#25D366]">
+            <span title="On WhatsApp" className="mt-0.5 shrink-0 text-[#25D366]">
               <BrandIcon name="whatsapp" className="size-3.5" />
               <span className="sr-only">On WhatsApp</span>
             </span>
           )}
-          {place.sample && <SampleBadge className="shrink-0" />}
+          {place.sample && (
+            <span className="hidden shrink-0 sm:inline">
+              <SampleBadge />
+            </span>
+          )}
         </span>
         {place.businessCategory && <span className="block truncate text-xs text-neutral-500">{place.businessCategory}</span>}
         <span className="mt-1 flex items-center gap-1 text-xs text-neutral-500">
@@ -117,9 +122,13 @@ export function NearbySelectedCard({ place, to, onOpen, onClose }: { place: Near
         <Link to={to} onClick={intercept(onOpen)} preventScrollReset className="flex min-w-0 flex-1 items-start gap-3">
           <Thumb place={place} />
           <span className="min-w-0 flex-1">
-            <span className="flex min-w-0 items-center gap-2">
-              <b className="truncate text-base font-bold">{placeTitle(place)}</b>
-              {place.sample && <SampleBadge className="shrink-0" />}
+            <span className="flex min-w-0 items-start gap-2">
+              <b className="line-clamp-2 min-w-0 text-base leading-snug font-bold break-words">{placeTitle(place)}</b>
+              {place.sample && (
+                <span className="hidden shrink-0 sm:inline">
+                  <SampleBadge />
+                </span>
+              )}
             </span>
             <span className="block truncate text-xs text-neutral-500">
               {place.businessCategory || m.label}
@@ -146,12 +155,12 @@ export function NearbySelectedCard({ place, to, onOpen, onClose }: { place: Near
             <a.icon className="size-4" />
           </ContactLink>
         ))}
-        <Link to={to} onClick={intercept(onOpen)} preventScrollReset className="text-xs font-semibold text-neutral-600 hover:text-ink">
-          View Details
+        <Link to={to} onClick={intercept(onOpen)} preventScrollReset className="text-xs font-semibold whitespace-nowrap text-neutral-600 hover:text-ink">
+          Details
         </Link>
         {dir && (
-          <a href={dir} target="_blank" rel="noopener" className="ml-auto inline-flex items-center gap-2 rounded-xl bg-ink px-4 py-2.5 text-xs font-semibold text-white hover:bg-neutral-800">
-            <Navigation2 className="size-3.5" /> Get Directions
+          <a href={dir} target="_blank" rel="noopener" className="ml-auto inline-flex items-center gap-2 rounded-xl bg-ink px-3.5 py-2.5 text-xs font-semibold whitespace-nowrap text-white hover:bg-neutral-800">
+            <Navigation2 className="size-3.5" /> Directions
           </a>
         )}
       </div>

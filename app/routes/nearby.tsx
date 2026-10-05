@@ -318,7 +318,7 @@ export default function Nearby({ loaderData }: Route.ComponentProps) {
               ) : places.length === 0 ? (
                 <Empty title="Nothing found nearby" body="Try widening the search area or clearing the type filter." />
               ) : (
-                <ul className={clsx("grid gap-3 sm:grid-cols-2 lg:grid-cols-3", results.isFetching && !results.isFetchingNextPage && "opacity-60")}>
+                <ul className={clsx("grid grid-cols-[minmax(0,1fr)] gap-3 sm:grid-cols-2 lg:grid-cols-3", results.isFetching && !results.isFetchingNextPage && "opacity-60")}>
                   {places.map((p) => (
                     <li key={p.id}>
                       <NearbyListCard place={p} to={activityPath(p)} onOpen={() => set({ place: p.id })} />
@@ -351,8 +351,8 @@ export default function Nearby({ loaderData }: Route.ComponentProps) {
                   className="h-[calc(100svh-15rem)] min-h-[28rem] sm:rounded-2xl lg:h-[40rem]"
                 />
               </Suspense>
-              {/* bottom: results strip, or the selected place */}
-              <div className="pointer-events-none absolute inset-x-0 bottom-4 z-[500]">
+              {/* bottom: results strip, or the selected place; on phones it clears the tab bar */}
+              <div className="pointer-events-none absolute inset-x-0 bottom-[calc(5.75rem+env(safe-area-inset-bottom))] z-[500] lg:bottom-4">
                 {selected ? (
                   <div className="pointer-events-auto mx-4 sm:max-w-md">
                     <NearbySelectedCard place={selected} to={activityPath(selected)} onOpen={() => set({ place: selected.id })} onClose={() => setSelected(null)} />
@@ -572,7 +572,7 @@ function PlaceSheet({ id, places, onClose }: { id: string | null; places: Nearby
 
 function ListSkeleton() {
   return (
-    <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" aria-hidden>
+    <ul className="grid grid-cols-[minmax(0,1fr)] gap-3 sm:grid-cols-2 lg:grid-cols-3" aria-hidden>
       {Array.from({ length: 6 }).map((_, i) => (
         <li key={i} className="flex items-center gap-3 rounded-2xl bg-white p-3 ring-1 ring-black/5">
           <span className="size-14 animate-pulse rounded-xl bg-mist" />

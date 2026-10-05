@@ -151,7 +151,7 @@ export default function NearbyHub({ loaderData }: Route.ComponentProps) {
             </p>
           )}
           {result.places.length > 0 ? (
-            <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <ul className="mt-6 grid grid-cols-[minmax(0,1fr)] gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {result.places.map((p) => (
                 <li key={p.id}>
                   <NearbyListCard place={p} to={activityPath(p)} />
