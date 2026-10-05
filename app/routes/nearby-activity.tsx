@@ -107,7 +107,7 @@ export default function NearbyActivity({ loaderData }: Route.ComponentProps) {
                   </Link>
                 )}
               </div>
-              <ul className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              <ul className="mt-5 grid grid-cols-[minmax(0,1fr)] gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {more.map((p) => (
                   <li key={p.id}><NearbyListCard place={p} to={activityPath(p)} /></li>
                 ))}
