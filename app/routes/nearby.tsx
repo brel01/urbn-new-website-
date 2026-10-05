@@ -27,7 +27,8 @@ import {
   type NearbyResult,
   type NearbySort,
 } from "~/lib/nearby/types";
-import { getPlace } from "~/lib/places";
+import { getPlace, LIVE_AREAS, PLACES } from "~/lib/places";
+import { HUB_TYPES, hubPath } from "~/lib/nearby/seo";
 import { breadcrumbs, seo } from "~/lib/seo";
 import type { Route } from "./+types/nearby";
 
@@ -190,7 +191,6 @@ export default function Nearby({ loaderData }: Route.ComponentProps) {
     return () => io.disconnect();
   }, [view, results.hasNextPage, results.isFetchingNextPage, results.fetchNextPage]);
 
-  const openPlace = (p: NearbyPlace) => `?${new URLSearchParams({ ...Object.fromEntries(sp), place: p.id })}`;
   const atUser = !!user && center.lat === user.lat && center.lng === user.lng;
   const where = atUser ? "your location" : isDefault ? loaderData.areaName : "this area";
 
@@ -321,7 +321,7 @@ export default function Nearby({ loaderData }: Route.ComponentProps) {
                 <ul className={clsx("grid gap-3 sm:grid-cols-2 lg:grid-cols-3", results.isFetching && !results.isFetchingNextPage && "opacity-60")}>
                   {places.map((p) => (
                     <li key={p.id}>
-                      <NearbyListCard place={p} to={openPlace(p)} />
+                      <NearbyListCard place={p} to={activityPath(p)} onOpen={() => set({ place: p.id })} />
                     </li>
                   ))}
                 </ul>
@@ -355,7 +355,7 @@ export default function Nearby({ loaderData }: Route.ComponentProps) {
               <div className="pointer-events-none absolute inset-x-0 bottom-4 z-[500]">
                 {selected ? (
                   <div className="pointer-events-auto mx-4 sm:max-w-md">
-                    <NearbySelectedCard place={selected} to={openPlace(selected)} onClose={() => setSelected(null)} />
+                    <NearbySelectedCard place={selected} to={activityPath(selected)} onOpen={() => set({ place: selected.id })} onClose={() => setSelected(null)} />
                   </div>
                 ) : loadingFirst ? (
                   <div className="pointer-events-auto mx-4 flex justify-center rounded-2xl bg-white p-4 shadow-lg sm:max-w-md">
@@ -379,8 +379,41 @@ export default function Nearby({ loaderData }: Route.ComponentProps) {
         </div>
       </section>
 
+      <BrowseByArea />
+
       <PlaceSheet id={placeId} places={places} onClose={() => set({ place: null })} />
     </>
+  );
+}
+
+/** Plain links to every area and category page, so people and search engines can browse without the tool. */
+function BrowseByArea() {
+  const areas = [PLACES[0], ...LIVE_AREAS];
+  return (
+    <section className="border-t border-black/5 bg-white py-14 sm:py-20" aria-labelledby="browse-heading">
+      <div className="container-x">
+        <h2 id="browse-heading" className="text-2xl sm:text-3xl">Browse Nearby by Area</h2>
+        <div className="mt-6 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+          {areas.map((a) => (
+            <div key={a.slug}>
+              <Link to={hubPath(a.slug)} className="font-semibold hover:text-urbn">
+                Places in {a.name}
+              </Link>
+              <p className="mt-1.5 text-sm leading-relaxed text-neutral-500">
+                {HUB_TYPES.slice(0, 6).map((t, i) => (
+                  <span key={t}>
+                    {i > 0 && " · "}
+                    <Link to={hubPath(a.slug, t)} className="hover:text-ink hover:underline">
+                      {ACTIVITY_META[t].plural}
+                    </Link>
+                  </span>
+                ))}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -520,7 +553,7 @@ function PlaceSheet({ id, places, onClose }: { id: string | null; places: Nearby
               </button>
             </div>
             {place ? (
-              <NearbyDetail place={place} images={detail.data?.images ?? []} />
+              <NearbyDetail place={place} images={detail.data?.images ?? []} extras={detail.data?.extras} />
             ) : detail.isError ? (
               <Empty title="This activity is no longer available to view." body="It may have closed or been made private." />
             ) : (

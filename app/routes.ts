@@ -11,6 +11,7 @@ export default [
   route("listings/in/:place", "routes/listings-place.tsx"),
   route("listings/:id/:slug?", "routes/listing.tsx"),
   route("nearby", "routes/nearby.tsx"),
+  route("nearby/in/:area/:category?", "routes/nearby-hub.tsx"),
   route("nearby/activity/:id/:slug?", "routes/nearby-activity.tsx"),
   route("about", "routes/about.tsx"),
   route("faq", "routes/faq.tsx"),

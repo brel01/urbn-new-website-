@@ -42,7 +42,17 @@ export type NearbyPlace = {
   sample?: boolean;
 };
 
-export type NearbyPlaceDetail = NearbyPlace & { images: string[] };
+/** Extra public fields from GET /activities/:id, filled in on the Add Activity form. */
+export type NearbyPlaceExtras = {
+  schoolLevel: string | null;
+  cropTypes: string[];
+  livestockTypes: string[];
+  facilityUse: string | null;
+  /** When the activity was recorded on Urbn (ISO). */
+  createdAt: string | null;
+};
+
+export type NearbyPlaceDetail = NearbyPlace & { images: string[]; extras?: NearbyPlaceExtras };
 
 export type CategoryCount = { value: ActivityType; count: number };
 
@@ -78,15 +88,21 @@ export const RADII = [1, 5, 10, 25] as const;
 export const DEFAULT_RADIUS = 5;
 export const MAX_RADIUS = 25;
 
-export const activitySlug = (p: Pick<NearbyPlace, "name" | "activityType" | "property">) =>
-  (p.name ?? `${p.activityType} ${p.property.area ?? p.property.city ?? ""}`)
+/** URL words: the place's name plus its area and city ("kolapo-pharmacy-bodija-ibadan"), which is what people search. */
+export const activitySlug = (p: Pick<NearbyPlace, "name" | "activityType" | "property">) => {
+  const words = [p.name ?? p.activityType.replace(/_/g, " ")];
+  for (const w of [p.property.area, p.property.city]) if (w && !words.join(" ").toLowerCase().includes(w.toLowerCase())) words.push(w);
+  return words
+    .join(" ")
     .toLowerCase()
     .normalize("NFKD")
     .replace(/[^\w\s-]/g, "")
     .trim()
     .replace(/[\s_]+/g, "-")
     .replace(/-+/g, "-")
-    .slice(0, 60);
+    .slice(0, 80)
+    .replace(/-+$/, "");
+};
 
 export const activityPath = (p: Pick<NearbyPlace, "id" | "name" | "activityType" | "property">) =>
   `/nearby/activity/${encodeURIComponent(p.id)}/${activitySlug(p)}`;

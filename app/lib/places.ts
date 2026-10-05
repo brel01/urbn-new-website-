@@ -98,6 +98,12 @@ export const PLACES: Place[] = [
 ];
 
 export const getPlace = (slug: string) => PLACES.find((p) => p.slug === slug);
+
+/** The live area an address sits in, matched on the area's name or aliases ("Kolapo Ishola Road, Bodija" → Bodija). */
+export const areaFromAddress = (address: string) => {
+  const a = address.toLowerCase();
+  return PLACES.find((p) => p.live && p.kind === "area" && [p.name.toLowerCase(), ...p.aliases].some((w) => new RegExp(`\\b${w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`).test(a)));
+};
 export const LIVE_AREAS = PLACES.filter((p) => p.kind === "area" && p.live);
 
 /** Ibadan LGAs (Oyo State) offered in the area filter, as named by the API. */
