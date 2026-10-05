@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import { CtaBanner } from "~/components/cta-banner";
 import { Reveal, Stagger, StaggerItem, WordsReveal } from "~/components/motion";
 import { breadcrumbs, seo } from "~/lib/seo";
+import { absoluteUrl } from "~/lib/site";
 import { STORIES } from "~/lib/stories";
 import type { Route } from "./+types/blog";
 
@@ -15,7 +16,7 @@ export const meta: Route.MetaFunction = () =>
         "@context": "https://schema.org",
         "@type": "Blog",
         name: "Urbn Stories",
-        blogPost: STORIES.map((s) => ({ "@type": "BlogPosting", headline: s.title, datePublished: s.date, url: `https://urbn.ng/blog/${s.slug}` })),
+        blogPost: STORIES.map((s) => ({ "@type": "BlogPosting", headline: s.title, datePublished: s.date, url: absoluteUrl(`/blog/${s.slug}`) })),
       },
       breadcrumbs([
         { name: "Home", path: "/" },
