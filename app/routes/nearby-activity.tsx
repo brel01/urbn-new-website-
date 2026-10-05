@@ -95,7 +95,7 @@ export default function NearbyActivity({ loaderData }: Route.ComponentProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: EASE }}
           >
-            <NearbyDetail place={place} images={place.images} />
+            <NearbyDetail place={place} images={place.images} extras={place.extras} />
           </motion.div>
           {more.length > 0 && (
             <div className="mx-auto mt-12 max-w-5xl">

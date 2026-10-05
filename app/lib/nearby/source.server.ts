@@ -7,7 +7,7 @@
  */
 import { api, haversineKm, usingLiveApi } from "../marketplace/source.server";
 import { areaFromAddress, getPlace } from "../places";
-import { SAMPLE_PLACES, SAMPLE_PROPERTIES } from "./seed";
+import { SAMPLE_EXTRAS, SAMPLE_PLACES, SAMPLE_PROPERTIES } from "./seed";
 import {
   ACTIVITY_TYPES,
   type ActivityType,
@@ -68,6 +68,12 @@ type ApiActivity = {
   contactPhone?: string | null;
   socialLinks?: NearbyPlace["socialLinks"];
   profilePictureUrl?: string | null;
+  // Detail-only (GET /activities/:id).
+  schoolLevel?: string | null;
+  cropTypes?: string[] | null;
+  livestockTypes?: string[] | null;
+  facilityUse?: string | null;
+  createdAt?: string | null;
 };
 type ApiProperty = { id: string; dpi: string; address: string; city: string | null; latitude: number | string; longitude: number | string };
 type ApiNearbyResult = { activity: ApiActivity; property: ApiProperty; unit: { id: string; unitNumber: string } | null; distance?: number | string };
@@ -175,13 +181,24 @@ export async function getNearbyPlace(id: string): Promise<NearbyPlaceDetail | nu
         `/activities/${encodeURIComponent(id)}`,
       );
       const d = r.data;
-      return { ...fromApi(d), images: (d.images ?? []).sort((a, b) => a.displayOrder - b.displayOrder).map((i) => i.fileUrl) };
+      const a = d.activity;
+      return {
+        ...fromApi(d),
+        images: (d.images ?? []).sort((x, y) => x.displayOrder - y.displayOrder).map((i) => i.fileUrl),
+        extras: {
+          schoolLevel: a.schoolLevel || null,
+          cropTypes: a.cropTypes ?? [],
+          livestockTypes: a.livestockTypes ?? [],
+          facilityUse: a.facilityUse || null,
+          createdAt: a.createdAt ?? null,
+        },
+      };
     } catch {
       return null;
     }
   }
   const p = SAMPLE_PLACES.find((x) => x.id === id);
-  return p ? { ...p, images: [] } : null;
+  return p ? { ...p, images: [], extras: SAMPLE_EXTRAS[p.id] } : null;
 }
 
 /** "Activity Here" on a DPI record: public activities at one property (GET /public/properties/:id/activity). */

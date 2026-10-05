@@ -42,7 +42,17 @@ export type NearbyPlace = {
   sample?: boolean;
 };
 
-export type NearbyPlaceDetail = NearbyPlace & { images: string[] };
+/** Extra public fields from GET /activities/:id, filled in on the Add Activity form. */
+export type NearbyPlaceExtras = {
+  schoolLevel: string | null;
+  cropTypes: string[];
+  livestockTypes: string[];
+  facilityUse: string | null;
+  /** When the activity was recorded on Urbn (ISO). */
+  createdAt: string | null;
+};
+
+export type NearbyPlaceDetail = NearbyPlace & { images: string[]; extras?: NearbyPlaceExtras };
 
 export type CategoryCount = { value: ActivityType; count: number };
 

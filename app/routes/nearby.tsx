@@ -553,7 +553,7 @@ function PlaceSheet({ id, places, onClose }: { id: string | null; places: Nearby
               </button>
             </div>
             {place ? (
-              <NearbyDetail place={place} images={detail.data?.images ?? []} />
+              <NearbyDetail place={place} images={detail.data?.images ?? []} extras={detail.data?.extras} />
             ) : detail.isError ? (
               <Empty title="This activity is no longer available to view." body="It may have closed or been made private." />
             ) : (

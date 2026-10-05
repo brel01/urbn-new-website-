@@ -2,7 +2,7 @@
 // activity data. Every record carries `sample: true` and the UI says so.
 // Names are illustrative; they don't describe real businesses.
 import { makeDpi } from "../dpi";
-import type { NearbyPlace } from "./types";
+import type { NearbyPlace, NearbyPlaceExtras } from "./types";
 
 export type SampleProperty = {
   id: string;
@@ -94,3 +94,42 @@ export const SAMPLE_PLACES: NearbyPlace[] = [
   place("sa-015", "sp-samonda-mosque", "RELIGIOUS", "Samonda Central Mosque", null, "A place of worship recorded at this property."),
   place("sa-016", "sp-samonda-ngo", "NGO", "Youth Skills Foundation", null, "Digital and vocational skills classes for young people."),
 ];
+
+// Sample contact details show which channels a place can list (phone, WhatsApp,
+// socials, website). They are placeholders: the UI renders them without links,
+// so nobody is sent to a real number or account.
+const SAMPLE_CONTACT: NearbyPlace["socialLinks"] = {
+  whatsapp: "https://wa.me/2340000000000",
+  instagram: "https://instagram.com/",
+  facebook: "https://facebook.com/",
+  tiktok: "https://tiktok.com/",
+  website: "https://example.com/",
+};
+for (const p of SAMPLE_PLACES) {
+  if (["sa-001", "sa-002", "sa-004", "sa-005", "sa-008", "sa-009", "sa-012", "sa-014"].includes(p.id)) {
+    p.contactPhone = "+234 000 000 0000";
+    p.socialLinks = p.activityType === "CLINIC" ? { whatsapp: SAMPLE_CONTACT.whatsapp } : SAMPLE_CONTACT;
+  }
+}
+
+const extras = (e: Partial<NearbyPlaceExtras>): NearbyPlaceExtras => ({
+  schoolLevel: null,
+  cropTypes: [],
+  livestockTypes: [],
+  facilityUse: null,
+  createdAt: "2026-06-15T00:00:00.000Z",
+  ...e,
+});
+
+/** Detail-only fields for sample places (school level, facility use, crops, livestock, date recorded). */
+export const SAMPLE_EXTRAS: Record<string, NearbyPlaceExtras> = Object.fromEntries(
+  SAMPLE_PLACES.map((p) => [
+    p.id,
+    extras(
+      p.id === "sa-003" ? { schoolLevel: "Nursery & Primary" }
+      : p.id === "sa-013" ? { schoolLevel: "Secondary" }
+      : p.id === "sa-011" ? { facilityUse: "Storage & distribution" }
+      : {},
+    ),
+  ]),
+);
