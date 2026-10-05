@@ -21,6 +21,8 @@ export type Story = {
   excerpt: string;
   image: string;
   imageAlt: string;
+  /** "contain" for portrait poster covers that must not be cropped. */
+  imageFit?: "contain";
   category: string;
   date: string;
   readMins: number;
@@ -69,3 +71,7 @@ const DRAFT_STORIES: Story[] = [
 export const STORIES: Story[] = MEDIUM_STORIES.length > 0 ? MEDIUM_STORIES : DRAFT_STORIES;
 
 export const getStory = (slug: string) => STORIES.find((s) => s.slug === slug);
+
+/** Card/thumbnail classes for a story cover: poster covers are shown whole on a tint. */
+export const coverFit = (s: Pick<Story, "imageFit">) =>
+  s.imageFit === "contain" ? "object-contain bg-blue-50 p-3" : "object-cover";

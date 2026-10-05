@@ -1,0 +1,16 @@
+{
+  "_comment": "Alt text for imported Medium images, keyed by '<slug>/<image index>' (0 is the cover). Medium posts mostly carry 'urbn.ng' as alt text, so describe each image here; npm run import:medium applies these.",
+  "a-landlords-guide-to-property-documentation-and-lease-agreements-in-nigeria/0": "A landlord signing a lease agreement at a desk, with the article title overlaid",
+  "from-paper-records-to-digital-property-identity-where-nigerian-real-estate-is-headed/0": "A smiling woman holding property documents beside a phone showing the Urbn app, under the headline 'From Paper Records to Digital Property Identity'",
+  "from-paper-records-to-digital-property-identity-where-nigerian-real-estate-is-headed/1": "Diagram: Property, then associated records, then history, then verification",
+  "why-co-living-is-reshaping-nigerias-urban-housing-market/0": "Aerial view of a Nigerian city neighbourhood with houses, trees and high-rise buildings",
+  "why-ibadans-growing-property-market-needs-better-information/0": "A man standing on an Urbn billboard above an Ibadan street, under the headline 'Why Ibadan's Growing Property Market Needs Better Information'",
+  "why-ibadans-growing-property-market-needs-better-information/1": "Aerial view of a busy road running through densely built Ibadan neighbourhoods",
+  "why-ibadans-growing-property-market-needs-better-information/2": "Cocoa House, a landmark tower in Ibadan, with a yellow taxi on the road in front",
+  "why-property-records-are-still-fragmented-in-nigeria/0": "A modern house surrounded by separate property documents, under the headline 'Why Property Records Are Still Fragmented in Nigeria'",
+  "why-property-records-are-still-fragmented-in-nigeria/1": "Paper files piled on a desk next to a laptop, lit by a desk lamp",
+  "why-real-estate-needs-an-identity-layer/0": "A modern house with a clipboard showing a Property ID record, under the headline 'Why Real Estate Needs an Identity Layer'",
+  "why-real-estate-needs-an-identity-layer/1": "Scattered real estate documents, including a listing, a mortgage form and a set of house keys",
+  "why-real-estate-needs-an-identity-layer/2": "Diagram: Document, search, another document, another search, reconciliation, then professional review",
+  "why-real-estate-needs-an-identity-layer/3": "Diagram: Property, then associated records, then history, then verification"
+}

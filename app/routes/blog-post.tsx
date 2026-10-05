@@ -6,13 +6,13 @@ import { EASE, Reveal } from "~/components/motion";
 import { ButtonLink } from "~/components/ui";
 import { breadcrumbs, seo } from "~/lib/seo";
 import { SITE, absoluteUrl } from "~/lib/site";
-import { STORIES, getStory, type StoryBlock } from "~/lib/stories";
+import { STORIES, coverFit, getStory, type StoryBlock } from "~/lib/stories";
 import type { Route } from "./+types/blog-post";
 
 export function loader({ params }: Route.LoaderArgs) {
   const story = getStory(params.slug);
   if (!story) throw data("Not found", { status: 404 });
-  return { story, more: STORIES.filter((s) => s.slug !== story.slug) };
+  return { story, more: STORIES.filter((s) => s.slug !== story.slug).slice(0, 4) };
 }
 
 export const meta: Route.MetaFunction = ({ loaderData }) => {
@@ -90,6 +90,10 @@ function Block({ block: b }: { block: StoryBlock }) {
 
 export default function BlogPost({ loaderData }: Route.ComponentProps) {
   const { story: s, more } = loaderData;
+  // Imported posts without a subtitle use their opening paragraph as the excerpt; don't show it twice.
+  const first = s.body.find((b) => b.type === "p");
+  const plain = (html: string) => html.replace(/<[^>]+>/g, "").replace(/&#?\w+;/g, " ").replace(/\s+/g, " ");
+  const showLede = !(first?.type === "p" && plain(first.html).startsWith(plain(s.excerpt.replace(/…$/, "")).slice(0, 60)));
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
   return (
@@ -107,13 +111,13 @@ export default function BlogPost({ loaderData }: Route.ComponentProps) {
               · {s.readMins} min read
             </p>
             <h1 className="mt-3 text-4xl leading-[1.05] sm:text-6xl">{s.title}</h1>
-            <p className="lede mt-5">{s.excerpt}</p>
+            {showLede && <p className="lede mt-5">{s.excerpt}</p>}
           </motion.header>
         </div>
         <motion.img
           src={s.image}
           alt={s.imageAlt}
-          className="mx-auto mt-10 aspect-[1.6] w-full max-w-4xl rounded-card object-cover"
+          className={s.imageFit === "contain" ? "mx-auto mt-10 w-full max-w-lg rounded-card" : "mx-auto mt-10 aspect-[1.6] w-full max-w-4xl rounded-card object-cover"}
           initial={{ opacity: 0, scale: 0.97 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, ease: EASE, delay: 0.15 }}
@@ -145,7 +149,7 @@ export default function BlogPost({ loaderData }: Route.ComponentProps) {
           <div className="mt-8 grid gap-6 md:grid-cols-2">
             {more.map((m) => (
               <Link key={m.slug} to={`/blog/${m.slug}`} className="group flex gap-5 rounded-card bg-white p-4">
-                <img src={m.image} alt="" loading="lazy" className="aspect-square w-28 shrink-0 rounded-xl object-cover sm:w-36" />
+                <img src={m.image} alt="" loading="lazy" className={`aspect-square w-28 shrink-0 rounded-xl ${coverFit(m)} sm:w-36`} />
                 <div>
                   <p className="text-sm text-urbn">{m.category}</p>
                   <h3 className="mt-1 font-display text-xl group-hover:text-urbn">{m.title}</h3>

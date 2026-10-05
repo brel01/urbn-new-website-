@@ -17,6 +17,7 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_TS = join(ROOT, "app/lib/medium-stories.generated.ts");
+const ALT_TEXT = join(ROOT, "scripts/medium-alt-text.json");
 const IMG_DIR = join(ROOT, "public/images/blog");
 const DEFAULT_FEED = "https://medium.com/feed/@urbn_hq";
 const FALLBACK_COVER = "/og/urbn-share.png";
@@ -121,6 +122,47 @@ function toBlocks(html) {
   return blocks;
 }
 
+const isDomain = (s = "") => /^[\w-]+(\.[\w-]+)+$/.test(s.trim());
+const sameTitle = (heading, title) => {
+  const h = heading.toLowerCase().replace(/\s+[—|-]\s+urbn$/, "").trim();
+  return h === title.toLowerCase();
+};
+
+/** Tidy Medium writing habits into proper structure. */
+function normalise(blocks, title) {
+  const out = [];
+  for (const b of blocks) {
+    if (b.type === "p") {
+      const plain = text(b.html);
+      // Hashtag footers (#UrbnNigeria #HousingNigeria …) aren't article content.
+      if (/^(#\w+\s*)+$/.test(plain)) continue;
+      // A paragraph that is only bold text is a section heading.
+      if (/^<strong>[^<]+<\/strong>$/.test(b.html) && plain.length < 90) {
+        out.push({ type: "h", text: plain.replace(/:$/, ""), level: 3 });
+        continue;
+      }
+      // "· item" paragraphs typed as bullets become one list.
+      const bullet = b.html.match(/^\s*[·•▪◦-]\s+([\s\S]*)$/);
+      if (bullet) {
+        const prev = out[out.length - 1];
+        if (prev?.type === "list" && !prev.ordered && prev.typed) prev.items.push(bullet[1]);
+        else out.push({ type: "list", ordered: false, items: [bullet[1]], typed: true });
+        continue;
+      }
+    }
+    if (b.type === "img") {
+      // "urbn.ng" style credits are neither a description nor a useful caption.
+      if (isDomain(b.caption)) b.caption = undefined;
+      if (!b.alt || isDomain(b.alt)) {
+        const heading = [...out].reverse().find((x) => x.type === "h");
+        b.alt = `Illustration: ${heading ? heading.text : title}`;
+      }
+    }
+    out.push(b);
+  }
+  return out.map(({ typed, ...b }) => b);
+}
+
 const excerptOf = (s, max = 160) => {
   if (s.length <= max) return s;
   const cut = s.slice(0, max);
@@ -136,7 +178,7 @@ function convertItem(item) {
   let blocks = toBlocks(html);
 
   // Medium repeats the title as the first heading, often followed by the subtitle.
-  if (blocks[0]?.type === "h" && blocks[0].text.toLowerCase() === title.toLowerCase()) blocks.shift();
+  if (blocks[0]?.type === "h" && sameTitle(blocks[0].text, title)) blocks.shift();
   let subtitle;
   const firstImgIdx = blocks.findIndex((b) => b.type === "img");
   if (blocks[0]?.type === "h" && blocks[0].level >= 4 && (firstImgIdx === -1 || firstImgIdx > 0)) subtitle = blocks.shift().text;
@@ -145,7 +187,7 @@ function convertItem(item) {
   const cover = blocks.find((b) => b.type === "img");
   if (cover && blocks.indexOf(cover) <= 1 && blocks.slice(0, blocks.indexOf(cover)).every((b) => b.type !== "p")) blocks.splice(blocks.indexOf(cover), 1);
 
-  blocks = blocks.map(({ level, ...b }) => b);
+  blocks = normalise(blocks, title).map(({ level, ...b }) => b);
   const words = blocks.map((b) => (b.type === "p" || b.type === "quote" ? text(b.html) : b.type === "list" ? b.items.map(text).join(" ") : "")).join(" ").split(/\s+/).filter(Boolean).length;
   const firstPara = blocks.find((b) => b.type === "p");
 
@@ -154,7 +196,7 @@ function convertItem(item) {
     title,
     excerpt: excerptOf(subtitle ?? (firstPara ? text(firstPara.html) : title)),
     image: cover?.src ?? FALLBACK_COVER,
-    imageAlt: cover?.alt || cover?.caption || title,
+    imageAlt: cover?.alt && !isDomain(cover.alt) ? cover.alt : title,
     category: categories[0] ? titleCase(categories[0]) : "Stories",
     date: new Date(tag(item, "pubDate") || tag(item, "atom:updated")).toISOString().slice(0, 10),
     readMins: Math.max(1, Math.round(words / 200)),
@@ -175,7 +217,6 @@ const hasPillow = (() => {
 })();
 
 function localiseImage(url, slug, n) {
-  if (!/^https?:\/\//.test(url)) return url;
   const dir = join(IMG_DIR, slug);
   mkdirSync(dir, { recursive: true });
   const ext = (url.split("?")[0].match(/\.(jpe?g|png|gif|webp|avif)$/i)?.[1] ?? "jpg").toLowerCase().replace("jpeg", "jpg");
@@ -183,16 +224,16 @@ function localiseImage(url, slug, n) {
   download(url, raw);
   if (hasPillow && ext !== "gif" && ext !== "webp") {
     const webp = join(dir, `${n}.webp`);
-    execFileSync("python3", [
+    const size = execFileSync("python3", [
       "-c",
-      "import sys;from PIL import Image;im=Image.open(sys.argv[1]);im=im.convert('RGBA' if im.mode in ('RGBA','LA','P') else 'RGB');im.thumbnail((1600,1600));im.save(sys.argv[2],'WEBP',quality=82)",
+      "import sys;from PIL import Image;im=Image.open(sys.argv[1]);im=im.convert('RGBA' if im.mode in ('RGBA','LA','P') else 'RGB');im.thumbnail((1600,1600));im.save(sys.argv[2],'WEBP',quality=82);print(im.size[0],im.size[1])",
       raw,
       webp,
-    ]);
+    ], { encoding: "utf8" }).trim().split(" ").map(Number);
     rmSync(raw);
-    return `/images/blog/${slug}/${n}.webp`;
+    return { src: `/images/blog/${slug}/${n}.webp`, width: size[0], height: size[1] };
   }
-  return `/images/blog/${slug}/${n}.${ext}`;
+  return { src: `/images/blog/${slug}/${n}.${ext}` };
 }
 
 // --- run ---------------------------------------------------------------------
@@ -205,17 +246,27 @@ if (items.length === 0) {
 }
 
 const stories = items.map(convertItem);
+const altText = existsSync(ALT_TEXT) ? JSON.parse(readFileSync(ALT_TEXT, "utf8")) : {};
 if (existsSync(IMG_DIR)) rmSync(IMG_DIR, { recursive: true });
 for (const s of stories) {
   let n = 0;
   const seen = new Map();
   const local = (url) => {
-    if (!/^https?:\/\//.test(url)) return url;
-    if (!seen.has(url)) seen.set(url, localiseImage(url, s.slug, n++));
+    if (!/^https?:\/\//.test(url)) return { src: url };
+    if (!seen.has(url)) seen.set(url, { ...localiseImage(url, s.slug, n), key: `${s.slug}/${n++}` });
     return seen.get(url);
   };
-  s.image = local(s.image);
-  for (const b of s.body) if (b.type === "img") b.src = local(b.src);
+  const cover = local(s.image);
+  s.image = cover.src;
+  if (altText[cover.key]) s.imageAlt = altText[cover.key];
+  // Portrait covers are posters with the title baked in: show them whole, never cropped.
+  if (cover.height && cover.height > cover.width * 0.9) s.imageFit = "contain";
+  for (const b of s.body) {
+    if (b.type !== "img") continue;
+    const img = local(b.src);
+    b.src = img.src;
+    if (altText[img.key]) b.alt = altText[img.key];
+  }
   console.log(`✓ ${s.title}  (${s.date}, ${s.body.length} blocks, ${n} images)`);
 }
 stories.sort((a, b) => b.date.localeCompare(a.date));
