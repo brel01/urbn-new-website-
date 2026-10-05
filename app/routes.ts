@@ -30,6 +30,7 @@ export default [
   route("api/listings/ai-search", "routes/api.ai-search.ts"),
   route("api/dpi/:code/:unit?", "routes/api.dpi.ts"),
   route("api/nearby", "routes/api.nearby.ts"),
+  route("api/nearby/:id", "routes/api.nearby-place.ts"),
   route("api/waitlist", "routes/api.waitlist.ts"),
   route("sitemap.xml", "routes/sitemap.xml.ts"),
   route("robots.txt", "routes/robots.txt.ts"),

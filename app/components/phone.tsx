@@ -8,7 +8,10 @@ import {
   MessageCircle,
   Navigation,
   Send,
+  Search,
   Share2,
+  SlidersHorizontal,
+  Filter,
   Sparkles,
   Users,
   Video,
@@ -387,45 +390,49 @@ export function AppHomeScreen() {
   );
 }
 
-/** Nearby: businesses, schools, clinics and other activities recorded at nearby properties, nearest first. */
+/** The app's Nearby list screen: search, type chips with counts, list cards (sample places). */
 export function NearbyScreen() {
   const { ref, step } = useLoop(4, 1600);
-  const chips = ["All", "Business", "School", "Clinic", "Restaurant"];
-  const places = [
-    ["Mama Tunde's Kitchen", "Restaurant", "0.3 km"],
-    ["Bright Future Academy", "School", "0.6 km"],
-    ["Bodija Family Clinic", "Clinic", "0.9 km"],
-    ["Adeola Pharmacy", "Business", "1.2 km"],
+  const chips = ["All", "Business · 2", "Restaurant · 1", "School · 1", "Clinic · 1"];
+  const places: [string, string, string, string, string][] = [
+    ["Kolapo Pharmacy", "Pharmacy", "14 Kolapo Ishola Road · U01", "200 m away", "bg-violet-100 text-violet-700"],
+    ["Bodija Corner Kitchen", "Local dishes", "14 Kolapo Ishola Road · U02", "200 m away", "bg-rose-100 text-rose-700"],
+    ["Brightfield Nursery & Primary", "School", "3 Awolowo Avenue, Bodija", "400 m away", "bg-indigo-100 text-indigo-700"],
+    ["Bodija Family Clinic", "Clinic", "22 Oluyole Close, Bodija", "750 m away", "bg-red-100 text-red-700"],
   ];
   return (
-    <div ref={ref} className="flex h-full flex-col px-4">
-      <Title>Near Me</Title>
-      <div className="no-scrollbar mt-4 flex gap-1.5 overflow-hidden">
+    <div ref={ref} className="flex h-full flex-col px-3.5">
+      <Title>Nearby</Title>
+      <div className="mt-3 flex items-center gap-1.5 rounded-xl bg-white/10 px-2.5 py-2 text-[9.5px] text-white/50">
+        <Search className="size-3 shrink-0" /> <span className="flex-1">Search nearby...</span>
+        <SlidersHorizontal className="size-3" /> <Filter className="size-3" />
+      </div>
+      <div className="no-scrollbar mt-2.5 flex gap-1.5 overflow-hidden">
         {chips.map((c, i) => (
-          <span key={c} className={clsx("shrink-0 rounded-full px-2.5 py-1 text-[9.5px] font-semibold", i === 0 ? "bg-white text-ink" : "bg-white/10 text-white/70")}>
+          <span key={c} className={clsx("shrink-0 rounded-full px-2.5 py-1 text-[8.5px] font-semibold", i === 0 ? "bg-white text-ink" : "border border-white/15 text-white/75")}>
             {c}
           </span>
         ))}
       </div>
-      <div className="mt-3 space-y-2">
-        {places.map(([name, type, km], i) => (
+      <div className="mt-2.5 space-y-1.5">
+        {places.map(([name, cat, addr, dist, tint], i) => (
           <motion.div
             key={name}
-            animate={{ opacity: step >= Math.min(i, 3) ? 1 : 0.25, y: step >= Math.min(i, 3) ? 0 : 6 }}
-            className="flex items-center gap-2.5 rounded-xl bg-white/[0.07] p-2.5 text-[10px]"
+            animate={{ opacity: step >= Math.min(i, 3) ? 1 : 0.3, y: step >= Math.min(i, 3) ? 0 : 6 }}
+            className="flex items-center gap-2 rounded-xl bg-white/[0.07] p-2 text-[9px]"
           >
-            <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-urbn">
+            <span className={clsx("grid size-8 shrink-0 place-items-center rounded-lg", tint)}>
               <MapPin className="size-3.5" />
             </span>
-            <span className="min-w-0">
-              <b className="block truncate">{name}</b>
-              <span className="text-white/60">{type}</span>
+            <span className="min-w-0 leading-tight">
+              <b className="block truncate text-[10px]">{name}</b>
+              <span className="block truncate text-white/55">{cat}</span>
+              <span className="block truncate text-white/55">{addr}</span>
+              <span className="block truncate text-white/55">{dist} · Ibadan</span>
             </span>
-            <span className="ml-auto shrink-0 text-white/60">{km}</span>
           </motion.div>
         ))}
       </div>
-      <p className="mt-auto mb-6 text-center text-[10px] text-white/50">Nearest First · Bodija</p>
     </div>
   );
 }

@@ -62,13 +62,8 @@ export type NearbyQuery = {
   limit?: number;
 };
 
-export type NearbyOrigin = {
-  kind: "area" | "device" | "property";
-  /** "Around Bodija", "Near your location", "Around this property" */
-  label: string;
-  /** For area origins: distances are measured from this centre. */
-  note?: string;
-};
+/** The point the search ran from. */
+export type NearbyOrigin = { lat: number; lng: number };
 
 export type NearbyResult = {
   places: NearbyPlace[];
@@ -96,6 +91,14 @@ export const activitySlug = (p: Pick<NearbyPlace, "name" | "activityType" | "pro
 export const activityPath = (p: Pick<NearbyPlace, "id" | "name" | "activityType" | "property">) =>
   `/nearby/activity/${encodeURIComponent(p.id)}/${activitySlug(p)}`;
 
-/** Approximate straight-line distance, app-style: "350 m", "1.2 km". */
-export const formatDistance = (km?: number) =>
-  km == null || !Number.isFinite(km) ? null : km < 1 ? `${Math.max(50, Math.round((km * 1000) / 50) * 50)} m` : `${km < 10 ? km.toFixed(1) : Math.round(km)} km`;
+/** Same wording as the app's formatDistanceAway: "Nearby", "350 m away", "1.2 km away". */
+export const formatDistanceAway = (km?: number) =>
+  km == null || !Number.isFinite(km) ? "" : km < 0.1 ? "Nearby" : km < 1 ? `${Math.round(km * 1000)} m away` : `${km.toFixed(1)} km away`;
+
+/** "IBADAN-NORTH… · U02" style location line used on app cards: address, then unit. */
+export const locationLabel = (p: Pick<NearbyPlace, "property" | "unit">) =>
+  p.unit ? `${p.property.address} · ${p.unit.unitNumber}` : p.property.address;
+
+/** Map mode loads one larger page; list mode paginates (same limits as the app). */
+export const LIST_LIMIT = 20;
+export const MAP_LIMIT = 50;

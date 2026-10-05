@@ -124,3 +124,23 @@
   .no-scrollbar { scrollbar-width: none; }
   .no-scrollbar::-webkit-scrollbar { display: none; }
 }
+
+/* Nearby map markers (same look as the app's: white disc, type icon, ink ring when selected) */
+.urbn-pin {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background: #fff;
+  border: 2px solid #fff;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.18);
+  transition: transform 0.2s;
+}
+.urbn-pin.is-selected {
+  border-color: #000;
+  transform: scale(1.15);
+}
+.leaflet-container {
+  font: inherit;
+}
