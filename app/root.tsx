@@ -64,9 +64,13 @@ export default function App() {
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   const notFound = isRouteErrorResponse(error) && error.status === 404;
-  let details = notFound
-    ? "This page doesn't have a DPI. It may have moved, or it never existed."
-    : "Something went wrong on our side. Please try again in a moment.";
+  const listingGone = notFound && error.data === "Listing Unavailable";
+  const heading = listingGone ? "Listing Unavailable" : notFound ? "Page Not Found" : "Something Went Wrong";
+  let details = listingGone
+    ? "This listing may have expired or been removed."
+    : notFound
+      ? "This page may have moved or the link may be incorrect."
+      : "Something went wrong on our side. Try again in a moment.";
   let stack: string | undefined;
   if (import.meta.env.DEV && error instanceof Error) {
     details = error.message;
@@ -76,18 +80,20 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     <MotionConfig reducedMotion="user">
       <Header />
       <main id="main" className="container-x grid min-h-[70vh] place-items-center py-24 text-center">
-        <title>{notFound ? "Page not found | Urbn" : "Error | Urbn"}</title>
+        <title>{`${heading} | Urbn`}</title>
         <meta name="robots" content="noindex" />
         <div>
           <p className="font-display text-[7rem] leading-none text-urbn sm:text-[10rem]">{notFound ? "404" : "Oops"}</p>
-          <h1 className="mt-4 text-3xl sm:text-4xl">{notFound ? "Can't verify this page." : "Something broke."}</h1>
+          <h1 className="mt-4 text-3xl sm:text-4xl">{heading}</h1>
           <p className="lede mx-auto mt-4 max-w-md">{details}</p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <ButtonLink to="/" variant="dark">
-              Back home
-            </ButtonLink>
-            <ButtonLink to="/verify" variant="outline">
-              Verify a property
+            {!listingGone && (
+              <ButtonLink to="/" variant="dark">
+                Go Home
+              </ButtonLink>
+            )}
+            <ButtonLink to="/listings" variant={listingGone ? "dark" : "outline"}>
+              Browse Listings
             </ButtonLink>
           </div>
           {stack && <pre className="mt-10 max-w-3xl overflow-x-auto rounded-xl bg-mist p-4 text-left text-xs">{stack}</pre>}

@@ -55,7 +55,7 @@ export function ListingCard({ listing, priority = false, className }: { listing:
           </div>
         )}
         {hasVideo && (
-          <span className="absolute bottom-3 left-3 grid size-8 place-items-center rounded-full bg-black/55" aria-label="Has video tour">
+          <span className="absolute bottom-3 left-3 grid size-8 place-items-center rounded-full bg-black/55" aria-label="Video Tour">
             <Play className="size-3.5 fill-white text-white" />
           </span>
         )}

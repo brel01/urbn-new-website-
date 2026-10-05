@@ -23,9 +23,9 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export const meta: Route.MetaFunction = () =>
   seo({
-    title: "Verify a Property in Nigeria | Check a DPI Code",
+    title: "Check a Property's DPI | Urbn",
     description:
-      "Enter a DPI code or scan the plaque's QR code to see a property's verified record: status, registered address, registration date and ownership. Free and instant.",
+      "Check a DPI code on Urbn to view the available property record and current verification status.",
     path: "/verify",
     jsonLd: [
       faqJsonLd(VERIFY_FAQS),
@@ -44,11 +44,11 @@ export default function Verify({ loaderData }: Route.ComponentProps) {
       <section className="container-x py-16 sm:py-24" aria-labelledby="sample-heading">
         <Reveal className="mb-8 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
           <div>
-            <h2 id="sample-heading" className="text-3xl sm:text-4xl">What a verified result looks like</h2>
-            <p className="lede mt-2">This is the example plaque record, {SAMPLE_DPI}. Try it yourself above.</p>
+            <h2 id="sample-heading" className="text-3xl sm:text-4xl">See a Sample Record</h2>
+            <p className="lede mt-2">Explore an example of a property record. This sample is for illustration.</p>
           </div>
           <ButtonLink to={`/verify/${SAMPLE_DPI}`} variant="outline" size="sm">
-            Open sample record
+            View Sample Record
           </ButtonLink>
         </Reveal>
         <Reveal>{sample.status === "verified" && <VerifiedResult record={sample.record} animate={false} />}</Reveal>

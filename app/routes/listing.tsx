@@ -47,7 +47,7 @@ import type { Route } from "./+types/listing";
 
 export async function loader({ params }: Route.LoaderArgs) {
   const listing = await getListing(decodeURIComponent(params.id));
-  if (!listing) throw data("Listing not found", { status: 404 });
+  if (!listing) throw data("Listing Unavailable", { status: 404 });
   // Compare route params, not request.url (v8 data requests carry a .data suffix).
   const canonical = listingPath(listing);
   if (params.slug !== canonical.split("/").pop()) throw redirect(canonical, 301);
@@ -61,14 +61,14 @@ const fmtDate = (d?: string | null) =>
 export const handle = { hideTabBar: true };
 
 export const meta: Route.MetaFunction = ({ loaderData }) => {
-  if (!loaderData) return [{ title: "Listing not found | Urbn" }];
+  if (!loaderData) return [{ title: "Listing Unavailable | Urbn" }];
   const l = loaderData.listing;
   const beds = roomCount(l, "Bedroom");
   const what = [beds && `${beds}-bedroom`, l.structureType ?? formatTextCase(l.propertyBuildingType)].filter(Boolean).join(" ");
   const where = [l.propertyAddress.split(",").slice(-1)[0]?.trim(), l.propertyCity].filter(Boolean).join(", ");
   return seo({
     title: `${l.propertyTitle}: ${what} ${listingTypeLabel(l.listingType).toLowerCase()} in ${where}`,
-    description: `${formatPrice(l.price, l.rentPeriod, true)}. ${l.description?.slice(0, 110) ?? ""} Verified by Urbn${l.dpi ? `, DPI ${l.dpi}` : ""}.`,
+    description: `${what || "Property"} in ${where}, ${formatPrice(l.price, l.rentPeriod, true)}. View listing details and check the property's current Urbn record.`,
     path: listingPath(l),
     image: l.images[0] ?? undefined,
     imageAlt: `${l.propertyTitle} in ${where}`,
@@ -130,9 +130,9 @@ export default function ListingPage({ loaderData }: Route.ComponentProps) {
   const canVirtual = l.inspectionType === "VIRTUAL" || l.inspectionType === "BOTH";
   const keyFeatures = l.keyFeatures?.split("\n").map((s) => s.trim()).filter(Boolean) ?? [];
   const costs = [
-    l.deposit && ["Caution deposit", l.deposit],
-    l.serviceCharge && ["Service charge", l.serviceCharge],
-    l.legalFee && ["Legal fee", l.legalFee],
+    l.deposit && ["Caution Deposit", l.deposit],
+    l.serviceCharge && ["Service Charge", l.serviceCharge],
+    l.legalFee && ["Legal Fee", l.legalFee],
   ].filter(Boolean) as [string, number][];
   const amenities = [...l.securityFeatures, ...l.outdoorFeatures, ...l.waterSources, ...l.electricitySources];
 
@@ -205,17 +205,17 @@ export default function ListingPage({ loaderData }: Route.ComponentProps) {
               <span className="rounded-full bg-black px-3 py-1 text-[11px] font-bold text-white">{listingTypeLabel(l.listingType)}</span>
             </div>
             <div className="absolute top-4 right-4 flex gap-2">
-              <button type="button" onClick={share} aria-label="Share listing" className="grid size-10 place-items-center rounded-full bg-white/90 backdrop-blur hover:bg-white">
+              <button type="button" onClick={share} aria-label="Share Listing" className="grid size-10 place-items-center rounded-full bg-white/90 backdrop-blur hover:bg-white">
                 {shared ? <Check className="size-4 text-success" /> : <Share2 className="size-4" />}
               </button>
-              <button type="button" onClick={() => setSaved((s) => !s)} aria-pressed={saved} aria-label="Save listing" className="grid size-10 place-items-center rounded-full bg-white/90 backdrop-blur hover:bg-white">
+              <button type="button" onClick={() => setSaved((s) => !s)} aria-pressed={saved} aria-label="Save Listing" className="grid size-10 place-items-center rounded-full bg-white/90 backdrop-blur hover:bg-white">
                 <Heart className={clsx("size-4", saved && "fill-error text-error")} />
               </button>
             </div>
             {hasVideo && (
               <a href="/download" className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full bg-black/70 py-1.5 pr-4 pl-1.5 text-sm text-white backdrop-blur hover:bg-black">
                 <span className="grid size-8 place-items-center rounded-full bg-white text-ink"><Play className="size-3.5 fill-ink" /></span>
-                Watch video tour in the app
+                Watch Video in the App
               </a>
             )}
           </div>
@@ -266,14 +266,14 @@ export default function ListingPage({ loaderData }: Route.ComponentProps) {
             <Reveal className="grid gap-6 rounded-2xl bg-ink p-5 text-white sm:p-7 md:grid-cols-[1fr_1.1fr] md:items-center">
               <div>
                 <p className="flex items-center gap-2 text-[10px] font-semibold tracking-widest text-blue-300 uppercase">
-                  <ShieldCheck className="size-4" /> Digital Property Identity
+                  <ShieldCheck className="size-4" /> Property Record
                 </p>
                 <p className="mt-3 font-mono text-lg">{l.dpi}</p>
                 <p className="mt-2 text-sm leading-relaxed text-neutral-400">
-                  Ownership confirmed at issuance, title documents checked and inspected in person. Check the record yourself before you pay anything.
+                  Check this property's details and current verification status on Urbn before proceeding.
                 </p>
                 <div className="mt-5 flex flex-wrap gap-2">
-                  <ButtonLink to={verifyPath(l.dpi)} variant="light" size="sm">Check This DPI</ButtonLink>
+                  <ButtonLink to={verifyPath(l.dpi)} variant="light" size="sm">View Record</ButtonLink>
                   <a href={appDeepLink(l.dpi)} className="inline-flex h-9 items-center rounded-[10px] px-3 text-sm font-medium text-white hover:bg-white/10">Open in App</a>
                 </div>
               </div>
@@ -296,8 +296,8 @@ export default function ListingPage({ loaderData }: Route.ComponentProps) {
                 beds != null && { i: BedDouble, v: `${beds} Bedroom${beds !== 1 ? "s" : ""}` },
                 baths != null && { i: Bath, v: `${baths} Bathroom${baths !== 1 ? "s" : ""}` },
                 l.squareFootage && { i: Ruler, v: `${l.squareFootage} sqm` },
-                { i: PawPrint, v: l.allowPets ? "Pets OK" : "No pets" },
-                { i: CalendarDays, v: l.immediateAvailability ? "Available now" : l.availableFrom ? `From ${fmtDate(l.availableFrom)}` : "Check availability" },
+                { i: PawPrint, v: l.allowPets ? "Pets Allowed" : "No Pets" },
+                { i: CalendarDays, v: l.immediateAvailability ? "Available Now" : l.availableFrom ? `Available From ${fmtDate(l.availableFrom)}` : "Check Availability" },
               ]
                 .filter(Boolean)
                 .map((s: any) => (
@@ -312,13 +312,13 @@ export default function ListingPage({ loaderData }: Route.ComponentProps) {
           {/* Text sections */}
           {l.description && (
             <Reveal className="rounded-2xl bg-white p-5 sm:p-6">
-              <SectionLabel>About this listing</SectionLabel>
+              <SectionLabel>About This Listing</SectionLabel>
               <p className="mt-3 leading-relaxed text-neutral-700">{l.description}</p>
             </Reveal>
           )}
           {(keyFeatures.length > 0 || amenities.length > 0) && (
             <Reveal className="rounded-2xl bg-white p-5 sm:p-6">
-              <SectionLabel>Key features</SectionLabel>
+              <SectionLabel>Key Features</SectionLabel>
               <ul className="mt-4 grid gap-2.5 sm:grid-cols-2">
                 {[...keyFeatures, ...amenities.map(formatTextCase)].map((a) => (
                   <li key={a} className="flex items-start gap-2.5 text-sm">
@@ -342,7 +342,7 @@ export default function ListingPage({ loaderData }: Route.ComponentProps) {
           <div className="grid gap-5 md:grid-cols-2">
             {costs.length > 0 && (
               <Reveal className="rounded-2xl bg-white p-5 sm:p-6">
-                <SectionLabel>Additional costs</SectionLabel>
+                <SectionLabel>Additional Costs</SectionLabel>
                 <dl className="mt-3 divide-y divide-neutral-100 text-sm">
                   {costs.map(([k, v]) => (
                     <div key={k} className="flex justify-between py-2.5">
@@ -354,13 +354,13 @@ export default function ListingPage({ loaderData }: Route.ComponentProps) {
               </Reveal>
             )}
             <Reveal className="rounded-2xl bg-white p-5 sm:p-6">
-              <SectionLabel>Dates & terms</SectionLabel>
+              <SectionLabel>Dates & Terms</SectionLabel>
               <dl className="mt-3 divide-y divide-neutral-100 text-sm">
                 {[
-                  ["Listed", fmtDate(l.publishedAt ?? l.createdAt)],
-                  ["Available", l.immediateAvailability ? "Now" : fmtDate(l.availableFrom)],
-                  l.minLeaseTerm && ["Lease term", l.maxLeaseTerm ? `${l.minLeaseTerm}–${l.maxLeaseTerm} months` : `${l.minLeaseTerm} months minimum`],
-                  l.expiresAt && ["Listing expires", fmtDate(l.expiresAt)],
+                  ["Date Listed", fmtDate(l.publishedAt ?? l.createdAt)],
+                  ["Available From", l.immediateAvailability ? "Now" : fmtDate(l.availableFrom)],
+                  l.minLeaseTerm && ["Lease Term", l.maxLeaseTerm ? `${l.minLeaseTerm}–${l.maxLeaseTerm} Months` : `Minimum Lease: ${l.minLeaseTerm} Months`],
+                  l.expiresAt && ["Listing Expiry", fmtDate(l.expiresAt)],
                 ]
                   .filter((r): r is [string, string] => Array.isArray(r) && !!r[1])
                   .map(([k, v]) => (
@@ -391,7 +391,7 @@ export default function ListingPage({ loaderData }: Route.ComponentProps) {
                 <Navigation className="size-5 shrink-0 text-urbn" />
                 <p className="text-sm">
                   <b className="block">{[l.propertyAddress.split(",").slice(-1)[0]?.trim(), l.propertyCity].join(", ")}</b>
-                  <span className="text-neutral-500">Exact pin and directions in the app after you book</span>
+                  <span className="text-neutral-500">Exact location and directions appear in the app when your inspection is confirmed.</span>
                 </p>
               </div>
             </div>
@@ -405,7 +405,7 @@ export default function ListingPage({ loaderData }: Route.ComponentProps) {
             <p className="text-3xl font-bold tracking-tight">{formatPrice(l.price, l.rentPeriod, true)}</p>
             {l.isAcceptingInspections ? (
               <>
-                <h2 className="mt-6 font-sans text-sm font-semibold tracking-normal">Book Inspection</h2>
+                <h2 className="mt-6 font-sans text-sm font-semibold tracking-normal">Request Inspection</h2>
                 <div role="radiogroup" aria-label="Inspection type" className="mt-3 grid grid-cols-2 gap-1 rounded-xl bg-mist p-1 text-sm font-medium">
                   {(["physical", "virtual"] as const).map((m) => {
                     const ok = m === "physical" ? canPhysical : canVirtual;
@@ -429,13 +429,13 @@ export default function ListingPage({ loaderData }: Route.ComponentProps) {
                   })}
                 </div>
                 <p className="mt-3 text-xs text-neutral-500">
-                  {l.inspectionFeeKobo ? `Inspection fee: ₦${(l.inspectionFeeKobo / 100).toLocaleString("en-NG")}. ` : "No inspection fee. "}
-                  Pick a time in the app; the {l.agent ? "agent" : "owner"} confirms it, and you can track their live location on the day.
+                  {l.inspectionFeeKobo ? `Inspection Fee: ₦${(l.inspectionFeeKobo / 100).toLocaleString("en-NG")}. ` : "No Inspection Fee. "}
+                  Request a slot in the app, then check there for the {l.agent ? "agent's" : "owner's"} acceptance and booking confirmation.
                 </p>
-                <ButtonLink to="/download" variant="blue" size="lg" className="mt-5 w-full">Book Inspection</ButtonLink>
+                <ButtonLink to="/download" variant="blue" size="lg" className="mt-5 w-full">Request Inspection</ButtonLink>
               </>
             ) : (
-              <p className="mt-6 rounded-xl bg-mist p-3 text-sm text-neutral-600">This listing isn't accepting inspections right now.</p>
+              <p className="mt-6 rounded-xl bg-mist p-3 text-sm text-neutral-600">This property is not accepting inspection requests right now.</p>
             )}
             <ButtonLink to="/download" variant="outline" size="lg" arrow={false} className="mt-2 w-full">
               <MessageCircle className="size-4" /> Message {l.agent ? "Agent" : "Owner"}
@@ -448,9 +448,9 @@ export default function ListingPage({ loaderData }: Route.ComponentProps) {
                 <p className="font-semibold">{listedByLabel(l)}</p>
                 <p className="text-neutral-500">
                   {l.agent ? (
-                    <>Verified agent{l.agent.rating ? ` · ★ ${l.agent.rating} (${l.agent.reviewCount})` : ""}</>
+                    <>{l.agent.agencyName ? "Property Manager" : "Agent"}{l.agent.rating ? ` · ★ ${l.agent.rating} (${l.agent.reviewCount})` : ""}</>
                   ) : (
-                    "Verified owner"
+                    "Property Owner"
                   )}
                 </p>
               </div>
@@ -458,7 +458,7 @@ export default function ListingPage({ loaderData }: Route.ComponentProps) {
           </div>
           <p className="mt-4 flex items-start gap-2 px-2 text-xs text-neutral-500">
             <ShieldCheck className="size-4 shrink-0 text-success" />
-            Never pay before you verify. Urbn will never ask you to send money outside the app.
+            Check the property record before paying. For transactions arranged through Urbn, use the payment instructions shown in the app.
           </p>
         </aside>
       </section>
@@ -467,8 +467,8 @@ export default function ListingPage({ loaderData }: Route.ComponentProps) {
         <section className="bg-white py-20">
           <div className="container-x">
             <div className="flex items-end justify-between gap-4">
-              <h2 className="text-3xl sm:text-4xl">Similar listings</h2>
-              <Link to="/listings" className="text-sm font-semibold text-urbn hover:underline">View all →</Link>
+              <h2 className="text-3xl sm:text-4xl">Similar Listings</h2>
+              <Link to="/listings" className="text-sm font-semibold text-urbn hover:underline">View All Listings →</Link>
             </div>
             <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {similar.map((s) => <li key={s.id}><ListingCard listing={s} /></li>)}
@@ -481,14 +481,14 @@ export default function ListingPage({ loaderData }: Route.ComponentProps) {
           <div className="min-w-0 flex-1">
             <p className="truncate text-lg font-bold tracking-tight">{formatPrice(l.price, l.rentPeriod)}</p>
             <p className="truncate text-xs text-neutral-500">
-              {l.inspectionFeeKobo ? `Inspection fee ₦${(l.inspectionFeeKobo / 100).toLocaleString("en-NG")}` : "Free inspection"} · {listedByLabel(l)}
+              {l.inspectionFeeKobo ? `Inspection Fee ₦${(l.inspectionFeeKobo / 100).toLocaleString("en-NG")}` : "No Inspection Fee"} · {listedByLabel(l)}
             </p>
           </div>
           <Link to="/download" aria-label={`Message ${l.agent ? "agent" : "owner"}`} className="grid size-12 shrink-0 place-items-center rounded-xl border border-neutral-200 active:scale-95">
             <MessageCircle className="size-5" />
           </Link>
           <Link to="/download" className="inline-flex h-12 shrink-0 items-center rounded-xl bg-urbn px-5 text-sm font-semibold text-white shadow-[0_10px_24px_-10px_rgba(37,61,226,0.9)] active:scale-95">
-            Book Inspection
+            Request Inspection
           </Link>
         </div>
       </BottomBar>
@@ -533,14 +533,14 @@ function MobileGallery({
       </div>
       <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/35 to-transparent" />
       <div className="absolute inset-x-4 top-3 flex items-center justify-between">
-        <Link to="/listings" aria-label="Back to listings" className="grid size-10 place-items-center rounded-full bg-white/90 backdrop-blur active:scale-90">
+        <Link to="/listings" aria-label="Back to Listings" className="grid size-10 place-items-center rounded-full bg-white/90 backdrop-blur active:scale-90">
           <ChevronLeft className="size-5" />
         </Link>
         <div className="flex gap-2">
-          <button type="button" onClick={onShare} aria-label="Share listing" className="grid size-10 place-items-center rounded-full bg-white/90 backdrop-blur active:scale-90">
+          <button type="button" onClick={onShare} aria-label="Share Listing" className="grid size-10 place-items-center rounded-full bg-white/90 backdrop-blur active:scale-90">
             {shared ? <Check className="size-4 text-success" /> : <Share2 className="size-4" />}
           </button>
-          <button type="button" onClick={onSave} aria-pressed={saved} aria-label="Save listing" className="grid size-10 place-items-center rounded-full bg-white/90 backdrop-blur active:scale-90">
+          <button type="button" onClick={onSave} aria-pressed={saved} aria-label="Save Listing" className="grid size-10 place-items-center rounded-full bg-white/90 backdrop-blur active:scale-90">
             <Heart className={clsx("size-4", saved && "fill-error text-error")} />
           </button>
         </div>

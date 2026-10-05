@@ -6,15 +6,11 @@ import { SocialLinks } from "./social";
 import { ButtonLink } from "./ui";
 import { WaitlistForm } from "./waitlist-form";
 
-/** "Be the first in line": the closing band used across the designs. */
+/** The closing band used across the designs. */
 export function CtaBanner({
   variant = "actions",
-  title = (
-    <>
-      Be the first in <span className="text-urbn">line</span>
-    </>
-  ),
-  body = "Every property deserves a record that can't be faked, sold, or lost in translation. Get started, and let's verify yours.",
+  title,
+  body,
   children,
 }: {
   variant?: "actions" | "waitlist";
@@ -22,6 +18,19 @@ export function CtaBanner({
   body?: string;
   children?: ReactNode;
 }) {
+  const waitlist = variant === "waitlist";
+  title ??= waitlist ? (
+    <>
+      Be Part of Urbn's <span className="text-urbn">Next City</span>
+    </>
+  ) : (
+    <>
+      Your Property. <span className="text-urbn">Your Next Step.</span>
+    </>
+  );
+  body ??= waitlist
+    ? "Find out when Urbn becomes available in your city."
+    : "Find a home, check a property record or bring your own property onto Urbn. Start with what you need today.";
   return (
     <section className="container-x pb-20 sm:pb-28">
       <Reveal className="relative overflow-hidden rounded-[1.75rem] bg-ink px-6 pt-12 pb-40 sm:px-12 sm:py-16 lg:px-16">
@@ -54,7 +63,7 @@ export function CtaBanner({
             <p className="mt-5 text-base text-neutral-400 sm:text-lg">{body}</p>
             {variant === "waitlist" && (
               <div className="mt-6 flex items-center gap-2 text-sm text-white">
-                Follow us: <SocialLinks className="text-white" />
+                Follow Urbn <SocialLinks className="text-white" />
               </div>
             )}
           </div>
@@ -64,7 +73,7 @@ export function CtaBanner({
             (children ?? (
               <div className="mt-8 grid gap-3 sm:mt-9 sm:flex sm:flex-wrap sm:items-center sm:justify-center">
                 <ButtonLink to="/download" variant="light" size="lg" className="w-full sm:h-11 sm:w-auto sm:px-5 sm:text-[15px]">
-                  Get Started
+                  Get the App
                 </ButtonLink>
                 <ButtonLink to="/verify" variant="ghost-light" size="lg" className="w-full sm:h-11 sm:w-auto sm:px-5 sm:text-[15px]">
                   Verify a Property

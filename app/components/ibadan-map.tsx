@@ -216,7 +216,7 @@ export function IbadanMap({ listings }: { listings: ListingCard[] }) {
       </div>
       {/* phones: swipe through the pinned homes, map-app style */}
       <div className="container-x relative z-10 -mt-14 md:hidden">
-        <Rail item="w-[72%] sm:w-[45%]" label="Homes on the map">
+        <Rail item="w-[72%] sm:w-[45%]" label="Homes on the Map">
           {pins.map((l) => (
             <MapCard key={l.id} listing={l} />
           ))}
@@ -293,7 +293,7 @@ function MapFilters() {
       <label className={clsx(field, "flex-1")}>
         <span className="text-xs text-neutral-500">Budget</span>
         <select name="maxPrice" className={select} defaultValue="">
-          <option value="">Any budget</option>
+          <option value="">Any Budget</option>
           <option value="500000">Up to ₦500k</option>
           <option value="1500000">Up to ₦1.5M</option>
           <option value="2500000">Up to ₦2.5M</option>
@@ -303,7 +303,7 @@ function MapFilters() {
       </label>
       <button
         type="submit"
-        aria-label="Search verified homes"
+        aria-label="Search Homes"
         className="m-1 grid h-12 shrink-0 place-items-center gap-2 rounded-xl bg-urbn px-4 text-white transition hover:bg-blue-600 active:scale-95 sm:size-12 sm:rounded-full sm:px-0"
       >
         <Search className="size-5" />

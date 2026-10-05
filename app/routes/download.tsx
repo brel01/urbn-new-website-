@@ -9,9 +9,9 @@ import type { Route } from "./+types/download";
 
 export const meta: Route.MetaFunction = () =>
   seo({
-    title: "Download the Urbn App for iOS & Android",
+    title: "Get the Urbn App | iOS & Android",
     description:
-      "Verify properties, search verified homes, book inspections, chat with owners and use U-Beep, all in the Urbn app for iPhone and Android.",
+      "Explore property records, browse listings, request inspections and manage housing activities with Urbn.",
     path: "/download",
     jsonLd: breadcrumbs([
       { name: "Home", path: "/" },
@@ -52,13 +52,13 @@ export default function Download() {
       <div className="absolute top-1/3 right-0 size-[40rem] rounded-full bg-urbn/30 blur-[120px]" aria-hidden />
       <div className="container-x relative grid items-center gap-16 py-20 lg:grid-cols-2 lg:py-28">
         <div>
-          <WordsReveal text="Your next home, verified." highlight={["verified."]} className="text-5xl leading-[1] sm:text-7xl" />
+          <WordsReveal text="Your Housing Activities. One App." highlight={["One", "App."]} className="text-5xl leading-[1] sm:text-7xl" />
           <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.8, ease: EASE }}>
             <p className="mt-6 max-w-lg text-lg text-neutral-400">
-              Verify any property, search verified homes, book inspections and message owners, all in one app.
+              Find a home, check a property record or manage your property with Urbn.
             </p>
             <ul className="mt-8 space-y-3">
-              {["Scan a plaque to see the verified record", "Video walkthroughs of every verified home", "Book inspections & track your agent live", "U-Beep: the digital doorbell for every property"].map((t) => (
+              {["Check a property's Urbn record", "Watch available video walkthroughs", "Request physical or virtual inspections", "Message owners or managers", "Send property alerts with U-Beep"].map((t) => (
                 <li key={t} className="flex items-center gap-3">
                   <span className="grid size-6 place-items-center rounded-full bg-urbn"><Check className="size-3.5" /></span>
                   {t}
@@ -69,10 +69,13 @@ export default function Download() {
               <StoreBadge store="ios" />
               <StoreBadge store="android" />
             </div>
-            <Reveal className="mt-12 max-w-md">
-              <p className="mb-3 text-sm text-neutral-400">Not in Ibadan yet? Join 10,000+ people on the waitlist.</p>
-              <WaitlistForm />
-            </Reveal>
+            <div id="launch-updates" className="scroll-mt-24">
+              <Reveal className="mt-12 max-w-md">
+                <p className="font-display text-xl">Waiting for Urbn in Your City?</p>
+                <p className="mt-1 mb-3 text-sm text-neutral-400">Get an email when local coverage becomes available.</p>
+                <WaitlistForm />
+              </Reveal>
+            </div>
           </motion.div>
         </div>
         <div className="relative mx-auto flex w-full max-w-md justify-center gap-5">

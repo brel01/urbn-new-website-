@@ -15,7 +15,6 @@ import {
   ShieldCheck,
   ShieldX,
   Stamp,
-  Trash2,
   UserCheck,
 } from "lucide-react";
 import { AnimatePresence, motion, useInView } from "motion/react";
@@ -34,54 +33,54 @@ import type { Route } from "./+types/dpi";
 
 const DETAILED_STEPS = [
   {
-    title: "Submit your property",
-    text: "Sign up and provide your property's details: address, ownership information, and supporting documents (Certificate of Occupancy, deed, or equivalent).",
+    title: "Add Property Details",
+    text: "Add the property's address and details in the Urbn app, with the information required for your role.",
     icon: FileText,
   },
   {
-    title: "Identity check (KYC)",
-    text: "We confirm you are who you say you are, and that you have the right to submit this property, using a valid government-issued ID.",
+    title: "Complete Required Identity Checks",
+    text: "Confirm your identity with a valid government-issued ID, so Urbn knows who is submitting the property.",
     icon: Fingerprint,
   },
   {
-    title: "Document verification",
-    text: "Our team checks your title documents against the property and the claimed owner. If something doesn't line up, we'll tell you exactly what's missing.",
+    title: "Submit Supporting Documents",
+    text: "Our team reviews the documents submitted for the property. If more information is needed, you'll receive a request to update your submission.",
     icon: FileCheck2,
   },
   {
-    title: "Physical inspection",
-    text: "Someone from Urbn visits the property in person to confirm it exists, matches the documents, and matches its house number.",
+    title: "Complete the Required Property Checks",
+    text: "Urbn carries out the checks required for the property, which can include a visit to confirm its details.",
     icon: MapPin,
   },
   {
-    title: "DPI issued",
-    text: "Your property receives its permanent DPI code, tied to the property itself. It never resets and can never be reassigned.",
+    title: "View Your Verification Status",
+    text: "Follow your property's status in Urbn. Once approved, its DPI and record are available to check.",
     icon: BadgeCheck,
   },
   {
-    title: "Request your plaque",
-    text: "Order a physical plaque for your gate, and download a virtual plaque to share with buyers and renters anywhere.",
+    title: "Optional: Request a Plaque",
+    text: "Check the plaque options available for your property in Urbn.",
     icon: QrCode,
   },
   {
-    title: "Once you're verified, carry the proof.",
-    text: "Residents and owners can request a Property Card that proves their verified relationship to the property, wherever they need to.",
+    title: "Optional: Property Card",
+    text: "View the relationship to a property recorded on your Urbn account.",
     icon: IdCard,
   },
 ];
 
 export const meta: Route.MetaFunction = () =>
   seo({
-    title: "What Is a DPI? Digital Property Identity Explained",
+    title: "What Is a DPI? Digital Property Identity Explained | Urbn",
     description:
-      "A DPI is a permanent, verified record tied to a property, not its owner, agent or listing. Learn how Urbn issues DPIs, what's on a plaque, and how to get one.",
+      "Learn how Digital Property Identity connects a property to its Urbn record, verification status and housing activities.",
     path: "/dpi",
     jsonLd: [
       {
         "@context": "https://schema.org",
         "@type": "HowTo",
-        name: "How to get a Digital Property Identity (DPI) for your property",
-        description: "The steps Urbn follows before issuing a permanent DPI to a property in Nigeria.",
+        name: "How to register your property on Urbn",
+        description: "Add your details in Urbn and follow the checks required for your property.",
         step: DETAILED_STEPS.map((s, i) => ({
           "@type": "HowToStep",
           position: i + 1,
@@ -93,7 +92,7 @@ export const meta: Route.MetaFunction = () =>
       faqJsonLd(DPI_FAQS),
       breadcrumbs([
         { name: "Home", path: "/" },
-        { name: "DPI", path: "/dpi" },
+        { name: "Property Identity", path: "/dpi" },
       ]),
     ],
   });
@@ -121,23 +120,18 @@ function Hero() {
     <section className="relative overflow-hidden">
       <div className="container-x grid items-center gap-10 pt-12 pb-16 lg:grid-cols-[1fr_1.1fr] lg:pt-16 lg:pb-24">
         <div>
-          <WordsReveal text="Get Your Property a DPI" highlight={["DPI"]} className="text-5xl leading-[1] sm:text-6xl lg:text-7xl" />
+          <WordsReveal text="Every Property Needs a Connected Record." highlight={["Connected", "Record."]} className="text-5xl leading-[1] sm:text-6xl lg:text-7xl" />
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.8, ease: EASE }}>
             <p className="lede mt-6 max-w-xl">
-              Right now, a property's identity depends on whoever's standing in front of you: an owner's claim, or a
-              document you can't independently check until it's too late.
-            </p>
-            <p className="lede mt-4 max-w-xl">
-              A DPI changes that. It's a permanent, verified record issued by Urbn, tied to the property itself, not to
-              its owner, agent, or listing. Once issued, anyone can check it in seconds, without depending on anyone's
-              word.
+              A Digital Property Identity (DPI) connects a property to its record on Urbn. It brings property details,
+              verification status and housing activities together, so the record can continue as people change.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <ButtonLink to="/download" variant="dark">
-                Get Started
+                Add Your Property
               </ButtonLink>
-              <ButtonLink to="/verify" variant="dark">
-                Verify a Property
+              <ButtonLink to="/verify" variant="outline">
+                Check a DPI
               </ButtonLink>
             </div>
           </motion.div>
@@ -173,19 +167,19 @@ function IconBadge({ icon: Icon, dark }: { icon: typeof History; dark?: boolean 
 
 function WhyExists() {
   const items = [
-    { icon: History, title: "No reliable property history", text: "Records live with individual agents or owners. When they change, the history goes with them, or it's never passed on at all." },
-    { icon: ReceiptText, title: "Fake & duplicate listings", text: "Anyone can claim to represent a property. There's no independent registry to check their claim against." },
-    { icon: ShieldX, title: "Disputes with no paper trail", text: "Rent, agreements, and complaints get handled informally: cash, WhatsApp, verbal. Nothing is logged anywhere both parties can point back to." },
-    { icon: ScanLine, title: "No way to verify before committing", text: "Buyers and renters have no independent source to check a property against. They rely entirely on the word of whoever's showing them around." },
+    { icon: History, title: "Scattered Property Details", text: "Information sits across documents and chats." },
+    { icon: ReceiptText, title: "Conflicting Listings", text: "The same space can be described differently." },
+    { icon: ShieldX, title: "Missing Activity Records", text: "Important changes become hard to trace." },
+    { icon: ScanLine, title: "Unanswered Questions", text: "People commit without the details they need." },
   ];
   return (
     <section className="bg-ink py-16 text-white sm:py-24 lg:py-28">
       <div className="container-x">
         <Reveal>
-          <SectionHeading dark title="Why DPI exists." lede="Real estate runs on trust, and today there's nothing to anchor it to." />
+          <SectionHeading dark title="Why Property Identity Matters" lede="A property's details should stay connected, whoever owns, manages or occupies it." />
         </Reveal>
         <Reveal className="mt-8 md:mt-14">
-        <Rail grid="md:grid-cols-2 md:gap-4 lg:grid-cols-4" item="w-[78%] sm:w-[52%]" dark label="Why DPI exists">
+        <Rail grid="md:grid-cols-2 md:gap-4 lg:grid-cols-4" item="w-[78%] sm:w-[52%]" dark label="Why property identity matters">
           {items.map((it) => (
             <div key={it.title} className="flex h-full flex-col items-start rounded-card bg-graphite p-7 ring-1 ring-white/5 transition hover:ring-white/20 md:items-center md:text-center">
               <IconBadge icon={it.icon} dark />
@@ -202,18 +196,18 @@ function WhyExists() {
 
 function Solves() {
   const items = [
-    { icon: History, title: "A record that never resets", text: "A DPI is tied to the property, not to any person. Owners, tenants, and agents can change, but the record doesn't. Every tenancy, payment, and dispute is logged against it, permanently." },
-    { icon: ShieldCheck, title: "Verification that can't be faked", text: "A property only has a DPI if it's passed Urbn's verification. Scan the plaque's QR code and see instantly whether it's genuinely verified, and by whom." },
-    { icon: CalendarClock, title: "A timestamped record, always available", text: "Transactions and service events get logged to the DPI as they happen, creating a history both parties can point back to whenever they need it." },
-    { icon: Lock, title: "Proof, before you pay anything", text: "Scan the plaque before sending money or signing anything. See the verified record for yourself: ownership, registration date, status. No one's word required." },
+    { icon: History, title: "One Property Record", text: "Keep details linked to the same property." },
+    { icon: ShieldCheck, title: "Visible Verification Status", text: "Check where the record stands." },
+    { icon: CalendarClock, title: "Recorded Activities", text: "Follow available updates over time." },
+    { icon: Lock, title: "Details to Review", text: "Ask better questions before committing." },
   ];
   return (
     <section className="container-x py-16 sm:py-24 lg:py-28">
       <Reveal>
-        <SectionHeading title="How DPI solves it" />
+        <SectionHeading title="What a Connected Record Makes Possible" />
       </Reveal>
       <Reveal className="mt-8 md:mt-14">
-      <Rail grid="md:grid-cols-2 md:gap-4 lg:grid-cols-4" item="w-[78%] sm:w-[52%]" label="How DPI solves it">
+      <Rail grid="md:grid-cols-2 md:gap-4 lg:grid-cols-4" item="w-[78%] sm:w-[52%]" label="What a connected record makes possible">
         {items.map((it) => (
           <div key={it.title} className="group flex h-full flex-col items-start rounded-card border border-neutral-200 bg-white p-7 transition duration-500 md:items-center md:text-center lg:hover:-translate-y-1 lg:hover:border-urbn lg:hover:shadow-[0_20px_50px_-25px_rgba(37,61,226,0.5)]">
             <span className="transition-transform duration-500 group-hover:scale-110">
@@ -235,7 +229,7 @@ function StepVisual({ index }: { index: number }) {
     return <img src="/images/illus-submit.webp" alt="Illustration of documents checked under a magnifying glass with a verified shield" className="mx-auto w-full max-w-sm" />;
   if (index === 5) return <Plaque className="mx-auto w-full max-w-md" />;
   if (index === 6)
-    return <img src="/images/property-card.webp" alt="Urbn Property Card: proof of relationship" className="mx-auto w-full max-w-sm rounded-card" />;
+    return <img src="/images/property-card.webp" alt="Sample Urbn Property Card" className="mx-auto w-full max-w-sm rounded-card" />;
   const Icon = step.icon;
   return (
     <div className="relative mx-auto grid aspect-square w-full max-w-xs place-items-center">
@@ -286,7 +280,7 @@ function DetailedSteps() {
   return (
     <section className="container-x pb-24 sm:pb-32" id="how-to-get-a-dpi">
       <Reveal>
-        <SectionHeading title="How to Get a DPI" lede="Seven steps, the same for every property. No shortcuts, no exceptions." />
+        <SectionHeading title="How to Register Your Property" lede="Add your details in Urbn and follow the checks required for your property." />
       </Reveal>
       <div ref={ref} className="mt-8 grid gap-8 lg:mt-14 lg:grid-cols-2 lg:gap-16">
         <div className="relative order-2 min-h-[24rem] lg:order-1 lg:min-h-[26rem] lg:border-r lg:border-neutral-200 lg:pr-16">
@@ -348,9 +342,9 @@ function DetailedSteps() {
 
 function PropertyCard() {
   const blocks = [
-    { title: "What it's for", text: "Show it to receive deliveries without a hassle, get through your estate gate without an interrogation, or prove where you live or what you own, without digging through old bills or documents." },
-    { title: "Getting one", text: "Once your tenancy or ownership is logged against a property's DPI, request your card through the app. Urbn confirms the relationship is accurate, then issues it, usually within a few days." },
-    { title: "What's on it?", text: "Your name, your permanent User ID, an issue date, and a QR code that pulls up your verified relationships in real time. It isn't tied to just one property, so it works no matter how many you're connected to." },
+    { title: "Who It's For", text: "Residents and owners whose relationship to a property is recorded on Urbn." },
+    { title: "How to Request One", text: "Request it in the Urbn app once your tenancy or ownership is recorded against the property." },
+    { title: "What It Shows", text: "Your name, your Urbn User ID, an issue date and a QR code linked to the relationships recorded on your account." },
   ];
   return (
     <section id="property-card" className="scroll-mt-24 bg-ink py-16 text-white sm:py-24 lg:py-32">
@@ -358,8 +352,8 @@ function PropertyCard() {
         <Reveal>
           <SectionHeading
             dark
-            title="What is a Property Card?"
-            lede="A Property Card is a personal identity card issued by Urbn that proves your verified relationship to a property, as a resident or an owner. Where a DPI verifies the property itself, a Property Card verifies you."
+            title="What Is a Property Card?"
+            lede="A Property Card shows the relationship to a property recorded on your Urbn account, as a resident or an owner."
           />
         </Reveal>
         <div className="mt-16 grid items-center gap-12 lg:grid-cols-2">
@@ -378,7 +372,7 @@ function PropertyCard() {
               style={{ transformPerspective: 1000 }}
               className="overflow-hidden rounded-card"
             >
-              <img src="/images/property-card.webp" alt="Black Urbn Property Card reading 'Proof of Relationship' with ID URBN-IBD-23-00056" loading="lazy" className="w-full" />
+              <img src="/images/property-card.webp" alt="Sample Urbn Property Card" loading="lazy" className="w-full" />
             </motion.div>
           </Reveal>
         </div>
@@ -388,10 +382,10 @@ function PropertyCard() {
 }
 
 const CALLOUTS = [
-  { n: 1, title: "DPI code", text: `The property's permanent identifier, e.g. ${SAMPLE_DPI}.`, x: 98, y: 13 },
-  { n: 2, title: "QR code", text: "Scans to the live digital record: real-time status, ownership, and history.", x: 98, y: 50 },
-  { n: 3, title: "House number", text: "Matched to the physical property, so the plaque can be visually confirmed on sight.", x: 2, y: 50 },
-  { n: 4, title: 'Urbn "Verified Property" seal', text: "Proof it passed verification. It can't be added any other way.", x: 2, y: 89 },
+  { n: 1, title: "DPI Code", text: "The property's identifier on Urbn.", x: 98, y: 13 },
+  { n: 2, title: "QR Code", text: "A link to its record.", x: 98, y: 50 },
+  { n: 3, title: "House Number", text: "The displayed property number.", x: 2, y: 50 },
+  { n: 4, title: "Urbn Mark", text: "Identifies the plaque's issuer.", x: 2, y: 89 },
 ];
 
 function Anatomy() {
@@ -402,7 +396,7 @@ function Anatomy() {
     <section className="bg-mist py-16 sm:py-24 lg:py-32">
       <div className="container-x">
         <Reveal>
-          <SectionHeading eyebrow="What's on a DPI plaque" title="Anatomy of a DPI" />
+          <SectionHeading eyebrow="The Plaque" title="What's on the Plaque?" lede="Check current verification status online." />
         </Reveal>
         <div ref={ref} className="relative mx-auto mt-14 max-w-3xl">
           <motion.div initial={{ opacity: 0, y: 30, rotateX: 18 }} animate={inView ? { opacity: 1, y: 0, rotateX: 0 } : {}} transition={{ duration: 1, ease: EASE }} style={{ transformPerspective: 1200 }}>
@@ -448,15 +442,15 @@ function CodeExplained() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-30%" });
   const parts = [
-    { seg: "IBADAN-NORTH", label: "IBADAN-NORTH", sub: "Local Government Area the property is registered in" },
-    { seg: "0041", label: "0041", sub: "the property's number within that LGA" },
-    { seg: "U", label: "U", sub: "check letter: a single typo won't match" },
+    { seg: "IBADAN-NORTH", label: "Area Code", sub: "The Local Government Area the property is registered in" },
+    { seg: "0041", label: "Property Number", sub: "The property's number within that area" },
+    { seg: "U", label: "Check Character", sub: "Helps catch typing errors" },
   ];
   return (
     <section className="bg-ink py-16 text-white sm:py-24 lg:py-32">
       <div className="container-x">
         <Reveal>
-          <SectionHeading dark eyebrow="How to read a DPI code" title="DPI Code Explained" lede="Every code tells you where a property is registered, and carries its own typo check." />
+          <SectionHeading dark eyebrow="How to Read a DPI Code" title="Understanding a DPI Code" lede="Each part of the code has a job. A valid format is not the same as a verified record." />
         </Reveal>
         <div ref={ref} className="mx-auto mt-14 max-w-3xl">
           <div className="flex flex-wrap items-center justify-center rounded-2xl bg-white px-4 py-5 font-display text-[1.6rem] text-blue-900 sm:text-5xl lg:text-6xl">
@@ -495,8 +489,9 @@ function CodeExplained() {
             ))}
           </div>
           <p className="mx-auto mt-12 max-w-xl text-center text-sm text-neutral-400">
-            Buildings with several units add a unit code after a slash, for example{" "}
-            <span className="font-mono text-white">{SAMPLE_DPI}/U01</span>, so every flat can be verified on its own.
+            Individual units may have their own identifier linked to the property, for example{" "}
+            <span className="font-mono text-white">{SAMPLE_DPI}/U01</span>. Enter the full unit code to view that unit's
+            available record.
           </p>
         </div>
       </div>
@@ -508,7 +503,7 @@ function Formats() {
   return (
     <section className="container-x py-16 sm:py-24 lg:py-32">
       <Reveal>
-        <SectionHeading eyebrow="One identity, two formats." title="Physical vs. Virtual Plaque" />
+        <SectionHeading eyebrow="Plaque Formats" title="One Property Identity. Two Plaque Formats." lede="Both link to the property's Urbn record." />
       </Reveal>
       <Reveal className="mx-auto mt-8 max-w-5xl md:mt-14">
       <Rail grid="md:grid-cols-2 md:gap-8" item="w-[85%] sm:w-[60%]" label="Plaque formats">
@@ -516,8 +511,8 @@ function Formats() {
           <div className="overflow-hidden rounded-card">
             <img src="/images/plaque-scene.webp" alt="Physical Urbn DPI plaque mounted on a property wall" loading="lazy" className="aspect-[1.4] w-full object-cover transition-transform duration-700 hover:scale-105" />
           </div>
-          <h3 className="mt-5 font-display text-2xl">Physical</h3>
-          <p className="mt-2 text-neutral-500">Mounted on the property itself. Anyone standing in front of it can scan the QR code and see the verified record on the spot.</p>
+          <h3 className="mt-5 font-display text-2xl">Physical Plaque</h3>
+          <p className="mt-2 text-neutral-500">Displayed at the property. Scan its QR code to open the property's record.</p>
         </div>
         <div>
           <div className="grid aspect-[1.4] place-items-center overflow-hidden rounded-card bg-gradient-to-br from-blue-50 to-blue-100 p-6">
@@ -525,15 +520,16 @@ function Formats() {
               <Plaque />
             </motion.div>
           </div>
-          <h3 className="mt-5 font-display text-2xl">Virtual</h3>
-          <p className="mt-2 text-neutral-500">A downloadable version of the same plaque, ready to share on WhatsApp, social media, or directly with a prospective buyer or renter.</p>
+          <h3 className="mt-5 font-display text-2xl">Digital Plaque</h3>
+          <p className="mt-2 text-neutral-500">Shared electronically, for example alongside a listing, and linked to the same record.</p>
         </div>
       </Rail>
       </Reveal>
       <div className="mt-14 text-center">
-        <p className="text-lg font-medium">Once your DPI is issued, you can request your plaque.</p>
+        <p className="font-display text-2xl">Need a Plaque for Your Property?</p>
+        <p className="mt-2 text-neutral-500">Check the available options in Urbn.</p>
         <ButtonLink to="/download" variant="dark" className="mt-5">
-          Get Started
+          View Plaque Options
         </ButtonLink>
       </div>
     </section>
@@ -542,16 +538,16 @@ function Formats() {
 
 function Lifecycle() {
   const items = [
-    { icon: Stamp, title: "Issued once", text: "A property never gets a second DPI. Issuance is a one-time event." },
-    { icon: ReceiptText, title: "Tied to the property, not the people", text: "When an owner sells, a tenant moves out, or an agent is reassigned, the DPI stays exactly where it is. Only the people associated with the record change." },
-    { icon: History, title: "Updated, never overwritten", text: "Only Urbn, or authorized parties through Urbn's system, can write to the record. Payments, service changes, disputes, and ownership transfers are logged as they happen. No individual agent or owner can edit it unilaterally." },
-    { icon: Trash2, title: "Nothing gets erased", text: "Past tenancies and resolved disputes stay part of the record, timestamped, even after new tenants or owners come in." },
+    { icon: Stamp, title: "One Identity per Property", text: "Each property is given one DPI on Urbn." },
+    { icon: ReceiptText, title: "Linked to the Property", text: "When an owner sells, a tenant moves out or a manager changes, the DPI stays with the property. The people linked to the record change." },
+    { icon: History, title: "Updated Through Urbn", text: "Changes to the record go through Urbn's process rather than being edited directly by an individual agent or owner." },
+    { icon: CalendarClock, title: "History You Can Follow", text: "View the updates available in the property's record over time." },
   ];
   return (
     <section className="relative overflow-hidden bg-ink py-16 text-white sm:py-24 lg:py-32">
       <div className="container-x">
         <Reveal>
-          <SectionHeading dark eyebrow="A record for life" title="Lifecycle" />
+          <SectionHeading dark eyebrow="Lifecycle" title="A Record That Continues" lede="The identity stays linked to the property as its details, people and activities change." />
         </Reveal>
         <div className="relative mt-10 lg:mt-16">
           {/* phones: vertical timeline spine */}

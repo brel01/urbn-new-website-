@@ -10,15 +10,15 @@ import type { Route } from "./+types/faq";
 
 export const meta: Route.MetaFunction = () =>
   seo({
-    title: "FAQs: DPI, Property Verification & the Urbn App",
+    title: "Urbn FAQs | Property Identity, Inspections & Getting Started",
     description:
-      "Answers about Digital Property Identity (DPI), verifying a property, Property Cards, inspections, the AI search assistant, U-Beep and where Urbn is live.",
+      "Find answers about DPI, property records, inspections, U-Beep and using Urbn.",
     path: "/faq",
     jsonLd: [
       faqJsonLd(ALL_FAQS),
       breadcrumbs([
         { name: "Home", path: "/" },
-        { name: "FAQ", path: "/faq" },
+        { name: "FAQs", path: "/faq" },
       ]),
     ],
   });
@@ -30,11 +30,8 @@ export default function FaqPage() {
     <>
       <section className="container-x pt-16 pb-24 sm:pt-24">
         <div className="mx-auto max-w-3xl text-center">
-          <WordsReveal text="FAQs." className="text-6xl sm:text-8xl" />
-          <p className="lede mt-5">
-            Urbn is building Nigeria's first Digital Property Identity system. Here's everything you need to know about
-            how it works.
-          </p>
+          <WordsReveal text="Frequently Asked Questions" className="text-5xl leading-[1] sm:text-7xl" />
+          <p className="lede mt-5">Find answers about property records, verification and using Urbn.</p>
         </div>
         <div role="tablist" aria-label="FAQ topics" className="no-scrollbar -mx-4 mt-12 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:justify-center sm:px-0">
           {FAQ_GROUPS.map((g) => (
@@ -70,9 +67,9 @@ export default function FaqPage() {
           ))}
         </div>
         <div className="mx-auto mt-16 max-w-3xl rounded-card bg-mist p-8 text-center">
-          <h2 className="text-2xl">Still have a question?</h2>
-          <p className="mt-2 text-neutral-600">Our team usually replies within one working day.</p>
-          <ButtonLink to="/contact" variant="dark" className="mt-5">Contact us</ButtonLink>
+          <h2 className="text-2xl">Still Have a Question?</h2>
+          <p className="mt-2 text-neutral-600">Send the Urbn team a message.</p>
+          <ButtonLink to="/contact" variant="dark" className="mt-5">Contact Us</ButtonLink>
         </div>
       </section>
       <CtaBanner />

@@ -10,7 +10,7 @@ import type { Route } from "./+types/contact";
 export const meta: Route.MetaFunction = () =>
   seo({
     title: "Contact Urbn",
-    description: "Questions about DPI, verification, partnerships or press? Get in touch with the Urbn team.",
+    description: "Need help with the app or want to discuss a partnership? Get in touch with the Urbn team.",
     path: "/contact",
     jsonLd: breadcrumbs([
       { name: "Home", path: "/" },
@@ -24,9 +24,9 @@ export async function action({ request }: Route.ActionArgs) {
   const email = String(form.get("email") ?? "").trim();
   const message = String(form.get("message") ?? "").trim();
   const errors: Record<string, string> = {};
-  if (!name) errors.name = "Please tell us your name.";
+  if (!name) errors.name = "Enter your full name.";
   if (!/^\S+@\S+\.\S+$/.test(email)) errors.email = "Enter a valid email address.";
-  if (message.length < 10) errors.message = "Tell us a little more (at least 10 characters).";
+  if (message.length < 10) errors.message = "Add a little more detail, using at least 10 characters.";
   if (Object.keys(errors).length) return { ok: false as const, errors };
   // TODO: forward to the support inbox / CRM.
   console.info("[contact]", { name, email, topic: form.get("topic") });
@@ -44,7 +44,7 @@ export default function Contact() {
       <div>
         <WordsReveal text="Let's talk." className="text-6xl sm:text-8xl" />
         <p className="lede mt-6 max-w-md">
-          Questions about DPI, verifying your property, partnerships or press? We usually reply within one working day.
+          Need help with Urbn, a property record or a partnership enquiry? Send us a message.
         </p>
         <ul className="mt-10 space-y-5">
           <li className="flex items-center gap-4">
@@ -53,7 +53,7 @@ export default function Contact() {
           </li>
           <li className="flex items-center gap-4">
             <span className="grid size-11 place-items-center rounded-full bg-urbn text-white"><MapPin className="size-5" /></span>
-            <span className="text-lg">Ibadan, Oyo State, Nigeria</span>
+            <span className="text-lg">Based in Ibadan, Oyo State, Nigeria</span>
           </li>
           <li className="flex items-center gap-4">
             <span className="grid size-11 place-items-center rounded-full bg-urbn text-white"><MessageCircle className="size-5" /></span>
@@ -65,8 +65,8 @@ export default function Contact() {
         {result?.ok ? (
           <div className="flex h-full flex-col items-center justify-center rounded-card bg-mist p-10 text-center" role="status">
             <span className="grid size-14 place-items-center rounded-full bg-success text-white"><Check className="size-7" /></span>
-            <h2 className="mt-5 text-3xl">Message sent</h2>
-            <p className="mt-2 text-neutral-600">Thanks for reaching out. We'll get back to you shortly.</p>
+            <h2 className="mt-5 text-3xl">Message Sent</h2>
+            <p className="mt-2 text-neutral-600">Thanks for contacting Urbn. Your message has been received.</p>
           </div>
         ) : (
           <Form method="post" className="rounded-card bg-mist p-6 sm:p-10" noValidate>
@@ -77,19 +77,20 @@ export default function Contact() {
                 {err.name && <span className="mt-1 block text-error">{err.name}</span>}
               </label>
               <label className="block text-sm font-medium">
-                Email
+                Email address
                 <input name="email" type="email" autoComplete="email" className={field} aria-invalid={!!err.email} />
                 {err.email && <span className="mt-1 block text-error">{err.email}</span>}
               </label>
             </div>
             <label className="mt-5 block text-sm font-medium">
-              I'm a…
+              What is your enquiry about?
               <select name="topic" className={field} defaultValue="renter">
-                <option value="renter">Renter / home seeker</option>
-                <option value="owner">Property owner</option>
-                <option value="agent">Agent / property manager</option>
-                <option value="partner">Partner or investor</option>
-                <option value="press">Journalist</option>
+                <option value="renter">Finding a home</option>
+                <option value="owner">Managing a property</option>
+                <option value="agent">Agent support</option>
+                <option value="partner">Partnership or investment</option>
+                <option value="press">Press</option>
+                <option value="other">Other</option>
               </select>
             </label>
             <label className="mt-5 block text-sm font-medium">
@@ -98,7 +99,7 @@ export default function Contact() {
               {err.message && <span className="mt-1 block text-error">{err.message}</span>}
             </label>
             <Button type="submit" variant="dark" size="lg" arrow className="mt-6 w-full sm:w-auto" disabled={busy}>
-              {busy ? "Sending…" : "Send message"}
+              {busy ? "Sending…" : "Send Message"}
             </Button>
           </Form>
         )}

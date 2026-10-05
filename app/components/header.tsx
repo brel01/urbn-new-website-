@@ -72,7 +72,7 @@ export function Header() {
 
           <span className="hidden lg:block">
             <ButtonLink to="/download" variant="dark" arrow={false}>
-              Download App Now
+              Get the App
             </ButtonLink>
           </span>
           {/* phones/tablets: navigation lives in the bottom tab bar */}

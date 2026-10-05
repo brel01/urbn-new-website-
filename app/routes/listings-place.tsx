@@ -22,10 +22,10 @@ export const meta: Route.MetaFunction = ({ loaderData }) => {
   const { place, listings } = loaderData;
   const where = place.kind === "area" ? `${place.name}, ${place.city}` : place.name;
   return seo({
-    title: place.live ? `Verified Homes for Rent & Sale in ${where}` : `Urbn in ${where}: Coming Soon`,
+    title: place.live ? `Homes for Rent & Sale in ${where} | Urbn` : `Urbn in ${where} | Get Launch Updates`,
     description: place.live
-      ? `${listings.length} verified ${listings.length === 1 ? "home" : "homes"} in ${where}, each with a permanent DPI. ${place.blurb}`
-      : `Verified property listings with Digital Property Identity are coming to ${where}. Join the Urbn waitlist to hear first.`,
+      ? `Browse homes in ${where}. Compare listing details and check property records on Urbn.`
+      : `Get updates when Urbn becomes available in ${where}.`,
     path: `/listings/in/${place.slug}`,
     jsonLd: breadcrumbs([
       { name: "Home", path: "/" },
@@ -45,13 +45,13 @@ export default function PlacePage({ loaderData }: Route.ComponentProps) {
         <div className="container-x relative py-20 sm:py-28">
           <Reveal>
             <p className="eyebrow text-blue-400">
-              <MapPin className="size-4" /> {place.live ? "Live on Urbn" : "Coming soon"}
+              <MapPin className="size-4" /> {place.live ? "Available" : "Coming Soon"}
             </p>
             <h1 className="mt-4 max-w-3xl text-5xl leading-[1] sm:text-7xl">
               {place.live ? (
-                <>Verified homes in <span className="text-blue-400">{place.name}</span></>
+                <>Find a Home in <span className="text-blue-400">{place.name}</span></>
               ) : (
-                <>Urbn is coming to <span className="text-blue-400">{place.name}</span></>
+                <>Urbn Is Coming to <span className="text-blue-400">{place.name}</span></>
               )}
             </h1>
             <p className="mt-6 max-w-xl text-lg text-neutral-400">{place.blurb}</p>
@@ -76,10 +76,10 @@ export default function PlacePage({ loaderData }: Route.ComponentProps) {
         <section className="container-x py-16 sm:py-24">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <h2 className="text-3xl">
-              {listings.length} verified {listings.length === 1 ? "home" : "homes"} in {where}
+              {listings.length} {listings.length === 1 ? "home" : "homes"} in {where}
             </h2>
             <ButtonLink to={`/listings?search=${encodeURIComponent(place.kind === "area" ? place.name : place.city)}#search`} variant="outline" size="sm">
-              Filter & search
+              Filter & Search
             </ButtonLink>
           </div>
           {listings.length > 0 ? (
@@ -91,17 +91,14 @@ export default function PlacePage({ loaderData }: Route.ComponentProps) {
               ))}
             </Stagger>
           ) : (
-            <p className="lede mt-8">New verified homes in {place.name} are on the way. Check back soon.</p>
+            <p className="lede mt-8">No listings available here yet. Check another area.</p>
           )}
         </section>
       ) : (
         <section className="container-x grid gap-10 py-16 sm:py-24 lg:grid-cols-2 lg:items-center">
           <div>
-            <h2 className="text-3xl sm:text-4xl">Be first to know when we launch in {place.name}.</h2>
-            <p className="lede mt-4">
-              We're expanding carefully, city by city, because verification only works if you can trust it. Join the
-              waitlist and we'll tell you the moment verified homes go live in {place.name}.
-            </p>
+            <h2 className="text-3xl sm:text-4xl">Get Updates for {place.name}</h2>
+            <p className="lede mt-4">We'll email you when Urbn becomes available here.</p>
           </div>
           <div className="rounded-card bg-ink p-6 sm:p-8">
             <WaitlistForm />

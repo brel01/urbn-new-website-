@@ -71,11 +71,11 @@ export function DpiSearch({
       }}
       className={className}
       role="search"
-      aria-label="Verify a property by DPI code"
+      aria-label="Check a property's DPI"
     >
       {variant === "card" && (
         <label htmlFor={id} className="mb-3 block text-left font-display text-xl text-ink">
-          Verify a DPI
+          Check a Property's DPI
         </label>
       )}
       <div
@@ -91,7 +91,7 @@ export function DpiSearch({
         </span>
         {variant === "pill" && (
           <label htmlFor={id} className="sr-only">
-            DPI code
+            Check a Property's DPI
           </label>
         )}
         <div className="relative min-w-0 flex-1">
@@ -112,7 +112,7 @@ export function DpiSearch({
             className="h-11 w-full bg-transparent text-[15px] text-ink uppercase outline-none placeholder:normal-case"
           />
           {value === "" && (
-            <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center truncate text-[15px] text-neutral-400">
+            <span className="pointer-events-none absolute inset-0 flex items-center overflow-hidden text-[15px] whitespace-nowrap text-neutral-400">
               <span className="hidden sm:inline">Enter a DPI code, e.g.&nbsp;</span>
               <span className="sm:hidden">e.g.&nbsp;</span>
               {typed}
@@ -124,7 +124,7 @@ export function DpiSearch({
           type="submit"
           className="group inline-flex h-11 shrink-0 items-center gap-1.5 rounded-xl bg-ink px-4 text-[15px] font-medium text-white transition hover:bg-neutral-800 active:scale-[0.97] sm:px-5"
         >
-          {busy ? "Checking…" : "Verify"}
+          {busy ? "Checking…" : "Check Record"}
           <Arrow />
         </button>
       </div>

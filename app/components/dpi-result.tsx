@@ -3,7 +3,7 @@ import { BadgeCheck, CalendarDays, Copy, FileBadge, MapPin, ShieldCheck, Triangl
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
-import { appDeepLink, DPI_ERROR_COPY, type DpiErrorCode, type DpiRecord } from "~/lib/dpi";
+import { appDeepLink, DPI_ERROR_COPY, SAMPLE_DPI, type DpiErrorCode, type DpiRecord } from "~/lib/dpi";
 import { formatPrice, listingTypeLabel, type ListingType, type RentPeriod } from "~/lib/marketplace/types";
 import { EASE } from "./motion";
 import { ButtonLink } from "./ui";
@@ -16,6 +16,7 @@ const fmtDate = (d: string) =>
 export function VerifiedResult({ record, animate = true }: { record: DpiRecord; animate?: boolean }) {
   const [scanning, setScanning] = useState(animate);
   const [copied, setCopied] = useState(false);
+  const sample = record.code === SAMPLE_DPI;
   useEffect(() => {
     if (!animate) return;
     const t = setTimeout(() => setScanning(false), 1500);
@@ -23,16 +24,16 @@ export function VerifiedResult({ record, animate = true }: { record: DpiRecord; 
   }, [animate]);
 
   const rows = [
-    { icon: ShieldCheck, k: "Verification status", v: <span className="inline-flex items-center gap-1 font-semibold text-success"><BadgeCheck className="size-4" /> Verified</span> },
-    { icon: MapPin, k: "Registered address", v: [record.address, record.lga && `${record.lga} LGA`, record.state].filter(Boolean).join(", ") },
-    ...(record.registeredOn ? [{ icon: CalendarDays, k: "Registration date", v: fmtDate(record.registeredOn) }] : []),
-    { icon: FileBadge, k: "Ownership status", v: record.ownership },
+    { icon: ShieldCheck, k: "Verification Status", v: <span className="inline-flex items-center gap-1 font-semibold text-success"><BadgeCheck className="size-4" /> Verified</span> },
+    { icon: MapPin, k: "Registered Address", v: [record.address, record.lga && `${record.lga} LGA`, record.state].filter(Boolean).join(", ") },
+    ...(record.registeredOn ? [{ icon: CalendarDays, k: "Registration Date", v: fmtDate(record.registeredOn) }] : []),
+    ...(record.ownership ? [{ icon: FileBadge, k: "Ownership Status", v: record.ownership }] : []),
   ];
 
   return (
     <div className="grid gap-4 lg:grid-cols-[0.8fr_2fr_0.8fr]">
       <div className="flex flex-col justify-between rounded-card bg-mist p-5 lg:p-6">
-        <p className="text-xs font-semibold tracking-wider text-neutral-500 uppercase">Verified result</p>
+        <p className="text-xs font-semibold tracking-wider text-neutral-500 uppercase">{sample ? "Sample Record" : "Property Record"}</p>
         <AnimatePresence mode="wait">
           {scanning ? (
             <motion.p key="s" exit={{ opacity: 0 }} className="mt-6 flex items-center gap-2 font-display text-xl text-neutral-500" role="status">
@@ -44,7 +45,7 @@ export function VerifiedResult({ record, animate = true }: { record: DpiRecord; 
                 <span className="grid size-8 place-items-center rounded-full bg-success text-white"><Check className="size-5" /></span>
                 Property Verified
               </p>
-              <p className="mt-3 text-sm text-neutral-500">This property passed identity, title document and physical checks before its DPI was issued.</p>
+              <p className="mt-3 text-sm text-neutral-500">This property completed Urbn's required verification checks. Review the available details and current status below.</p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -87,13 +88,13 @@ export function VerifiedResult({ record, animate = true }: { record: DpiRecord; 
             ))}
             <div className="grid grid-cols-[auto_1fr] items-center gap-x-3 text-sm sm:grid-cols-[auto_9.5rem_1fr]">
               <BadgeCheck className="size-4 text-neutral-400" aria-hidden />
-              <dt className="text-neutral-500">DPI code</dt>
+              <dt className="text-neutral-500">DPI Code</dt>
               <dd className="col-start-2 flex items-center gap-2 font-mono font-semibold sm:col-start-3">
                 {record.code}
                 {record.unitCode && <span className="text-neutral-400">/{record.unitCode}</span>}
                 <button
                   type="button"
-                  aria-label="Copy DPI code"
+                  aria-label="Copy DPI Code"
                   className="rounded p-1 text-neutral-400 hover:bg-mist hover:text-ink"
                   onClick={() => {
                     navigator.clipboard?.writeText(record.unitCode ? `${record.code}/${record.unitCode}` : record.code);
@@ -113,7 +114,7 @@ export function VerifiedResult({ record, animate = true }: { record: DpiRecord; 
               </Link>
             )}
             <a href={appDeepLink(record.code, record.unitCode)} className="text-sm font-semibold text-ink underline-offset-4 hover:underline">
-              Open in Urbn App
+              Open in Urbn
             </a>
           </div>
         </div>
@@ -128,13 +129,20 @@ export function VerifiedResult({ record, animate = true }: { record: DpiRecord; 
         >
           <ShieldCheck className="size-16 stroke-[1.5]" />
         </motion.span>
-        <p className="mt-4 text-sm text-neutral-600">This is what you'll see whenever a property is fully verified.</p>
+        {sample ? (
+          <p className="mt-4 text-sm text-neutral-600">
+            <b className="block text-ink">Sample Record</b>
+            This example shows how a property record may appear. Available details depend on the record and access settings.
+          </p>
+        ) : (
+          <p className="mt-4 text-sm text-neutral-600">Check the details against the property and its documents before you commit.</p>
+        )}
       </div>
 
       {record.history.length > 0 && (
         <div className="rounded-card border border-neutral-200 p-6 lg:col-span-3">
-          <h3 className="font-display text-xl">Record history</h3>
-          <p className="text-sm text-neutral-500">Timestamped events logged to this DPI. Entries are added, never overwritten.</p>
+          <h3 className="font-display text-xl">Record History</h3>
+          <p className="text-sm text-neutral-500">View the property updates and events available on this record.</p>
           <ol className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {record.history.map((e, i) => (
               <motion.li
@@ -156,13 +164,13 @@ export function VerifiedResult({ record, animate = true }: { record: DpiRecord; 
   );
 }
 
-/** "Don't panic" no-match guidance. */
+/** Neutral next steps when a lookup doesn't return a public record. */
 export function NoMatch({ code, error = "PROPERTY_NOT_FOUND" }: { code?: string; error?: DpiErrorCode }) {
   const copy = DPI_ERROR_COPY[error];
   const steps = [
-    { title: "Check the code", text: "Make sure there are no typos. Codes look like IBADAN-NORTH-0041-U, and the last letter is a typo check." },
-    { title: "Ask questions", text: "Ask whoever's showing you the property why it isn't verified." },
-    { title: "Don't assume it's verified", text: "Until there's a match, there's no independent Urbn verification to rely on." },
+    { title: "Check the Code", text: "Enter the complete code exactly as it appears on the plaque or property record, then try again." },
+    { title: "Ask for the Current DPI", text: "Ask the owner or manager for the property's current DPI or record." },
+    { title: "Review the Documents", text: "A missing result does not establish whether the property is legitimate. Review the available documents before committing." },
   ];
   return (
     <div className="grid gap-6 rounded-card bg-mist p-6 sm:p-8 lg:grid-cols-[0.9fr_2fr_0.9fr] lg:items-center">
@@ -171,20 +179,20 @@ export function NoMatch({ code, error = "PROPERTY_NOT_FOUND" }: { code?: string;
           <span className="grid size-12 place-items-center rounded-full bg-ink text-white">
             <TriangleAlert className="size-5" />
           </span>
-          <span className="rounded-full bg-urbn px-2.5 py-1 text-xs font-medium text-white">{error === "PROPERTY_NOT_FOUND" ? "No match?" : copy.title}</span>
+          <span className="rounded-full bg-urbn px-2.5 py-1 text-xs font-medium text-white">{error === "PROPERTY_NOT_FOUND" ? "No Match" : copy.title}</span>
         </div>
-        <h2 className="mt-5 text-3xl">{error === "PROPERTY_NOT_FOUND" ? "Don't Panic." : copy.title}</h2>
+        <h2 className="mt-5 text-3xl">{error === "PROPERTY_NOT_FOUND" ? "No Matching Record" : copy.title}</h2>
         <p className="mt-2 text-sm text-neutral-600">
           {code && (
             <>
-              We couldn't find <span className="font-mono font-semibold text-ink">{code}</span>.{" "}
+              <span className="mb-1 block font-mono font-semibold text-ink">{code}</span>
             </>
           )}
           {copy.body}
         </p>
       </div>
       <div>
-        <p className="font-semibold">Before you move forward:</p>
+        <p className="font-semibold">Next steps</p>
         <ol className="mt-4 grid gap-5 sm:grid-cols-3">
           {steps.map((s, i) => (
             <li key={s.title} className="border-neutral-300 sm:border-l sm:pl-4">
@@ -197,9 +205,9 @@ export function NoMatch({ code, error = "PROPERTY_NOT_FOUND" }: { code?: string;
       </div>
       <div className="flex flex-col items-center rounded-2xl bg-ink p-6 text-center text-white">
         <UserPlus className="size-8" />
-        <p className="mt-3 font-medium">Own or manage this property?</p>
+        <p className="mt-3 font-medium">Own or Manage This Property?</p>
         <ButtonLink to="/dpi" variant="ghost-light" arrow={false} className={clsx("mt-5 w-full")}>
-          Get a DPI
+          Add Your Property
         </ButtonLink>
       </div>
     </div>

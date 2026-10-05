@@ -7,8 +7,8 @@ import type { Route } from "./+types/blog";
 
 export const meta: Route.MetaFunction = () =>
   seo({
-    title: "Blog & Press: Stories from Urbn",
-    description: "News, product updates and stories from Urbn, the team building Nigeria's Digital Property Identity system.",
+    title: "Stories & Updates From Urbn",
+    description: "Housing insights, product updates and news from the team building the digital infrastructure for housing.",
     path: "/blog",
     jsonLd: [
       {
@@ -31,8 +31,8 @@ export default function Blog() {
   return (
     <>
       <section className="container-x pt-16 pb-24 sm:pt-24">
-        <WordsReveal text="Stories" className="text-6xl sm:text-8xl" />
-        <p className="lede mt-4 max-w-xl">News, product updates and the people behind Nigeria's first Digital Property Identity system.</p>
+        <WordsReveal text="Stories From Urbn" className="text-6xl sm:text-8xl" />
+        <p className="lede mt-4 max-w-xl">Housing insights, product updates and the people behind Urbn.</p>
 
         <Reveal className="mt-14">
           <Link to={`/blog/${lead.slug}`} className="group grid overflow-hidden rounded-card bg-ink text-white md:grid-cols-2">
@@ -43,7 +43,7 @@ export default function Blog() {
               <p className="text-sm text-blue-400">{lead.category} · {fmt(lead.date)}</p>
               <h2 className="mt-3 text-3xl sm:text-4xl">{lead.title}</h2>
               <p className="mt-4 text-neutral-400">{lead.excerpt}</p>
-              <span className="mt-8 text-sm font-semibold">Read story →</span>
+              <span className="mt-8 text-sm font-semibold">Read Story →</span>
             </div>
           </Link>
         </Reveal>
@@ -63,7 +63,7 @@ export default function Blog() {
           ))}
         </Stagger>
       </section>
-      <CtaBanner variant="waitlist" body="Get our stories, product updates and city launches in your inbox." />
+      <CtaBanner variant="waitlist" title="Updates From Urbn" body="Get new stories and product updates by email." />
     </>
   );
 }

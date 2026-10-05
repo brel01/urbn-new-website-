@@ -4,49 +4,49 @@ export type FaqGroup = { id: string; title: string; items: Faq[] };
 export const FAQ_GROUPS: FaqGroup[] = [
   {
     id: "dpi",
-    title: "DPI basics",
+    title: "Property Identity",
     items: [
       {
-        q: "What is a DPI?",
-        a: "A DPI (Digital Property Identity) is a permanent, verified record tied to a property itself, not to its owner, agent or listing. Urbn issues it only after identity, title document and physical checks pass. Once issued, it can never be faked, duplicated or reassigned, and anyone can verify it in seconds.",
+        q: "What Is a DPI?",
+        a: "A Digital Property Identity (DPI) links a property to its record on Urbn. That record can include property details, verification status and housing activities.",
       },
       {
-        q: "Can a DPI be faked?",
-        a: "No. Only Urbn issues DPIs, and only after every check passes: identity, title document and physical inspection. No individual agent, owner or third party can create, edit or transfer a DPI outside Urbn's system, and every plaque's QR code resolves to the live record on Urbn.",
+        q: "How Do I Check That a DPI Is Genuine?",
+        a: "Open Urbn's official website or app and look up the code. Compare the property details and current status. A copied code or plaque alone does not establish that a transaction is legitimate.",
       },
       {
-        q: "How do I get a DPI for my property?",
-        a: "Submit your property in the Urbn app with its address, ownership information and supporting documents (Certificate of Occupancy, deed or equivalent). We run an identity check, verify your documents and visit the property in person. When everything checks out, your DPI is issued and you can request your plaque.",
+        q: "How Do I Register My Property?",
+        a: "Add your property in the Urbn app, submit the required details and documents, and follow the verification updates shown there.",
       },
       {
-        q: "What happens to the DPI when a property is sold?",
-        a: "Nothing changes. The DPI stays exactly where it is. A DPI is tied to the property, not the people, so when an owner sells, a tenant moves out or an agent is reassigned, only the people associated with the record change. The full history stays on the record.",
+        q: "What Happens When a Property Changes Hands?",
+        a: "The property identity remains linked to the property. Ownership and related records must be updated through Urbn's required process.",
       },
       {
-        q: "What do the parts of a DPI code mean?",
-        a: "Take IBADAN-NORTH-0041-U. \"IBADAN-NORTH\" is the Local Government Area the property is registered in, \"0041\" is its number within that LGA, and \"U\" is a check letter that catches typos. Individual units add a unit code, for example IBADAN-NORTH-0041-U/U01.",
+        q: "What Do the Parts of a DPI Code Mean?",
+        a: "Take IBADAN-NORTH-0041-U. \"IBADAN-NORTH\" is the area code for the Local Government Area the property is registered in, \"0041\" is the property number within that area, and \"U\" is a check character that helps catch typing errors. Individual units can add a unit code, for example IBADAN-NORTH-0041-U/U01. A valid format is not the same as a verified record.",
       },
     ],
   },
   {
     id: "verify",
-    title: "Verifying a property",
+    title: "Checking a Property",
     items: [
       {
-        q: "How do I verify a property?",
-        a: "Enter the DPI code on the Verify page, or scan the QR code on the property's plaque. You'll see the verified record (verification status, registered address, registration date and ownership status) instantly, with no account needed.",
+        q: "How Do I Check a Property Record?",
+        a: "Enter its DPI code on Urbn's Verify page or scan its plaque. Review the available details and current verification status.",
       },
       {
-        q: "Does it cost anything to verify a property?",
-        a: "No. Checking a DPI is free for everyone, and it's the one step that protects you before you pay a deposit, sign an agreement or hand over rent.",
+        q: "Does It Cost to Check a DPI?",
+        a: "Checking an available DPI record is free. Property onboarding and plaque charges, where applicable, are shown separately.",
       },
       {
-        q: "What if a property has no DPI, or the code doesn't match?",
-        a: "Don't panic. No match doesn't always mean something is wrong. It usually means the property hasn't been verified by Urbn yet. Check the code for typos, ask whoever is showing you the property why it isn't verified, and don't treat it as verified until it is.",
+        q: "What If There Is No Matching DPI?",
+        a: "Check the code and ask the owner or manager for the current property record. A missing result does not prove fraud or legitimacy. Review the available documents before committing.",
       },
       {
-        q: "What's the difference between a physical and a virtual plaque?",
-        a: "They're the same identity in two formats. The physical plaque is mounted on the property, so anyone standing in front of it can scan the QR code. The virtual plaque is a downloadable version you can share on WhatsApp, social media or directly with a prospective buyer or renter.",
+        q: "What's the Difference Between Physical and Digital Plaques?",
+        a: "A physical plaque is displayed at the property. A digital plaque is shared electronically. Both link to the same Urbn property record.",
       },
     ],
   },
@@ -55,42 +55,38 @@ export const FAQ_GROUPS: FaqGroup[] = [
     title: "Property Card",
     items: [
       {
-        q: "What is a Property Card?",
-        a: "A Property Card is a personal identity card issued by Urbn that proves your verified relationship to a property, as a resident or an owner. A DPI verifies the property itself; a Property Card verifies you.",
+        q: "What Is a Property Card?",
+        a: "A Property Card shows the relationship to a property recorded on your Urbn account, as a resident or an owner.",
       },
       {
-        q: "How do I get a Property Card?",
-        a: "Once your tenancy or ownership is logged against a property's DPI, request your card in the Urbn app. Urbn confirms the relationship is accurate, then issues the card, usually within a few days.",
-      },
-      {
-        q: "What's on a Property Card?",
-        a: "Your name, your permanent User ID, an issue date and a QR code that pulls up your verified relationships in real time. It isn't tied to one property, so it works no matter how many properties you're connected to.",
+        q: "How Do I Request a Property Card?",
+        a: "Request it in the Urbn app once your tenancy or ownership is recorded against the property. The app shows whether you're eligible and any charges before you request one.",
       },
     ],
   },
   {
     id: "features",
-    title: "Finding & renting",
+    title: "Finding & Renting",
     items: [
       {
-        q: "Do I need to book an inspection before renting?",
-        a: "We strongly recommend it. In the Urbn app you can book a physical visit or start with a virtual walkthrough, whichever suits your schedule. Pick a time, the agent or owner confirms, and once it's booked you can track their live location so you know they're on their way.",
+        q: "Should I Inspect Before Renting?",
+        a: "Arrange a physical or virtual inspection and ask about details that matter to you. When booking through Urbn, check that the owner or manager has confirmed your request.",
       },
       {
-        q: "Is the AI search assistant free to use?",
-        a: "Yes. Searching on Urbn, including with the AI search assistant, is free. Tell it what you want, like \"2-bedroom in Bodija under ₦800k\", and it does the searching for you. The more specific you are, the better it finds.",
+        q: "Is AI Search Free?",
+        a: "AI Search is available at no charge within the daily limit shown on your account. When the limit is reached, use filters or wait until the displayed reset time.",
       },
       {
-        q: "How do I join a neighborhood community?",
-        a: "Open the Community tab in the Urbn app and join the space for your building or area. Once you're in, you can ask questions, share tips and connect with your neighbours.",
+        q: "How Do I Join a Community?",
+        a: "Open the Community tab in the Urbn app to see the property or area communities available to your account, then join the one you need.",
       },
       {
-        q: "What is U-Beep?",
-        a: "U-Beep is the digital doorbell for every Urbn property. Scan the DPI QR code on the plaque to let the right person know you're there (a delivery, a visitor, a service appointment or something urgent) without needing anyone's phone number.",
+        q: "What Is U-Beep?",
+        a: "U-Beep lets a visitor scan a property's DPI QR code and send an alert to eligible contacts. Notification delivery depends on internet access and device settings.",
       },
       {
-        q: "Which cities is Urbn available in?",
-        a: "Urbn is live in Ibadan, with Lagos, Abuja and Port Harcourt next. We're expanding carefully, city by city, with verification you can trust. Join the waitlist to hear when we launch near you.",
+        q: "Where Is Urbn Available?",
+        a: "Urbn is starting in Ibadan, Oyo State. Check the app for currently supported areas and sign up for new-city updates.",
       },
     ],
   },
@@ -101,32 +97,33 @@ export const faqsFor = (...questions: string[]) =>
   questions.map((q) => ALL_FAQS.find((f) => f.q === q)).filter(Boolean) as Faq[];
 
 export const HOME_FAQS = faqsFor(
-  "What is a DPI?",
-  "How do I verify a property?",
-  "Can a DPI be faked?",
-  "How do I get a Property Card?",
-  "Does it cost anything to verify a property?",
-  "Which cities is Urbn available in?",
+  "What Is a DPI?",
+  "How Do I Check a Property Record?",
+  "How Do I Check That a DPI Is Genuine?",
+  "How Do I Register My Property?",
+  "Does It Cost to Check a DPI?",
+  "Where Is Urbn Available?",
 );
 export const DPI_FAQS = faqsFor(
-  "Can a DPI be faked?",
-  "How do I get a DPI for my property?",
-  "What happens to the DPI when a property is sold?",
-  "What do the parts of a DPI code mean?",
-  "What's the difference between a physical and a virtual plaque?",
-  "What is a Property Card?",
+  "How Do I Check That a DPI Is Genuine?",
+  "How Do I Register My Property?",
+  "What Happens When a Property Changes Hands?",
+  "What Do the Parts of a DPI Code Mean?",
+  "What's the Difference Between Physical and Digital Plaques?",
+  "What Is a Property Card?",
 );
 export const VERIFY_FAQS = faqsFor(
-  "How do I verify a property?",
-  "What if a property has no DPI, or the code doesn't match?",
-  "Does it cost anything to verify a property?",
-  "Can a DPI be faked?",
-  "What's the difference between a physical and a virtual plaque?",
-  "What is a DPI?",
+  "How Do I Check a Property Record?",
+  "What If There Is No Matching DPI?",
+  "Does It Cost to Check a DPI?",
+  "How Do I Check That a DPI Is Genuine?",
+  "What's the Difference Between Physical and Digital Plaques?",
+  "What Is a DPI?",
 );
 // From the Features PRD
 export const FEATURE_FAQS = faqsFor(
-  "Do I need to book an inspection before renting?",
-  "Is the AI search assistant free to use?",
-  "How do I join a neighborhood community?",
+  "Should I Inspect Before Renting?",
+  "Is AI Search Free?",
+  "How Do I Join a Community?",
+  "What Is U-Beep?",
 );

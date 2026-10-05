@@ -48,9 +48,9 @@ export type PlaqueData = {
 
 export const SAMPLE_PLAQUE: PlaqueData = {
   code: SAMPLE_DPI,
-  houseNo: "41A",
-  houseRef: "ADY-041-41A",
-  address: ["Adeyemo Street,", "Off Allen Avenue,", "Bodija, Ibadan,", "Oyo State."],
+  houseNo: "12",
+  houseRef: "SAMPLE",
+  address: ["12 Example Street,", "Ibadan,", "Oyo State."],
 };
 
 /**
@@ -64,8 +64,13 @@ export function Plaque({ data = SAMPLE_PLAQUE, className }: { data?: PlaqueData;
       <div
         className="relative aspect-[1.52] w-full overflow-hidden rounded-[1.6cqw] bg-[#0b0b0c] text-white shadow-[0_40px_80px_-30px_rgba(0,0,0,0.6)] ring-1 ring-white/10"
         role="img"
-        aria-label={`Urbn DPI plaque. DPI code ${data.code}, house number ${data.houseNo}, ${data.address.join(" ")}`}
+        aria-label={`${data === SAMPLE_PLAQUE ? "Sample " : ""}Urbn DPI plaque. DPI code ${data.code}, house number ${data.houseNo}, ${data.address.join(" ")}`}
       >
+        {data === SAMPLE_PLAQUE && (
+          <span className="absolute top-[1.6cqw] left-1/2 -translate-x-1/2 rounded-full bg-warning px-[1.6cqw] py-[0.4cqw] text-[1.5cqw] font-bold tracking-widest text-ink uppercase">
+            Sample
+          </span>
+        )}
         {/* top bar */}
         <div className="flex items-start justify-between px-[5cqw] pt-[4.5cqw] pb-[2.5cqw]">
           <div>
@@ -102,7 +107,7 @@ export function Plaque({ data = SAMPLE_PLAQUE, className }: { data?: PlaqueData;
           <div className="flex flex-col items-center py-[3cqw] pl-[3cqw]">
             <p className="text-[1.9cqw] font-semibold uppercase">U - Beep</p>
             <QrArt seed={data.code} className="mt-[1.6cqw] w-[15cqw]" />
-            <p className="mt-[1.4cqw] text-[1.7cqw] font-semibold uppercase">Scan to verify</p>
+            <p className="mt-[1.4cqw] text-[1.7cqw] font-semibold uppercase">Scan to View Record</p>
           </div>
         </div>
         {/* bottom bar */}
@@ -112,13 +117,13 @@ export function Plaque({ data = SAMPLE_PLAQUE, className }: { data?: PlaqueData;
             <div>
               <p className="text-[1.8cqw] font-bold uppercase">Verified by Urbn</p>
               <p className="max-w-[34cqw] text-[1.15cqw] leading-tight text-white/70">
-                This property has been verified by Urbn. Property details have been verified and recorded on its
-                Digital Property Identity (DPI).
+                This property has a Digital Property Identity on Urbn. Scan the QR code to view its record and
+                current verification status.
               </p>
             </div>
           </div>
           <span className="rounded-[0.6cqw] bg-white px-[2cqw] py-[0.9cqw] text-[1.6cqw] font-semibold text-ink">
-            Download Urbn app
+            Get the Urbn App
           </span>
         </div>
       </div>

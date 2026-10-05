@@ -65,7 +65,7 @@ DPI codes follow the backend and app format: `LGA-NNNN-C` (e.g. `IBADAN-NORTH-00
 - Per-route `<title>`, description, canonical, Open Graph and Twitter tags (`app/lib/seo.ts`). Branded share image at `public/og/urbn-share.png` (bump `?v=` in `SITE.ogImage` when it changes, so WhatsApp refetches it).
 - JSON-LD: `Organization`, `WebSite` + `SearchAction`, `FAQPage`, `HowTo` (getting a DPI), `RealEstateListing` (offers, address, geo, DPI identifier), `ItemList`, `BlogPosting`, `BreadcrumbList` and `MobileApplication`.
 - `/sitemap.xml` (including live listings and images) and `/robots.txt` are generated.
-- Area pages (`/listings/in/bodija`, `/listings/in/lagos`, …) target local searches. Roadmap cities show a waitlist.
+- Area pages (`/listings/in/bodija`, `/listings/in/lagos`, …) target local searches. Cities without coverage show a launch-updates sign-up.
 - `scripts/check-prerender.mjs` fails the build if any pre-rendered page is a redirect stub or is missing its `<h1>`.
 
 ## Brand assets
@@ -79,10 +79,10 @@ The Creato Display web fonts in `public/fonts` were rebuilt from the subsets emb
 Placeholders are marked `TODO` in `app/lib/site.ts`.
 
 - App Store / Google Play links, support email, social handles (only `@urbn_hq` appears in the brand assets), registered company name.
-- Stats on the homepage and About page (10,000+ waitlist, 50 properties in verification) come from the Figma. Confirm they're current.
-- Blog stories (`app/lib/stories.ts`) are drafts. In particular, "LaTunde is Missing" fills in a campaign story the brand assets only tease.
-- FAQ answers were written from the PRD and Figma copy (the Figma FAQ answers were placeholder text). Check "Is the AI search assistant free to use?" against the real pricing and quota policy.
-- Terms of Use and Privacy Policy are drafts (written with the NDPA 2023 in mind) and need legal review.
+- Site copy follows the team's reviewed copy audit (`docs/urbn-copy-audit.xlsx`). Its "Website status" column lists the rows that still need a product decision: Property Card, Neighbourhood Community and live location availability, free DPI lookup, and AI Search limits.
+- Blog stories (`app/lib/stories.ts`) are drafts. Add the approved LaTunde campaign story when it's ready.
+- Terms of Service and Privacy Policy are drafts (written with the NDPA 2023 in mind), shown with a "Draft pending approval" notice. Replace them with the approved texts.
+- Some artwork still carries old copy baked into the image: the homepage hero ("Don't pay before you verify" billboard, "41A / Allen Avenue" plaque), the billboard and plaque-scene images. These need new design assets.
 - Seed listings are illustrative. They disappear once `URBN_API_URL` is set.
 
 ## Deploying

@@ -36,63 +36,65 @@ const FEATURES: Feature[] = [
     id: "u-beep",
     icon: BellRing,
     title: "U-Beep",
-    body: "Scan the DPI QR code, and let the right person know you're there, no phone number needed. Whether it's a delivery, a visitor, a service appointment, or something urgent, U-Beep gets your message to whoever's responsible for that property.",
-    highlight: "It's not a chat app. It's the digital doorbell for every Urbn property.",
+    body: "Scan the property's DPI QR code to send a visitor, delivery or service alert to eligible contacts. Delivery depends on connectivity and notification settings.",
+    highlight: "Let the Property Know You're Here",
     screen: <UBeepScreen />,
   },
   {
     id: "video-listings",
     icon: Play,
     title: "Video Listings",
-    body: "Swipe through real video walkthroughs of properties, not just photos. Like, save, and comment on the ones you love, and come back to them anytime.",
-    kicker: "See a space the way you'd actually experience it, before you ever visit.",
+    body: "Watch available property walkthroughs, save listings you like and review the details before arranging a visit.",
+    highlight: "See More of the Space",
     screen: <VideoScreen />,
   },
   {
     id: "live-location",
     icon: MapPin,
     title: "Live Location",
-    body: "See exactly where a property is: pinned, precise, and impossible to fudge. Once you've booked an inspection, track your agent's live location in real time, so you always know they're on their way.",
-    kicker: "No more wasted trips. No more waiting around for someone who was never coming.",
+    body: "Where available, use location sharing to follow the person meeting you for a confirmed inspection.",
+    highlight: "Coordinate Your Inspection",
     screen: <LocationScreen />,
   },
   {
     id: "inspection-booking",
     icon: CalendarCheck,
     title: "Inspection Booking",
-    body: "Book a physical visit, or start with a virtual walkthrough, whichever fits your schedule. Pick a time, confirm with the agent or owner, and you're set.",
-    kicker: "No back-and-forth. No guessing if it's actually confirmed.",
+    body: "Request a physical or virtual inspection from the available slots. Check the app for acceptance and booking confirmation.",
+    highlight: "Choose a Time to View",
     screen: <BookingScreen />,
   },
   {
     id: "ai-search",
     icon: Sparkles,
-    title: "AI Search Assistant",
-    body: "Tell it what you're looking for, like “2-bedroom in Bodija under ₦800k”, and let it do the searching. No endless scrolling, no filters to figure out.",
-    kicker: "The more specific you are, the better it finds.",
+    title: "AI Search",
+    body: "Enter an area, budget and must-haves in your own words. Urbn searches the available listings for matches.",
+    highlight: "Describe the Home You Want",
     screen: <AiScreen />,
   },
   {
     id: "direct-chat",
     icon: MessageSquareText,
     title: "Direct Chat",
-    body: "Message agents or owners straight from the app: ask questions, negotiate, confirm details. Everything in one place, so nothing gets lost in a WhatsApp thread you can't find later.",
+    body: "Message the owner or manager in Urbn to ask questions and discuss listing details.",
+    highlight: "Keep Property Conversations Together",
     screen: <ChatScreen />,
   },
   {
     id: "community",
     icon: Users,
-    title: "Neighborhood Community",
-    body: "Connect with other renters and residents in your building or area. Ask questions, share tips, and connect with your neighbors.",
+    title: "Neighbourhood Community",
+    body: "Share updates and ask questions in the property or area communities available to your account.",
+    highlight: "Stay Connected Locally",
     screen: <CommunityScreen />,
   },
 ];
 
 export const meta: Route.MetaFunction = () =>
   seo({
-    title: "Features: U-Beep, Video Listings, AI Search & More",
+    title: "Urbn Features | Property Records, Inspections & More",
     description:
-      "Beyond DPI, Urbn helps you find, check and settle into a home: video listings, live location, inspection booking, an AI search assistant, direct chat and neighborhood communities.",
+      "Explore Urbn's tools for property records, listings, inspection booking, direct messaging and everyday housing activities.",
     path: "/features",
     jsonLd: [
       {
@@ -101,7 +103,7 @@ export const meta: Route.MetaFunction = () =>
         name: "Urbn",
         operatingSystem: "iOS, Android",
         applicationCategory: "LifestyleApplication",
-        description: "Verify properties, find verified homes and settle in with U-Beep, video listings, AI search and more.",
+        description: "Check property records, find homes, request inspections and manage everyday housing activities with Urbn.",
         featureList: FEATURES.map((f) => f.title).join(", "),
         offers: { "@type": "Offer", price: "0", priceCurrency: "NGN" },
       },
@@ -120,7 +122,7 @@ export default function Features() {
       <section className="container-x py-12 sm:py-20 lg:py-28" aria-label="Urbn features">
         {/* phones: an app tour, one feature per swipe */}
         <div className="lg:hidden">
-          <p className="text-[10px] font-semibold tracking-widest text-neutral-400 uppercase">Swipe the tour</p>
+          <p className="text-[10px] font-semibold tracking-widest text-neutral-400 uppercase">Swipe to Explore</p>
           <Rail grid="md:grid-cols-2 md:gap-5" item="w-[86%] sm:w-[60%]" className="mt-3" label="Urbn features">
             {FEATURES.map((f, i) => (
               <article key={f.id} className="flex h-full flex-col overflow-hidden rounded-[1.75rem] bg-mist">
@@ -144,7 +146,7 @@ export default function Features() {
             ))}
           </Rail>
         </div>
-        <nav aria-label="Jump to feature" className="mb-10 hidden flex-wrap justify-center gap-2 lg:flex">
+        <nav aria-label="Choose a Feature" className="mb-10 hidden flex-wrap justify-center gap-2 lg:flex">
           {FEATURES.map((f) => (
             <a
               key={f.id}
@@ -166,7 +168,7 @@ export default function Features() {
       <ExploreBand />
       <FaqSection
         faqs={FEATURE_FAQS}
-        lede="Beyond DPI, Urbn gives you the tools to actually find, book, and settle into a home."
+        lede="See how Urbn connects property records with the actions people take around them."
       />
       <CtaBanner />
     </>
@@ -194,14 +196,14 @@ function Hero() {
         <div className="absolute inset-0 bg-mist/75 lg:hidden" />
       </motion.div>
       <div className="container-x flex min-h-[22rem] flex-col justify-end pt-20 pb-10 sm:min-h-[34rem] sm:pt-24 sm:pb-14 lg:justify-center lg:py-28">
-        <WordsReveal text="More than verification" highlight={["verification"]} className="max-w-xl text-[2.75rem] leading-[1] sm:text-7xl" />
+        <WordsReveal text="Housing Has More Than One Moving Part." highlight={["Moving", "Part."]} className="max-w-xl text-[2.75rem] leading-[1] sm:text-6xl" />
         <motion.p
           className="mt-6 max-w-sm text-lg text-neutral-700"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.8 }}
         >
-          Urbn helps you find, check, and settle into a home, not just prove it's real.
+          Keep property records, people and everyday activities connected in Urbn.
         </motion.p>
       </div>
     </section>
@@ -252,12 +254,12 @@ function ExploreBand() {
           viewport={{ once: true }}
           transition={{ delay: 0.3, duration: 0.8, ease: EASE }}
         >
-          <h2 className="font-display text-2xl sm:text-3xl">Get started, and explore it all for yourself.</h2>
+          <h2 className="font-display text-2xl sm:text-3xl">Bring Your Housing Activities Together</h2>
           <p className="mt-2 text-sm text-neutral-600">
-            Every feature works hand in hand with DPI, so the home you find is the home you get.
+            Find a property, arrange an inspection and keep track of what comes next.
           </p>
           <ButtonLink to="/download" variant="dark" className="mt-5">
-            Get Started
+            Get the App
           </ButtonLink>
         </motion.div>
       </Reveal>

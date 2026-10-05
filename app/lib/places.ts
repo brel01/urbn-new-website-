@@ -24,7 +24,7 @@ export const PLACES: Place[] = [
     aliases: ["ibadan", "oyo"],
     live: true,
     blurb:
-      "Urbn's first live city. Every home listed in Ibadan has passed ownership, document and physical checks, and carries a permanent DPI you can check yourself.",
+      "Urbn's first city. Browse homes across Ibadan and check each property's current Urbn record.",
   },
   {
     slug: "bodija",
@@ -35,7 +35,7 @@ export const PLACES: Place[] = [
     lga: "Ibadan North",
     aliases: ["new bodija", "old bodija"],
     live: true,
-    blurb: "Quiet, central and close to the University of Ibadan and Bodija Market. Bodija is one of the most searched areas on Urbn.",
+    blurb: "Quiet, central and close to the University of Ibadan and Bodija Market.",
   },
   {
     slug: "akobo",
@@ -81,12 +81,12 @@ export const PLACES: Place[] = [
     live: true,
     blurb: "Minutes from UI and The Polytechnic, Ibadan, Samonda is a favourite with students and young professionals.",
   },
-  { slug: "lagos", name: "Lagos", kind: "city", city: "Lagos", state: "Lagos", lga: null, aliases: ["lagos"], live: false, blurb: "Lagos is next on the Urbn roadmap." },
-  { slug: "lekki", name: "Lekki", kind: "area", city: "Lagos", state: "Lagos", lga: "Eti-Osa", aliases: ["lekki phase 1", "ajah", "victoria island", "vi"], live: false, blurb: "Lekki is coming with our Lagos launch." },
-  { slug: "yaba", name: "Yaba", kind: "area", city: "Lagos", state: "Lagos", lga: "Lagos Mainland", aliases: ["surulere"], live: false, blurb: "Yaba is coming with our Lagos launch." },
-  { slug: "ikeja", name: "Ikeja", kind: "area", city: "Lagos", state: "Lagos", lga: "Ikeja", aliases: ["gra ikeja", "allen avenue"], live: false, blurb: "Ikeja is coming with our Lagos launch." },
-  { slug: "abuja", name: "Abuja", kind: "city", city: "Abuja", state: "FCT", lga: null, aliases: ["abuja", "maitama", "wuse", "garki"], live: false, blurb: "Abuja is on the Urbn roadmap." },
-  { slug: "port-harcourt", name: "Port Harcourt", kind: "city", city: "Port Harcourt", state: "Rivers", lga: null, aliases: ["port harcourt", "ph"], live: false, blurb: "Port Harcourt is on the Urbn roadmap." },
+  { slug: "lagos", name: "Lagos", kind: "city", city: "Lagos", state: "Lagos", lga: null, aliases: ["lagos"], live: false, blurb: "Urbn isn't available in Lagos yet." },
+  { slug: "lekki", name: "Lekki", kind: "area", city: "Lagos", state: "Lagos", lga: "Eti-Osa", aliases: ["lekki phase 1", "ajah", "victoria island", "vi"], live: false, blurb: "Urbn isn't available in Lekki yet." },
+  { slug: "yaba", name: "Yaba", kind: "area", city: "Lagos", state: "Lagos", lga: "Lagos Mainland", aliases: ["surulere"], live: false, blurb: "Urbn isn't available in Yaba yet." },
+  { slug: "ikeja", name: "Ikeja", kind: "area", city: "Lagos", state: "Lagos", lga: "Ikeja", aliases: ["gra ikeja", "allen avenue"], live: false, blurb: "Urbn isn't available in Ikeja yet." },
+  { slug: "abuja", name: "Abuja", kind: "city", city: "Abuja", state: "FCT", lga: null, aliases: ["abuja", "maitama", "wuse", "garki"], live: false, blurb: "Urbn isn't available in Abuja yet." },
+  { slug: "port-harcourt", name: "Port Harcourt", kind: "city", city: "Port Harcourt", state: "Rivers", lga: null, aliases: ["port harcourt", "ph"], live: false, blurb: "Urbn isn't available in Port Harcourt yet." },
 ];
 
 export const getPlace = (slug: string) => PLACES.find((p) => p.slug === slug);

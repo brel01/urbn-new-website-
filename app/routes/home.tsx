@@ -23,7 +23,7 @@ export const meta: Route.MetaFunction = () =>
   seo({
     title: "Urbn | The Digital Infrastructure for Housing",
     description:
-      "Urbn is the digital infrastructure for housing in Nigeria. Every property gets a permanent Digital Property Identity (DPI), so anyone can verify a home in seconds and rent or buy without blind trust.",
+      "Find homes in Ibadan, check property records and manage housing activities with Urbn, the digital infrastructure for housing.",
     path: "/",
     jsonLd: faqJsonLd(HOME_FAQS),
   });
@@ -45,10 +45,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       <FeaturedListings listings={featured} />
       <Stories />
       <FaqSection faqs={HOME_FAQS} />
-      <CtaBanner
-        variant="waitlist"
-        body="Get updates as we launch in new cities, plus early access when we do."
-      />
+      <CtaBanner variant="waitlist" />
     </>
   );
 }
@@ -98,7 +95,7 @@ function Hero() {
           <span className="size-1.5 animate-pulse rounded-full bg-success" /> Live in Ibadan
         </motion.span>
         <WordsReveal
-          text="Can you trust this property?"
+          text="A Home Has More Than an Address."
           className="max-w-4xl text-[2.75rem] leading-[0.98] text-ink sm:text-7xl lg:text-[5.5rem]"
         />
         <motion.p
@@ -107,7 +104,7 @@ function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.8, ease: EASE }}
         >
-          Check any property's Digital Property Identity before you pay a single naira. Free, instant, no account needed.
+          Urbn connects a property's identity, people and housing activities. Find a home, check its record or manage yours.
         </motion.p>
         <motion.div
           className="mt-6 w-full max-w-2xl lg:mt-8"
@@ -119,9 +116,9 @@ function Hero() {
           {/* phones: app-style quick actions */}
           <div className="no-scrollbar -mx-4 mt-4 flex gap-2 overflow-x-auto px-4 lg:hidden">
             {[
-              { to: "/listings", label: "Browse homes", icon: Search },
-              { to: "/dpi", label: "How DPI works", icon: ShieldCheck },
-              { to: "/for-owners", label: "Get a DPI", icon: House },
+              { to: "/listings", label: "Browse Homes", icon: Search },
+              { to: "/dpi", label: "What Is DPI?", icon: ShieldCheck },
+              { to: "/for-owners", label: "Add Your Property", icon: House },
             ].map((a) => (
               <Link key={a.to} to={a.to} className="inline-flex shrink-0 items-center gap-2 rounded-full bg-mist px-4 py-2.5 text-[13px] font-semibold active:scale-95 active:bg-fog">
                 <a.icon className="size-4 text-urbn" /> {a.label}
@@ -129,9 +126,9 @@ function Hero() {
             ))}
           </div>
           <p className="mt-4 hidden items-center gap-1.5 rounded-full bg-white/90 px-4 py-2 text-sm text-neutral-700 shadow-sm backdrop-blur lg:inline-flex">
-            No code?
+            No DPI code?
             <Link to="/listings" className="font-semibold text-urbn underline-offset-4 hover:underline">
-              Browse verified homes in Ibadan →
+              Browse Homes in Ibadan →
             </Link>
           </p>
         </motion.div>
@@ -143,22 +140,22 @@ function Hero() {
 function Problem() {
   const cards = [
     {
-      big: <><CountUp to={1} /> in <CountUp to={3} /></>,
-      text: "property deals in Nigeria involve a documentation dispute",
+      big: "One Property. Conflicting Details.",
+      text: "Different listings can tell different stories about the same space.",
       img: "/images/stat-sunset.webp",
       alt: "Sunset view from a residential balcony",
       tone: "bg-ink text-white",
     },
     {
-      big: <CountUp to={0} />,
-      text: "shared identity layer exists for real estate in Nigeria, until now",
+      big: "Records That Stay Connected",
+      text: "Keep a property's details and housing activities linked as people come and go.",
       img: "/images/stat-skyline.webp",
       alt: "Blue line illustration of a city skyline",
       tone: "bg-urbn text-white",
     },
     {
-      big: "Countless",
-      text: "buyers and renters lose money to fake or duplicate listings every year",
+      big: "Questions Before Payment",
+      text: "Check the available property record and ask for the details you need before committing.",
       img: "/images/stat-phone.webp",
       alt: "Hand holding a phone running the Urbn app",
       tone: "bg-mist text-ink",
@@ -168,17 +165,17 @@ function Problem() {
     <section className="container-x py-16 sm:py-24 lg:py-32">
       <Reveal>
         <SectionHeading
-          title="Real estate shouldn't require blind trust."
-          lede="Real estate in Nigeria is broken. Urbn is here to change that."
+          title="Property Details Shouldn't Get Lost."
+          lede="Listings in one place. Agreements in another. Payment records buried in chats. Urbn brings housing activities into one connected record."
         />
       </Reveal>
       <Reveal className="mt-8 md:mt-14">
-        <Rail grid="md:grid-cols-3 md:gap-5" item="w-[78%] sm:w-[55%]" label="Why trust is broken">
+        <Rail grid="md:grid-cols-3 md:gap-5" item="w-[78%] sm:w-[55%]" label="Why property details get lost">
         {cards.map((c, i) => (
             <article key={i} className={clsx("group relative flex h-full flex-col overflow-hidden rounded-card", c.tone)}>
               {i === 1 && <Rings className="-top-16 -right-16 size-48" />}
               <div className="relative p-7 pb-6">
-                <p className="font-display text-5xl leading-none sm:text-6xl">{c.big}</p>
+                <h3 className="font-display text-[1.75rem] leading-[1.08] sm:text-3xl">{c.big}</h3>
                 <span className={clsx("mt-4 block h-0.5 w-10", i === 2 ? "bg-urbn" : i === 1 ? "bg-white" : "bg-urbn")} />
                 <p className={clsx("mt-3 max-w-[16rem] text-[15px] leading-snug", i === 2 ? "text-neutral-600" : "text-white/75")}>
                   {c.text}
@@ -205,21 +202,21 @@ function Identity() {
       <div ref={ref} className="container-x grid items-center gap-6 py-14 lg:grid-cols-[1fr_1.15fr] lg:gap-10 lg:py-28">
         <Reveal>
           <p className="eyebrow">
-            <span className="size-2 rounded-full bg-urbn" /> What DPI is
+            <span className="size-2 rounded-full bg-urbn" /> Digital Property Identity
           </p>
           <h2 className="mt-4 text-[2.6rem] leading-[1.02] sm:text-6xl">
-            Meet your property's <span className="text-urbn">identity.</span>
+            A Record Built Around the <span className="text-urbn">Property</span>
           </h2>
           <p className="lede mt-6 max-w-lg">
-            A DPI is a permanent record tied to a property: not its owner, not its agent, not a listing. Once issued,
-            it can never be faked, duplicated, or reassigned. Anyone can verify it in seconds.
+            A Digital Property Identity (DPI) connects a property to its record on Urbn. It helps keep details and
+            activities linked to the same property as owners, managers and occupants change.
           </p>
-          <div className="mt-6 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-3 lg:mt-8">
+          <div className="mt-6 grid gap-2 sm:flex sm:flex-wrap sm:gap-3 lg:mt-8">
             <ButtonLink to="/dpi" variant="blue" className="w-full sm:w-auto">
-              Learn more about DPI
+              Explore Property Identity
             </ButtonLink>
             <ButtonLink to="/verify" variant="outline" className="w-full sm:w-auto">
-              Verify a property
+              Check a DPI
             </ButtonLink>
           </div>
         </Reveal>
@@ -246,6 +243,7 @@ function Identity() {
             </span>
             <span className="text-sm">
               <b className="block font-semibold">Property Verified</b>
+              <span className="block text-[11px] font-semibold tracking-wider text-warning uppercase">Sample Record</span>
               <span className="font-mono text-xs text-neutral-500">{SAMPLE_DPI}</span>
             </span>
           </motion.div>
@@ -256,9 +254,9 @@ function Identity() {
 }
 
 const STEPS = [
-  { icon: FileUp, title: "Submit", text: "An owner or agent submits the property to Urbn, with ownership details and title documents." },
-  { icon: ShieldCheck, title: "Verify", text: "We confirm ownership, check the title document, and visit the property in person." },
-  { icon: Stamp, title: "Issue", text: "The property gets a permanent DPI and a plaque anyone can scan to see the verified record." },
+  { icon: FileUp, title: "Submit Your Property", text: "Add the property details and provide the documents required for your role." },
+  { icon: ShieldCheck, title: "Complete the Checks", text: "Urbn reviews the submitted information and carries out the checks required for the property." },
+  { icon: Stamp, title: "View Your Property Record", text: "Once approved, check the property's verification status and available plaque options in Urbn." },
 ];
 
 function HowItWorks() {
@@ -282,7 +280,7 @@ function HowItWorks() {
     <section className="bg-ink py-16 text-white sm:py-24 lg:py-32">
       <div className="container-x" ref={ref}>
         <Reveal>
-          <SectionHeading dark eyebrow="How to get started" title="How It Works" lede="From submission to proof in three steps. Every property, every time." />
+          <SectionHeading dark eyebrow="How It Works" title="Give Your Property a Connected Record" lede="Submit your details, complete the required checks and follow your property's status in Urbn." />
         </Reveal>
         <HowItWorksDeck />
         <div className="mt-14 hidden gap-4 lg:grid lg:grid-cols-[1fr_1fr_1fr]">
@@ -330,13 +328,12 @@ function HowItWorks() {
             >
               <img src="/images/property-card-scene.webp" alt="Black Urbn Property Card with QR code" loading="lazy" className="aspect-[1.42] w-full object-cover" />
               <div className="relative flex flex-1 flex-col p-6">
-                <p className="font-display text-2xl leading-tight">And once you're verified, carry the proof.</p>
+                <p className="font-display text-2xl leading-tight">Your Property Card</p>
                 <p className="mt-3 text-sm text-white/65">
-                  Every verified resident and owner can request a Property Card: one simple way to prove your relationship
-                  to a property, wherever you need to.
+                  View the relationship to a property recorded on your Urbn account.
                 </p>
                 <Link to="/dpi#property-card" className="mt-6 inline-flex w-fit items-center gap-1 rounded-lg bg-white px-4 py-2.5 text-sm font-medium text-ink">
-                  Learn more ›
+                  Learn About Property Cards ›
                 </Link>
                 <span className="pointer-events-none absolute right-4 -bottom-4 font-display text-8xl text-white/10">4</span>
               </div>
@@ -351,8 +348,8 @@ function HowItWorks() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <span className="text-white/60">Step {active + 1} of 4 · </span>
-              {["Property submitted", "Checks in progress", "DPI issued", "Property Card ready"][active]}
+              {active < 3 ? <span className="text-white/60">Step {active + 1} of 3 · </span> : <span className="text-white/60">Optional · </span>}
+              {["Property Submitted", "Under Review", "Verification Complete", "Property Card"][active]}
             </motion.div>
           </Reveal>
         </div>
@@ -365,7 +362,7 @@ function HowItWorks() {
 function HowItWorksDeck() {
   const cards = [
     ...STEPS.map((s, i) => ({ ...s, n: i + 1, img: null as string | null })),
-    { icon: ShieldCheck, title: "Carry the proof", text: "Verified residents and owners can request a Property Card to prove their relationship to a property, anywhere.", n: 4, img: "/images/property-card-scene.webp" },
+    { icon: ShieldCheck, title: "Your Property Card", text: "View the relationship to a property recorded on your Urbn account.", n: 4, img: "/images/property-card-scene.webp" },
   ];
   return (
     <Reveal className="mt-8 lg:hidden">
@@ -376,7 +373,7 @@ function HowItWorksDeck() {
               <span className="grid size-12 place-items-center rounded-full bg-white text-urbn">
                 <c.icon className="size-5" />
               </span>
-              <span className="text-xs font-semibold tracking-widest text-white/60 uppercase">Step {c.n} of 4</span>
+              <span className="text-xs font-semibold tracking-widest text-white/60 uppercase">{c.n < 4 ? `Step ${c.n} of 3` : "Optional"}</span>
             </div>
             {c.img && <img src={c.img} alt="Urbn Property Card" loading="lazy" className="mt-5 aspect-[1.6] w-full rounded-xl object-cover" />}
             <h3 className="mt-auto pt-6 font-display text-3xl">{c.title}</h3>
@@ -394,8 +391,9 @@ function Audiences() {
     {
       icon: House,
       title: "Property Owners",
-      kicker: "To protect what's yours",
-      text: "Get your property a permanent identity, and prove it's legitimately yours to anyone, instantly.",
+      kicker: "Keep Your Property in View",
+      text: "Bring property details, occupants and tenancy records into one place.",
+      link: "Explore Owner Tools",
       img: "/images/illus-owners.webp",
       to: "/for-owners",
       dark: false,
@@ -403,17 +401,19 @@ function Audiences() {
     {
       icon: Briefcase,
       title: "Agents & Property Managers",
-      kicker: "Close faster. Prove it's real.",
-      text: "Give every listing a verified identity that builds trust before you even show up.",
+      kicker: "Keep Your Work Organised",
+      text: "Manage listings, inspection requests and property activities with a clearer record.",
+      link: "Explore Agent Tools",
       img: "/images/illus-agents.webp",
       to: "/for-agents",
       dark: true,
     },
     {
       icon: Search,
-      title: "Renters / Home Seekers",
-      kicker: "Never guess again",
-      text: "Check a property's identity before you send a single naira. No more taking anyone's word for it.",
+      title: "Renters & Home Seekers",
+      kicker: "Find a Home. Stay Informed.",
+      text: "Explore listings, book inspections and keep track of your tenancy.",
+      link: "Explore Renter Tools",
       img: "/images/illus-renters.webp",
       to: "/for-renters",
       dark: false,
@@ -423,9 +423,9 @@ function Audiences() {
     <section className="container-x py-16 sm:py-24 lg:py-32">
       <Reveal>
         <SectionHeading
-          eyebrow="Who we built Urbn for"
-          title="Built for everyone in real estate."
-          lede="Whether you own it, manage it or want to live in it, a DPI gives everyone the same source of truth."
+          eyebrow="Who Urbn Is For"
+          title="Built for the People Around Every Property"
+          lede="Owners, renters and managers can keep their housing activities connected."
         />
       </Reveal>
       <Reveal className="mt-8 md:mt-14">
@@ -450,7 +450,7 @@ function Audiences() {
               <p className={clsx("mt-4 text-sm leading-relaxed", it.dark ? "text-white/60" : "text-neutral-500")}>{it.text}</p>
               <img src={it.img} alt="" loading="lazy" className={clsx("mt-6 h-28 w-full object-contain object-bottom", !it.dark && "mix-blend-multiply")} />
               <span className={clsx("mt-5 text-sm font-semibold", it.dark ? "text-blue-300" : "text-urbn")}>
-                See how it works <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
+                {it.link} <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
               </span>
             </Link>
         ))}
@@ -462,14 +462,14 @@ function Audiences() {
 
 function Growth({ listings }: { listings: Card[] }) {
   const stats = [
-    { icon: Users, value: <CountUp to={10000} suffix="+" />, label: "People on the waitlist", text: "Join thousands of owners, agencies and renters building a safer real estate future." },
-    { icon: MapPin, value: <><CountUp to={1} /> city live</>, label: "Ibadan, with Lagos, Abuja, and Port Harcourt next", text: "We're expanding carefully, city by city, with verification you can trust." },
-    { icon: House, value: <CountUp to={50} />, label: "Properties currently in verification", text: "Every one checked for identity, title and condition before a DPI is issued." },
+    { icon: MapPin, label: "Starting in Ibadan", text: "We'll announce new locations as coverage becomes available." },
+    { icon: House, label: "A Clearer Property Record", text: "Follow submitted details and verification status in Urbn." },
+    { icon: Users, label: "Be Part of Urbn's Next City", text: "Get an email when Urbn becomes available near you.", to: "/download#launch-updates" },
   ];
   return (
     <section className="pt-4 pb-16 sm:pb-24 lg:pt-8 lg:pb-32">
       <Reveal className="container-x">
-        <SectionHeading title="Growing fast, city by city." lede="Live in Ibadan today. Search verified homes on the map, or pick an area to explore." />
+        <SectionHeading title="Start With Ibadan" lede="Explore homes by area or see available listings on the map." />
       </Reveal>
       <div className="mt-8 lg:mt-12">
         <IbadanMap listings={listings} />
@@ -482,9 +482,13 @@ function Growth({ listings }: { listings: Card[] }) {
               <s.icon className="size-5" />
             </span>
             <div>
-              <p className="font-display text-4xl leading-none">{s.value}</p>
-              <p className="mt-2 font-semibold">{s.label}</p>
-              <p className="mt-1 text-sm text-neutral-500">{s.text}</p>
+              <h3 className="font-display text-2xl leading-tight">{s.label}</h3>
+              <p className="mt-1.5 text-sm text-neutral-500">{s.text}</p>
+              {s.to && (
+                <Link to={s.to} className="mt-2 inline-block text-sm font-semibold text-urbn">
+                  Get Launch Updates →
+                </Link>
+              )}
             </div>
           </div>
         ))}
@@ -503,13 +507,13 @@ function FeaturedListings({ listings }: { listings: Card[] }) {
           <Reveal>
             <SectionHeading
               align="left"
-              eyebrow="Verified listings"
-              title={<>Verified. <span className="text-neutral-400">Not just listed.</span></>}
-              lede="Every home here has been checked: ownership confirmed, documents verified, and seen in person by our team."
+              eyebrow="Listings"
+              title="Homes to Explore"
+              lede="Browse available listings and check each property's current Urbn verification status."
             />
           </Reveal>
           <ButtonLink to="/listings" variant="dark" className="hidden shrink-0 md:inline-flex">
-            Search verified homes
+            Browse Listings
           </ButtonLink>
         </div>
         <Reveal className="mt-8 lg:mt-12">
@@ -520,7 +524,7 @@ function FeaturedListings({ listings }: { listings: Card[] }) {
           </Rail>
         </Reveal>
         <ButtonLink to="/listings" variant="dark" size="lg" className="mt-6 w-full md:hidden">
-          Search verified homes
+          Browse Listings
         </ButtonLink>
       </div>
     </section>
@@ -532,7 +536,7 @@ function Stories() {
     <section className="bg-ink py-16 text-white sm:py-24 lg:py-32">
       <div className="container-x">
         <Reveal>
-          <SectionHeading dark title="Stories" lede="News, product updates and the people behind Nigeria's first Digital Property Identity system." />
+          <SectionHeading dark title="Stories From Urbn" lede="Product updates, housing insights and the people building Urbn." />
         </Reveal>
         <Reveal className="mt-8 md:mt-14">
           <Rail grid="md:grid-cols-3 md:gap-5" item="w-[80%] sm:w-[55%]" dark label="Stories">
@@ -545,7 +549,7 @@ function Stories() {
                   <h3 className="font-display text-xl leading-tight">{s.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-neutral-600">{s.excerpt}</p>
                   <span className="mt-auto self-end pt-5 text-sm font-semibold text-urbn">
-                    Read more <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
+                    Read Story <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
                   </span>
                 </div>
               </Link>

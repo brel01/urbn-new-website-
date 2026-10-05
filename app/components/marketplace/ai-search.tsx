@@ -1,8 +1,7 @@
 import { clsx } from "clsx";
-import { ChevronDown, MessageCircle, Sparkles } from "lucide-react";
+import { ChevronDown, Sparkles } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
-import { Link } from "react-router";
 import type { AiQuota } from "~/lib/marketplace/types";
 
 // Same guidance the app shows in its AI search tips panel, localised to Ibadan.
@@ -15,9 +14,9 @@ const TIPS = [
   "Must-haves: parking, 24hr security, borehole, furnished",
 ];
 const EXAMPLES = [
-  "3 bedroom flat in Bodija, max 2 million per year, needs parking and 24hr security",
-  "I want to buy a 4 bedroom duplex in Samonda, budget 150 to 200 million",
-  "Furnished short-let apartment in Bodija for a week, max 60,000 per night",
+  "A 3-bedroom flat in Bodija, up to ₦2M a year, with parking.",
+  "A 4-bedroom duplex in Samonda to buy, between ₦150M and ₦200M.",
+  "A furnished apartment in Bodija for one week, up to ₦60k a night.",
 ];
 
 const formatReset = (iso: string) => new Date(iso).toLocaleTimeString("en-NG", { hour: "numeric", minute: "2-digit" });
@@ -43,18 +42,18 @@ export function AiSearchPanel({
 
   const submit = (value = q) => {
     const v = value.trim();
-    if (v.length < 5) return setLocalError("Please enter at least 5 characters.");
+    if (v.length < 5) return setLocalError("Describe the home you want using at least 5 characters.");
     setLocalError(null);
     onSearch(v);
   };
 
   return (
     <div className="space-y-3">
-      <div className="grid grid-cols-2 gap-2">
-        <span className="rounded-xl border border-urbn bg-white py-2.5 text-center text-xs font-semibold text-urbn">Quick Search</span>
-        <Link to="/download" className="flex items-center justify-center gap-1.5 rounded-xl bg-fog py-2.5 text-xs font-semibold text-neutral-500 transition hover:text-ink">
-          <MessageCircle className="size-3.5" /> AI Advisor <span className="font-normal">· in the app</span>
-        </Link>
+      <div>
+        <p className="flex items-center gap-1.5 text-sm font-bold">
+          <Sparkles className="size-4 text-urbn" /> AI Search
+        </p>
+        <p className="mt-0.5 text-[13px] text-neutral-500">Describe the home you're looking for.</p>
       </div>
 
       <form
@@ -64,7 +63,7 @@ export function AiSearchPanel({
         }}
         className="rounded-2xl bg-white p-2 ring-1 ring-black/5 focus-within:ring-2 focus-within:ring-urbn"
       >
-        <label htmlFor="ai-q" className="sr-only">Describe the home you want</label>
+        <label htmlFor="ai-q" className="sr-only">Describe the home you're looking for</label>
         <div className="flex items-start gap-2">
           <span className="mt-1 grid size-9 shrink-0 place-items-center rounded-xl bg-urbn text-white">
             <Sparkles className="size-4" />
@@ -82,7 +81,7 @@ export function AiSearchPanel({
               }
             }}
             disabled={exhausted}
-            placeholder="Location, budget, size, features…"
+            placeholder="Location, budget, bedrooms and must-haves"
             className="min-h-[3.25rem] flex-1 resize-none bg-transparent py-2 text-[15px] outline-none placeholder:text-neutral-400 disabled:opacity-50"
           />
           <button
@@ -90,7 +89,7 @@ export function AiSearchPanel({
             disabled={busy || exhausted}
             className="mt-1 h-10 shrink-0 rounded-xl bg-ink px-4 text-sm font-semibold text-white transition hover:bg-neutral-800 active:scale-95 disabled:opacity-60"
           >
-            {busy ? "Searching…" : "Search"}
+            {busy ? "Searching…" : "Search Homes"}
           </button>
         </div>
       </form>
@@ -101,8 +100,8 @@ export function AiSearchPanel({
       {quota && (
         <p className={clsx("text-xs", exhausted ? "text-error" : quota.remaining <= 3 ? "text-warning" : "text-neutral-500")}>
           {exhausted
-            ? `You've used all your AI searches for today. Resets at ${formatReset(quota.resetsAt)}.`
-            : `${quota.remaining} of ${quota.limit} AI searches remaining today`}
+            ? `You've reached today's AI Search limit. Try again at ${formatReset(quota.resetsAt)}, or use filters to keep searching.`
+            : `${quota.remaining} of ${quota.limit} searches remaining today`}
         </p>
       )}
 
@@ -131,7 +130,7 @@ export function AiSearchPanel({
           {tips && (
             <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} className="overflow-hidden">
               <div className="space-y-3 px-4 pb-4 text-xs leading-relaxed text-neutral-500">
-                <p>Write like you are describing your ideal home to a friend. The more detail you give, the better the match.</p>
+                <p>Start with an area, budget and property type. Add bedrooms and the features that matter to you, such as parking or furnishing.</p>
                 <p className="font-semibold text-ink">Include:</p>
                 <ul className="space-y-1">
                   {TIPS.map((t) => (
