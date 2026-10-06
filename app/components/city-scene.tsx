@@ -17,7 +17,7 @@ import { useEffect, useRef, useState } from "react";
 import { SYMBOL_PATH, WORDMARK } from "./logo";
 
 const W = 1600;
-const H = 600;
+const H = 630;
 const INK = "#000";
 const BLUE = "#253DE2";
 const SUCCESS = "#12B76A";
@@ -906,10 +906,13 @@ export function SkyClouds({ className }: { className?: string }) {
 
 // --- the scene -------------------------------------------------------------------
 
-/** Vehicles on two lanes. Each sits at its resting x (used with reduced motion) and,
- *  when animated, starts its loop from that same point. */
-const LANE_A = { y: 588, from: -280, to: 1720, dur: 22 };
-const LANE_B = { y: 546, from: 1760, to: -200, dur: 16 };
+/** Vehicles on two lanes, two per lane, half a loop apart, at 80% scale. The lanes
+ *  are further apart than the tallest near-lane vehicle (the van, ~59 units), so
+ *  vehicles passing in opposite lanes never overlap. Each sits at its resting x
+ *  (used with reduced motion) and, when animated, starts its loop from that point. */
+const VEHICLE_SCALE = 0.8;
+const LANE_A = { y: 614, from: -280, to: 1720, dur: 22 };
+const LANE_B = { y: 548, from: 1760, to: -200, dur: 16 };
 const laneDelay = (lane: typeof LANE_A, x0: number) =>
   `${(-((x0 - lane.from) / (lane.to - lane.from)) * lane.dur).toFixed(2)}s`;
 
@@ -943,7 +946,7 @@ export function CityScene({
       className={clsx("city-scene", className)}
       data-paused={paused || undefined}
       role="img"
-      aria-label="Line drawing of an Ibadan street in the near future: Cocoa House and Mapo Hall above rooftops and solar-roofed towers, and a road lined with a food stall, a pharmacy, a home, a bungalow, a clinic, a school and a bus stop. A visitor scans the home's Urbn plaque and its record shows Verified, an Urbn drone delivers a parcel to its door, black Nearby pins mark the places around it, and black and blue cars, some carrying Urbn branding, pass with an Urbn courier bike."
+      aria-label="Line drawing of an Ibadan street in the near future: Cocoa House and Mapo Hall above rooftops and solar-roofed towers, and a road lined with a food stall, a pharmacy, a home, a bungalow, a clinic, a school and a bus stop. A visitor scans the home's Urbn plaque and its record shows Verified, an Urbn drone delivers a parcel to its door, black Nearby pins mark the places around it, and the blue Urbn van, a black car, a black Urbn car and an Urbn courier bike pass on a two-lane road."
     >
       {/* far layer: rooftops and landmarks */}
       <motion.g style={far ? { y: far } : undefined}>
@@ -978,12 +981,12 @@ export function CityScene({
         <Pin x={1059} y={376} glyph="cross" delay={1.8} />
         <Pin x={1226} y={378} glyph="cap" delay={2} />
         <Selection />
-        <g transform="translate(666 356)">
+        <g transform="translate(666 372)">
           <g className="city-parcel">
             <Parcel />
           </g>
         </g>
-        <g transform="translate(666 234)">
+        <g transform="translate(666 250)">
           <g className="city-drone">
             <g className="city-hover">
               <Drone />
@@ -998,19 +1001,18 @@ export function CityScene({
       <line
         x1={0}
         x2={W}
-        y1={550}
-        y2={550}
+        y1={581}
+        y2={581}
         stroke={INK}
         strokeWidth={3}
         strokeDasharray="28 22"
       />
-      <line x1={0} x2={W} y1={592} y2={592} stroke={INK} strokeWidth={5} />
-      {/* lane A, left to right: Urbn van, a black car, a blue Urbn hatch */}
+      <line x1={0} x2={W} y1={622} y2={622} stroke={INK} strokeWidth={5} />
+      {/* lane A (near), left to right: the blue Urbn van and a plain black car */}
       {(
         [
           [120, <Van key="van" />],
-          [760, <Car key="sedan" kind="sedan" color={INK} />],
-          [1320, <Car key="hatch" kind="hatch" color={BLUE} logo="symbol" />],
+          [1100, <Car key="sedan" kind="sedan" color={INK} />],
         ] as const
       ).map(([x0, v], i) => (
         <g key={i} transform={`translate(0 ${LANE_A.y})`}>
@@ -1019,16 +1021,15 @@ export function CityScene({
             className="city-lane-a"
             style={{ animationDelay: laneDelay(LANE_A, x0) }}
           >
-            {v}
+            <g transform={`scale(${VEHICLE_SCALE})`}>{v}</g>
           </g>
         </g>
       ))}
-      {/* lane B, right to left: a black Urbn car, a courier bike, a black car */}
+      {/* lane B (far), right to left: a black Urbn car and the courier bike */}
       {(
         [
           [440, <Car key="suv" kind="suv" color={INK} logo="wordmark" flip />],
-          [1130, <Bike key="bike" />],
-          [1600, <Car key="sedan2" kind="sedan" color={INK} flip />],
+          [1420, <Bike key="bike" />],
         ] as const
       ).map(([x0, v], i) => (
         <g key={i} transform={`translate(0 ${LANE_B.y})`}>
@@ -1037,7 +1038,7 @@ export function CityScene({
             className="city-lane-b"
             style={{ animationDelay: laneDelay(LANE_B, x0) }}
           >
-            {v}
+            <g transform={`scale(${VEHICLE_SCALE})`}>{v}</g>
           </g>
         </g>
       ))}
