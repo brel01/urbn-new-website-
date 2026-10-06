@@ -294,7 +294,7 @@
   }
   42%,
   46% {
-    transform: scaleY(2.04);
+    transform: scaleY(1.89);
     animation-timing-function: ease-in-out;
   }
   56%,
@@ -315,11 +315,11 @@
   }
   42%,
   92% {
-    transform: translate(0, 114px);
+    transform: translate(0, 98px);
     opacity: 1;
   }
   96% {
-    transform: translate(0, 114px);
+    transform: translate(0, 98px);
     opacity: 0;
   }
   97%,
