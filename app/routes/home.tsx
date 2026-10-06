@@ -68,12 +68,14 @@ function Hero() {
 
   return (
     <section ref={ref} className="relative isolate flex flex-col overflow-hidden bg-white">
-      {/* Sky colour behind the text (desktop) or behind the scene (phones). */}
-      <div aria-hidden className="absolute inset-x-0 top-0 -z-10 h-[clamp(17rem,44svh,23rem)] bg-[#FFF4DE] lg:h-[calc(100%-6vw)]" />
+      {/* Urbn's "u" pattern, faint in Urbn Blue, behind the sky. */}
+      <div aria-hidden className="absolute inset-x-0 top-0 -z-10 h-[clamp(17rem,44svh,23rem)] [mask-image:linear-gradient(black,transparent)] lg:h-[70%]">
+        <div className="pattern-u size-full bg-urbn/[0.045]" />
+      </div>
 
       {/* The illustrated Ibadan street: under the text on desktop, above it on phones. */}
       <motion.div
-        className="pointer-events-none relative order-first h-[clamp(17rem,44svh,23rem)] overflow-hidden lg:order-last lg:-mt-[19vw] lg:h-auto lg:overflow-visible"
+        className="pointer-events-none relative order-first h-[clamp(17rem,44svh,23rem)] overflow-hidden lg:order-last lg:-mt-[11vw] xl:-mt-[14vw] lg:h-auto lg:overflow-visible"
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.2, ease: EASE }}
@@ -87,7 +89,7 @@ function Hero() {
 
       <motion.div
         style={desktop ? { opacity: fade } : undefined}
-        className="container-x relative z-10 flex flex-col pt-2 pb-10 lg:items-center lg:pt-20 lg:pb-0 lg:text-center"
+        className="container-x relative z-10 flex flex-col pt-2 pb-10 lg:items-center lg:pt-14 lg:pb-0 lg:text-center"
       >
         <motion.span
           className="mb-4 inline-flex w-fit items-center gap-2 rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold shadow-sm lg:hidden"
