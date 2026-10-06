@@ -17,7 +17,7 @@ import { useEffect, useRef, useState } from "react";
 import { SYMBOL_PATH, WORDMARK } from "./logo";
 
 const W = 1600;
-const H = 630;
+const H = 640;
 const INK = "#000";
 const BLUE = "#253DE2";
 const SUCCESS = "#12B76A";
@@ -690,7 +690,7 @@ function Wheel({ cx, cy, r }: { cx: number; cy: number; r: number }) {
   );
 }
 
-/** Urbn courier van, facing right; origin is the road under its rear bumper. */
+/** Urbn courier van, facing right; origin is the road under its rear wheel. */
 function Van() {
   return (
     <g>
@@ -708,8 +708,8 @@ function Van() {
         stroke={INK}
         strokeWidth={2}
       />
-      <Wheel cx={30} cy={-8} r={12} />
-      <Wheel cx={128} cy={-8} r={12} />
+      <Wheel cx={30} cy={-12} r={12} />
+      <Wheel cx={128} cy={-12} r={12} />
     </g>
   );
 }
@@ -906,13 +906,20 @@ export function SkyClouds({ className }: { className?: string }) {
 
 // --- the scene -------------------------------------------------------------------
 
-/** Vehicles on two lanes, two per lane, half a loop apart, at 80% scale. The lanes
- *  are further apart than the tallest near-lane vehicle (the van, ~59 units), so
- *  vehicles passing in opposite lanes never overlap. Each sits at its resting x
- *  (used with reduced motion) and, when animated, starts its loop from that point. */
-const VEHICLE_SCALE = 0.8;
-const LANE_A = { y: 614, from: -280, to: 1720, dur: 22 };
-const LANE_B = { y: 548, from: 1760, to: -200, dur: 16 };
+/** The road: two equal lanes split by a centred dashed line. Every vehicle's wheels
+ *  sit the same distance above its lane's lower edge, so both lanes read at the same
+ *  perspective. Lanes are taller than the tallest near-lane vehicle (the van, ~53
+ *  units at 72%), so vehicles passing in opposite lanes never overlap. */
+const ROAD_TOP = 512;
+const LANE_H = 60;
+const ROAD_MID = ROAD_TOP + LANE_H;
+const ROAD_BOTTOM = ROAD_MID + LANE_H;
+const WHEEL_INSET = 6;
+const VEHICLE_SCALE = 0.72;
+/** Two vehicles per lane, half a loop apart. Each sits at its resting x (used with
+ *  reduced motion) and, when animated, starts its loop from that point. */
+const LANE_A = { y: ROAD_BOTTOM - WHEEL_INSET, from: -280, to: 1720, dur: 22 };
+const LANE_B = { y: ROAD_MID - WHEEL_INSET, from: 1760, to: -200, dur: 16 };
 const laneDelay = (lane: typeof LANE_A, x0: number) =>
   `${(-((x0 - lane.from) / (lane.to - lane.from)) * lane.dur).toFixed(2)}s`;
 
@@ -997,17 +1004,17 @@ export function CityScene({
 
       {/* road */}
       <line x1={0} x2={W} y1={500} y2={500} stroke={INK} strokeWidth={5} />
-      <line x1={0} x2={W} y1={512} y2={512} stroke={INK} strokeWidth={3} />
+      <line x1={0} x2={W} y1={ROAD_TOP} y2={ROAD_TOP} stroke={INK} strokeWidth={3} />
       <line
         x1={0}
         x2={W}
-        y1={581}
-        y2={581}
+        y1={ROAD_MID}
+        y2={ROAD_MID}
         stroke={INK}
         strokeWidth={3}
         strokeDasharray="28 22"
       />
-      <line x1={0} x2={W} y1={622} y2={622} stroke={INK} strokeWidth={5} />
+      <line x1={0} x2={W} y1={ROAD_BOTTOM} y2={ROAD_BOTTOM} stroke={INK} strokeWidth={5} />
       {/* lane A (near), left to right: the blue Urbn van and a plain black car */}
       {(
         [
