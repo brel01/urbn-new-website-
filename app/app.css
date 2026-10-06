@@ -313,6 +313,42 @@
   34%, 87.9% { opacity: 1; }
   88%, 100% { opacity: 0; }
 }
+/* Homepage problem cards (components/problem-art.tsx): links flowing to the
+   house's records; scan, question, answer, then Pay unlocks. */
+.city-scene .city-chat-q,
+.city-scene .city-chat-a {
+  transform-box: fill-box;
+}
+.city-scene .city-dash {
+  animation: city-dash 1.2s linear infinite;
+}
+.city-scene .city-chat-q {
+  animation: city-chat-q 8s infinite;
+}
+.city-scene .city-chat-a {
+  animation: city-chat-a 8s infinite;
+}
+.city-scene .city-pay {
+  animation: city-pay 8s infinite;
+}
+@keyframes city-dash {
+  to { stroke-dashoffset: -20; }
+}
+@keyframes city-chat-q {
+  0%, 18% { opacity: 0; transform: translateY(6px); }
+  24%, 92% { opacity: 1; transform: none; }
+  97%, 100% { opacity: 0; transform: none; }
+}
+@keyframes city-chat-a {
+  0%, 38% { opacity: 0; transform: translateY(6px); }
+  44%, 92% { opacity: 1; transform: none; }
+  97%, 100% { opacity: 0; transform: none; }
+}
+@keyframes city-pay {
+  0%, 54% { opacity: 0.2; }
+  60%, 92% { opacity: 1; }
+  97%, 100% { opacity: 0.2; }
+}
 @keyframes city-drone {
   0% {
     transform: translate(760px, -260px);
