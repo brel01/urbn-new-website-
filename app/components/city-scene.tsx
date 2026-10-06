@@ -997,6 +997,71 @@ function Pin({
   );
 }
 
+/** Several properties picked out at once (For Agents): a blue box and DPI tag on each. */
+const PORTFOLIO: { box: [number, number, number, number]; dpi: string }[] = [
+  { box: [362, 384, 516, 506], dpi: "IBADAN-NORTH-0038-B" },
+  { box: [536, 322, 796, 506], dpi: "IBADAN-NORTH-0041-U" },
+  { box: [802, 390, 982, 506], dpi: "IBADAN-NORTH-0042-U" },
+  { box: [1136, 366, 1316, 506], dpi: "IBADAN-NORTH-0047-S" },
+];
+function Portfolio() {
+  return (
+    <g>
+      {PORTFOLIO.map(({ box: [x0, y0, x1, y1], dpi }, i) => {
+        const delay = `${i * 0.9}s`;
+        const corners = [
+          [x0, y0],
+          [x1, y0],
+          [x0, y1],
+          [x1, y1],
+        ];
+        return (
+          <g key={dpi}>
+            <rect
+              x={x0}
+              y={y0}
+              width={x1 - x0}
+              height={y1 - y0}
+              fill="none"
+              stroke={BLUE}
+              strokeWidth={2.5}
+              className="city-select"
+              pathLength={1}
+              style={{ animationDelay: delay }}
+            />
+            <g className="city-handles" style={{ animationDelay: delay }}>
+              {corners.map(([x, y]) => (
+                <rect
+                  key={`${x}-${y}`}
+                  x={x - 5}
+                  y={y - 5}
+                  width={10}
+                  height={10}
+                  fill="#fff"
+                  stroke={BLUE}
+                  strokeWidth={2.5}
+                />
+              ))}
+            </g>
+            <g className="city-label" style={{ animationDelay: delay }}>
+              <rect
+                x={x0}
+                y={y0 - 24}
+                width={dpi.length * 7.4 + 14}
+                height={20}
+                fill={BLUE}
+              />
+              <text x={x0 + 7} y={y0 - 10} fontSize={11.5} fill="#fff" {...TXT}>
+                {dpi}
+              </text>
+            </g>
+          </g>
+        );
+      })}
+    </g>
+  );
+}
+
 // --- the Urbn fleet -----------------------------------------------------------------
 function Wheel({ cx, cy, r }: { cx: number; cy: number; r: number }) {
   return (
@@ -1255,7 +1320,11 @@ export type SceneFocus =
   | "verify"
   | "nearby"
   | "listings"
-  | "area";
+  | "area"
+  | "city"
+  | "overview"
+  | "portfolio"
+  | "street";
 
 /** The crop of the world each page shows (viewBox), and which story beats play. */
 const FOCUS: Record<
@@ -1269,6 +1338,7 @@ const FOCUS: Record<
     pins?: "once" | "loop";
     toLet?: boolean;
     plaqueLoop?: boolean;
+    portfolio?: boolean;
   }
 > = {
   home: {
@@ -1284,6 +1354,28 @@ const FOCUS: Record<
   nearby: { view: "220 236 1120 404", pins: "loop" },
   listings: { view: "220 236 1120 404", toLet: true },
   area: { view: `0 40 ${W} ${H - 40}`, pins: "once" },
+  // About: the whole city with every story beat.
+  city: {
+    view: `0 40 ${W} ${H - 40}`,
+    scan: true,
+    select: true,
+    verified: true,
+    drone: true,
+    pins: "once",
+  },
+  // Features and Download: the middle of the street, everything moving at once.
+  overview: {
+    view: "300 196 1000 444",
+    scan: true,
+    select: true,
+    verified: true,
+    drone: true,
+    pins: "once",
+  },
+  // For Agents: several properties picked out, each with its own DPI.
+  portfolio: { view: "220 236 1120 404", portfolio: true },
+  // 404: just the street.
+  street: { view: "220 300 1120 340" },
 };
 
 export function CityScene({
@@ -1390,7 +1482,10 @@ export function CityScene({
             <ToLet x={930} delay={1.6} />
           </>
         )}
-        {f.select && <Selection verified={!!f.verified} delivered={!!f.drone} />}
+        {f.portfolio && <Portfolio />}
+        {f.select && (
+          <Selection verified={!!f.verified} delivered={!!f.drone} />
+        )}
         {f.drone && (
           <>
             <g transform="translate(666 372)">
@@ -1478,14 +1573,39 @@ export function CityScene({
  * A page's slice of the city. On phones it keeps a usable height and crops around the
  * middle of the focus; from `sm` up it shows the whole focus at full width.
  */
-export function SceneFrame({ focus, area, className }: { focus: SceneFocus; area?: string; className?: string }) {
+export function SceneFrame({
+  focus,
+  area,
+  className,
+}: {
+  focus: SceneFocus;
+  area?: string;
+  className?: string;
+}) {
   return (
-    <div className={clsx("pointer-events-none relative h-52 overflow-hidden sm:h-auto sm:overflow-visible", className)}>
+    <div
+      className={clsx(
+        "pointer-events-none relative h-52 overflow-hidden sm:h-auto sm:overflow-visible",
+        className,
+      )}
+    >
       <CityScene
         focus={focus}
         area={area}
         className="absolute bottom-0 left-1/2 h-full w-auto max-w-none -translate-x-1/2 sm:static sm:block sm:h-auto sm:w-full sm:translate-x-0"
       />
+    </div>
+  );
+}
+
+/** Grey clouds across the top of a text page, so it sits in the same sky as the heroes. */
+export function PageSky() {
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-x-0 top-14 -z-10 h-[30rem] overflow-hidden lg:top-[4.5rem]"
+    >
+      <SkyClouds className="h-full w-full" />
     </div>
   );
 }

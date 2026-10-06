@@ -18,6 +18,7 @@ import {
 import { motion } from "motion/react";
 import { useMatches } from "react-router";
 import { CtaBanner } from "~/components/cta-banner";
+import { SceneFrame, SkyClouds, type SceneFocus } from "~/components/city-scene";
 import { EASE, Reveal, Stagger, StaggerItem, WordsReveal } from "~/components/motion";
 import { ButtonLink, SectionHeading } from "~/components/ui";
 import { breadcrumbs, seo } from "~/lib/seo";
@@ -31,7 +32,8 @@ type Audience = {
   lede: string;
   metaTitle: string;
   metaDescription: string;
-  image: string;
+  /** Which part of the city the hero shows. */
+  scene: SceneFocus;
   pains: { icon: typeof Search; title: string; text: string }[];
   gains: { icon: typeof Search; title: string; text: string }[];
   cta: { label: string; to: string };
@@ -47,7 +49,7 @@ const AUDIENCES: Record<string, Audience> = {
     lede: "Explore listings, ask questions and check the property record before you commit.",
     metaTitle: "For Renters | Find Homes & Manage Your Tenancy",
     metaDescription: "Explore homes, check property records, book inspections and follow your tenancy in Urbn.",
-    image: "/images/illus-renters.webp",
+    scene: "listings",
     pains: [
       { icon: FileWarning, title: "Conflicting Listings", text: "One flat, different descriptions and prices." },
       { icon: UserX, title: "Unclear Inspection Plans", text: "Time and transport spent without a confirmed visit." },
@@ -70,7 +72,7 @@ const AUDIENCES: Record<string, Audience> = {
     lede: "Connect your property's details, spaces, people and activities in one place.",
     metaTitle: "For Property Owners | Manage Your Property With Urbn",
     metaDescription: "Connect property details, spaces, occupants, listings and tenancy records in one place with Urbn.",
-    image: "/images/illus-owners.webp",
+    scene: "identity",
     pains: [
       { icon: UserX, title: "Property Details in Different Places", text: "Important information is hard to find." },
       { icon: MessageSquareWarning, title: "Updates That Depend on Calls", text: "Knowing what's happening takes repeated follow-up." },
@@ -93,7 +95,7 @@ const AUDIENCES: Record<string, Audience> = {
     lede: "Keep listings, inspection requests and property conversations organised in Urbn.",
     metaTitle: "For Agents & Property Managers | Organise Your Portfolio",
     metaDescription: "Manage property listings, inspection requests and client conversations through Urbn.",
-    image: "/images/illus-agents.webp",
+    scene: "portfolio",
     pains: [
       { icon: FileWarning, title: "Repeated Questions", text: "Explaining the same details to each prospect." },
       { icon: UserX, title: "Inspection Follow-Up", text: "Requests and confirmations spread across chats." },
@@ -131,8 +133,9 @@ export default function AudiencePage() {
   const a = fromId(matches[matches.length - 1].id);
   return (
     <>
-      <section className="relative overflow-hidden bg-gradient-to-b from-blue-50/70 to-white">
-        <div className="container-x grid items-center gap-10 pt-16 pb-20 lg:grid-cols-[1.1fr_0.9fr] lg:pt-24">
+      <section className="relative isolate overflow-hidden bg-white">
+        <SkyClouds className="absolute inset-x-0 top-0 -z-10 h-full w-full" />
+        <div className="container-x grid items-center gap-10 pt-12 pb-16 lg:grid-cols-[0.95fr_1.05fr] lg:pt-20">
           <div>
             <p className="eyebrow"><span className="size-2 rounded-full bg-urbn" /> {a.label}</p>
             <WordsReveal key={a.path} text={a.title} highlight={a.highlight.split(" ")} className="mt-4 text-5xl leading-[1] sm:text-6xl" />
@@ -144,15 +147,10 @@ export default function AudiencePage() {
               <ButtonLink to={a.secondary.to} variant="outline">{a.secondary.label}</ButtonLink>
             </div>
           </div>
-          <motion.img
-            key={a.image}
-            src={a.image}
-            alt=""
-            className="w-full mix-blend-multiply"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: EASE }}
-          />
+          {/* Renters: To Let boards turning Verified. Owners: a home getting its plaque. Agents: a portfolio picked out. */}
+          <motion.div key={a.path} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, ease: EASE }}>
+            <SceneFrame focus={a.scene} />
+          </motion.div>
         </div>
       </section>
 

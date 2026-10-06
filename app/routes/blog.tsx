@@ -5,6 +5,7 @@ import { breadcrumbs, seo } from "~/lib/seo";
 import { absoluteUrl } from "~/lib/site";
 import { STORIES, coverFit } from "~/lib/stories";
 import type { Route } from "./+types/blog";
+import { PageSky } from "~/components/city-scene";
 
 export const meta: Route.MetaFunction = () =>
   seo({
@@ -31,6 +32,7 @@ export default function Blog() {
   const [lead, ...rest] = STORIES;
   return (
     <>
+      <PageSky />
       <section className="container-x pt-16 pb-24 sm:pt-24">
         <WordsReveal text="Stories From Urbn" className="text-6xl sm:text-8xl" />
         <p className="lede mt-4 max-w-xl">Property insights, product updates and the people behind Urbn.</p>

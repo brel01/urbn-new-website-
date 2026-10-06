@@ -11,6 +11,7 @@ import { TabBar } from "./components/mobile";
 import { ButtonLink } from "./components/ui";
 import { organizationJsonLd, websiteJsonLd } from "./lib/seo";
 import { SITE } from "./lib/site";
+import { PageSky, SceneFrame } from "./components/city-scene";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preload", href: "/fonts/creato-bold.woff2", as: "font", type: "font/woff2", crossOrigin: "anonymous" },
@@ -83,6 +84,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     <MotionConfig reducedMotion="user">
       <Header />
       <main id="main" className="container-x grid min-h-[70vh] place-items-center py-24 text-center">
+        <PageSky />
         <title>{`${heading} | Urbn`}</title>
         <meta name="robots" content="noindex" />
         <div>
@@ -107,6 +109,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
               </>
             )}
           </div>
+          {notFound && <SceneFrame focus="street" className="mx-auto mt-12 max-w-3xl" />}
           {stack && <pre className="mt-10 max-w-3xl overflow-x-auto rounded-xl bg-mist p-4 text-left text-xs">{stack}</pre>}
         </div>
       </main>

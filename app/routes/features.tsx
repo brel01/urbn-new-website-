@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import type { ComponentType, ReactNode } from "react";
 import { CtaBanner } from "~/components/cta-banner";
 import { FaqSection } from "~/components/faq";
+import { SceneFrame, SkyClouds } from "~/components/city-scene";
 import { EASE, Reveal, Stagger, StaggerItem, WordsReveal } from "~/components/motion";
 import {
   AiScreen,
@@ -192,34 +193,24 @@ export default function Features() {
 
 function Hero() {
   return (
-    <section className="relative isolate overflow-hidden bg-mist">
-      <motion.div
-        className="absolute inset-y-0 right-0 -z-10 w-full lg:w-[70%]"
-        initial={{ opacity: 0, x: 40 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1.2, ease: EASE }}
-      >
-        <img
-          src="/images/hero-billboard.webp"
-          srcSet="/images/hero-billboard-640.webp 640w, /images/hero-billboard.webp 992w"
-          sizes="(min-width: 1024px) 70vw, 100vw"
-          alt="Apartment building with a large Urbn DPI billboard"
-          fetchPriority="high"
-          className="size-full object-cover object-right"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-mist via-mist/70 to-transparent lg:via-mist/10" />
-        <div className="absolute inset-0 bg-mist/75 lg:hidden" />
-      </motion.div>
-      <div className="container-x flex min-h-[22rem] flex-col justify-end pt-20 pb-10 sm:min-h-[34rem] sm:pt-24 sm:pb-14 lg:justify-center lg:py-28">
-        <WordsReveal text="Every Property Has More Than One Moving Part." highlight={["Moving", "Part."]} className="max-w-xl text-[2.75rem] leading-[1] sm:text-6xl" />
-        <motion.p
-          className="mt-6 max-w-sm text-lg text-neutral-700"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.8 }}
-        >
-          Keep property records, people and everyday activities connected in Urbn.
-        </motion.p>
+    <section className="relative isolate overflow-hidden bg-white">
+      <SkyClouds className="absolute inset-x-0 top-0 -z-10 h-full w-full" />
+      <div className="container-x grid items-center gap-6 pt-10 pb-6 sm:pt-16 lg:grid-cols-[0.85fr_1.15fr] lg:gap-10 lg:py-16">
+        <div>
+          <WordsReveal text="Every Property Has More Than One Moving Part." highlight={["Moving", "Part."]} className="max-w-xl text-[2.75rem] leading-[1] sm:text-6xl" />
+          <motion.p
+            className="mt-6 max-w-sm text-lg text-neutral-700"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+          >
+            Keep property records, people and everyday activities connected in Urbn.
+          </motion.p>
+        </div>
+        {/* The same street with every moving part at once: scan, Verified, delivery, pins, couriers. */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.1, ease: EASE }}>
+          <SceneFrame focus="overview" />
+        </motion.div>
       </div>
     </section>
   );

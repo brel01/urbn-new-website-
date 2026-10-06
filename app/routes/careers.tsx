@@ -4,6 +4,7 @@ import { ButtonLink } from "~/components/ui";
 import { breadcrumbs, seo } from "~/lib/seo";
 import { SITE } from "~/lib/site";
 import type { Route } from "./+types/careers";
+import { PageSky } from "~/components/city-scene";
 
 export const meta: Route.MetaFunction = () =>
   seo({
@@ -25,6 +26,7 @@ const TEAMS = [
 export default function Careers() {
   return (
     <>
+      <PageSky />
       <section className="container-x py-16 sm:py-24">
         <WordsReveal text="Build the Digital Infrastructure for Housing." highlight={["Housing."]} className="max-w-4xl text-5xl leading-[1] sm:text-7xl" />
         <Reveal className="mt-6 max-w-xl">
