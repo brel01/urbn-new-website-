@@ -8,6 +8,7 @@ import { breadcrumbs, seo } from "~/lib/seo";
 import { SITE, absoluteUrl } from "~/lib/site";
 import { STORIES, coverFit, getStory, type StoryBlock } from "~/lib/stories";
 import type { Route } from "./+types/blog-post";
+import { PageSky } from "~/components/city-scene";
 
 export function loader({ params }: Route.LoaderArgs) {
   const story = getStory(params.slug);
@@ -99,6 +100,7 @@ export default function BlogPost({ loaderData }: Route.ComponentProps) {
   return (
     <>
       <motion.div aria-hidden className="fixed inset-x-0 top-0 z-[60] h-1 origin-left bg-urbn" style={{ scaleX: progress }} />
+      <PageSky />
       <article className="container-x pt-10 pb-24">
         <div className="mx-auto max-w-3xl">
           <Link to="/blog" className="inline-flex items-center gap-1 text-sm text-neutral-500 hover:text-ink">

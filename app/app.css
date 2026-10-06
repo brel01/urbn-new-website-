@@ -151,3 +151,386 @@
     display: none;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Homepage city scene (components/city-scene.tsx). Each element's resting state
+   is its finished look; animations only add motion on top of it.
+   Drone (14s): fly in, lower the parcel to the home's door ("Delivered"), fly off.
+   Scan (10s): the visitor scans the plaque, the box draws, DPI label, Verified.
+   Traffic: two lanes at constant speed; each vehicle's delay starts it at its
+   resting position. */
+.city-scene .city-wheel,
+.city-scene .city-rotor,
+.city-scene .city-tether,
+.city-scene .city-pop,
+.city-scene .city-pin,
+.city-scene .city-verified,
+.city-scene .city-delivered,
+.city-scene .city-flag {
+  transform-box: fill-box;
+}
+.city-scene .city-drone {
+  animation: city-drone 14s infinite;
+}
+.city-scene .city-hover {
+  animation: city-hover 0.9s ease-in-out infinite alternate;
+}
+.city-scene .city-rotor {
+  transform-origin: center;
+  animation: city-rotor 0.09s linear infinite alternate;
+}
+.city-scene .city-tether {
+  transform-origin: 50% 0;
+  animation: city-tether 14s infinite;
+}
+.city-scene .city-parcel {
+  animation: city-parcel 14s infinite;
+}
+.city-scene .city-delivered {
+  transform-origin: 0 50%;
+  animation: city-delivered 14s infinite;
+}
+.city-scene .city-beam {
+  animation: city-beam 10s infinite;
+}
+.city-scene .city-select {
+  stroke-dasharray: 1;
+  animation: city-select 10s infinite;
+}
+.city-scene .city-handles {
+  animation: city-handles 10s infinite;
+}
+.city-scene .city-label {
+  animation: city-label 10s infinite;
+}
+.city-scene .city-verified {
+  transform-origin: 0 50%;
+  animation: city-verified 10s infinite;
+}
+.city-scene .city-lane-a {
+  animation: city-lane-a 22s linear infinite;
+}
+.city-scene .city-lane-b {
+  animation: city-lane-b 16s linear infinite;
+}
+.city-scene .city-wheel {
+  transform-origin: center;
+  animation: city-spin 0.55s linear infinite;
+}
+.city-scene .city-lane-b .city-wheel {
+  animation-direction: reverse;
+}
+.city-scene .city-lane-b g[transform^="scale(-1"] .city-wheel {
+  animation-direction: normal;
+}
+.city-scene .city-pop {
+  transform-origin: center;
+  animation: city-pop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.city-scene .city-pin {
+  transform-origin: 50% 100%;
+  animation:
+    city-rise 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both,
+    city-float 3.4s ease-in-out infinite;
+}
+.city-scene .city-cloud {
+  animation: city-cloud 26s ease-in-out infinite alternate;
+}
+.city-scene .city-cloud-slow {
+  animation-duration: 38s;
+  animation-direction: alternate-reverse;
+}
+.city-scene .city-blink {
+  animation: city-blink 2.4s steps(1) infinite;
+}
+.city-scene .city-flag {
+  transform-origin: 0 50%;
+  animation: city-flag 1.6s ease-in-out infinite alternate;
+}
+.city-scene[data-paused] * {
+  animation-play-state: paused !important;
+}
+@media (max-width: 1023px) {
+  .city-scene[data-focus="home"] .city-callout {
+    transform: translate(-476px, -110px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .city-scene * {
+    animation: none !important;
+  }
+}
+
+/* Page focuses: Nearby pins keep rising; Property Identity's plaque keeps mounting;
+   Listings' "To Let" boards flip to Verified (resting face: Verified). */
+.city-scene .city-pin-loop,
+.city-scene .city-plaque-loop,
+.city-scene .city-flip {
+  transform-box: fill-box;
+}
+.city-scene .city-pin-loop {
+  transform-origin: 50% 100%;
+  animation: city-pin-cycle 6s infinite both;
+}
+.city-scene .city-plaque-loop {
+  transform-origin: center;
+  animation: city-plaque-cycle 10s infinite;
+}
+.city-scene .city-flip {
+  transform-origin: center;
+  animation: city-flip 8s infinite;
+}
+.city-scene .city-face-tolet {
+  animation: city-face-tolet 8s infinite;
+}
+.city-scene .city-face-verified {
+  animation: city-face-verified 8s infinite;
+}
+@keyframes city-pin-cycle {
+  0% { opacity: 0; transform: translateY(18px) scale(0.4); animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1); }
+  12%, 78% { opacity: 1; transform: none; }
+  88%, 100% { opacity: 0; transform: translateY(-6px); }
+}
+@keyframes city-plaque-cycle {
+  0%, 4% { opacity: 0; transform: scale(0.2); animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1); }
+  12%, 88% { opacity: 1; transform: none; }
+  94%, 100% { opacity: 0; transform: scale(0.9); }
+}
+@keyframes city-flip {
+  0%, 30% { transform: scaleX(1); }
+  34% { transform: scaleX(0); }
+  38%, 84% { transform: scaleX(1); }
+  88% { transform: scaleX(0); }
+  92%, 100% { transform: scaleX(1); }
+}
+@keyframes city-face-tolet {
+  0%, 33.9% { opacity: 1; }
+  34%, 87.9% { opacity: 0; }
+  88%, 100% { opacity: 1; }
+}
+@keyframes city-face-verified {
+  0%, 33.9% { opacity: 0; }
+  34%, 87.9% { opacity: 1; }
+  88%, 100% { opacity: 0; }
+}
+@keyframes city-drone {
+  0% {
+    transform: translate(760px, -260px);
+    animation-timing-function: cubic-bezier(0.2, 0.6, 0.3, 1);
+  }
+  22%,
+  58% {
+    transform: translate(0, 0);
+    animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.4);
+  }
+  80%,
+  100% {
+    transform: translate(-860px, -300px);
+  }
+}
+@keyframes city-hover {
+  to {
+    transform: translateY(-3px);
+  }
+}
+@keyframes city-rotor {
+  to {
+    transform: scaleX(0.3);
+  }
+}
+@keyframes city-tether {
+  0%,
+  24% {
+    transform: scaleY(0.05);
+    animation-timing-function: ease-in-out;
+  }
+  42%,
+  46% {
+    transform: scaleY(1.89);
+    animation-timing-function: ease-in-out;
+  }
+  56%,
+  100% {
+    transform: scaleY(0.05);
+  }
+}
+@keyframes city-parcel {
+  0% {
+    transform: translate(760px, -365px);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.2, 0.6, 0.3, 1);
+  }
+  22%,
+  24% {
+    transform: translate(0, -105px);
+    animation-timing-function: ease-in-out;
+  }
+  42%,
+  92% {
+    transform: translate(0, 98px);
+    opacity: 1;
+  }
+  96% {
+    transform: translate(0, 98px);
+    opacity: 0;
+  }
+  97%,
+  100% {
+    transform: translate(760px, -365px);
+    opacity: 0;
+  }
+}
+@keyframes city-delivered {
+  0%,
+  43% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  47%,
+  88% {
+    opacity: 1;
+    transform: none;
+  }
+  93%,
+  100% {
+    opacity: 0;
+    transform: none;
+  }
+}
+@keyframes city-beam {
+  0% {
+    opacity: 0;
+  }
+  4%,
+  10%,
+  16% {
+    opacity: 1;
+  }
+  7%,
+  13% {
+    opacity: 0.35;
+  }
+  22%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes city-select {
+  0%,
+  16% {
+    stroke-dashoffset: 1;
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.6, 0, 0.3, 1);
+  }
+  28%,
+  86% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  92%,
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+@keyframes city-handles {
+  0%,
+  26% {
+    opacity: 0;
+  }
+  30%,
+  86% {
+    opacity: 1;
+  }
+  92%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes city-label {
+  0%,
+  30% {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  35%,
+  86% {
+    opacity: 1;
+    transform: none;
+  }
+  92%,
+  100% {
+    opacity: 0;
+    transform: none;
+  }
+}
+@keyframes city-verified {
+  0%,
+  38% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  43%,
+  86% {
+    opacity: 1;
+    transform: none;
+  }
+  92%,
+  100% {
+    opacity: 0;
+    transform: none;
+  }
+}
+@keyframes city-lane-a {
+  from {
+    transform: translateX(-280px);
+  }
+  to {
+    transform: translateX(1720px);
+  }
+}
+@keyframes city-lane-b {
+  from {
+    transform: translateX(1760px);
+  }
+  to {
+    transform: translateX(-200px);
+  }
+}
+@keyframes city-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes city-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+}
+@keyframes city-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.4);
+  }
+}
+@keyframes city-float {
+  50% {
+    transform: translateY(-6px);
+  }
+}
+@keyframes city-cloud {
+  to {
+    transform: translateX(-70px);
+  }
+}
+@keyframes city-blink {
+  50% {
+    opacity: 0.2;
+  }
+}
+@keyframes city-flag {
+  to {
+    transform: skewY(5deg) scaleX(0.92);
+  }
+}

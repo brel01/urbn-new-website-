@@ -2,6 +2,7 @@ import { useMatches } from "react-router";
 import { seo } from "~/lib/seo";
 import { SITE } from "~/lib/site";
 import type { Route } from "./+types/legal";
+import { PageSky } from "~/components/city-scene";
 
 // DRAFT legal copy: must be reviewed by counsel before launch.
 const DOCS = {
@@ -46,6 +47,8 @@ export default function Legal() {
   const matches = useMatches();
   const doc = fromId(matches[matches.length - 1].id);
   return (
+    <>
+      <PageSky />
     <article className="container-x py-16 sm:py-24">
       <div className="mx-auto max-w-2xl">
         <h1 className="text-5xl sm:text-6xl">{doc.title}</h1>
@@ -65,5 +68,6 @@ export default function Legal() {
         </div>
       </div>
     </article>
+    </>
   );
 }
