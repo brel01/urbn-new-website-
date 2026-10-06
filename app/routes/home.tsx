@@ -3,7 +3,7 @@ import { Briefcase, FileUp, House, Search, ShieldCheck, Stamp, Users, MapPin } f
 import { motion, useScroll, useTransform } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
-import { CityScene } from "~/components/city-scene";
+import { CityScene, SkyClouds } from "~/components/city-scene";
 import { CtaBanner } from "~/components/cta-banner";
 import { DpiSearch } from "~/components/dpi-search";
 import { FaqSection } from "~/components/faq";
@@ -68,10 +68,8 @@ function Hero() {
 
   return (
     <section ref={ref} className="relative isolate flex flex-col overflow-hidden bg-white">
-      {/* Urbn's "u" pattern, faint in Urbn Blue, behind the sky. */}
-      <div aria-hidden className="absolute inset-x-0 top-0 -z-10 h-[clamp(17rem,44svh,23rem)] [mask-image:linear-gradient(black,transparent)] lg:h-[70%]">
-        <div className="pattern-u size-full bg-urbn/[0.045]" />
-      </div>
+      {/* Soft grey clouds drifting behind the text and the scene. */}
+      <SkyClouds className="absolute inset-x-0 top-0 -z-10 h-[34rem] w-full lg:h-[40rem]" />
 
       {/* The illustrated Ibadan street: under the text on desktop, above it on phones. */}
       <motion.div

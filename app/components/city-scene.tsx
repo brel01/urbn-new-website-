@@ -1,15 +1,16 @@
 // The homepage hero scene, drawn in Urbn's visual language (Visual Identity Guide):
 // black line art on white, square corners and one heavy stroke weight, like the
-// house outline in Urbn's own posts. Urbn Blue is reserved for Urbn itself: the
-// home being identified, its plaque, the Nearby pins, the selection box, and the
-// Urbn fleet (a delivery drone, a courier van and a courier bike) that shows
-// where the platform is heading.
+// house outline in Urbn's own posts. Urbn Blue marks Urbn: the onboarded home,
+// its plaque, the selection box, and the Urbn fleet. Grey is only for depth (the
+// rooftops and towers behind the street) and the clouds.
 //
-// Story: a selection box picks out a home and its DPI comes back Verified, Nearby
-// pins mark the places around it, an Urbn drone lowers a parcel to its door, and
-// Urbn couriers pass on the road. Motion is CSS only (app.css, `.city-*`), pauses
-// off screen and is off for reduced motion; each element's resting state is its
-// finished look, so the still scene tells the same story.
+// Story: what happens around a property once it's onboarded. A visitor scans the
+// home's DPI plaque and its record comes back Verified, an Urbn drone delivers a
+// parcel to its door, black Nearby pins mark the places around it, and the street
+// carries on: cars (some Urbn, some not), a courier bike, a bus stop screen, smart
+// streetlights and solar roofs. Near future, not science fiction.
+// Motion is CSS only (app.css, `.city-*`), pauses off screen and is off for
+// reduced motion; each element's resting state is its finished look.
 import { clsx } from "clsx";
 import { motion, type MotionValue } from "motion/react";
 import { useEffect, useRef, useState } from "react";
@@ -20,6 +21,8 @@ const H = 600;
 const INK = "#000";
 const BLUE = "#253DE2";
 const SUCCESS = "#12B76A";
+const GREY = "#A9AEB8";
+const CLOUD = "#ECEEF1";
 
 /** Shared look for line-drawn shapes: white fill so nearer shapes hide farther lines. */
 const LINE = {
@@ -153,6 +156,167 @@ function MapoHall() {
   );
 }
 
+/** Mid-rise blocks behind the street, in grey for depth, with solar roofs and balcony plants. */
+function Tower({
+  x,
+  top,
+  w,
+  cols,
+}: {
+  x: number;
+  top: number;
+  w: number;
+  cols: number;
+}) {
+  const cw = (w - 16) / cols;
+  const rows = Math.floor((392 - top - 16) / 20);
+  return (
+    <g stroke={GREY} strokeWidth={3} fill="#fff">
+      <rect x={x} y={top} width={w} height={500 - top} />
+      {/* solar panels */}
+      {[0, 1, 2].map((i) => (
+        <path
+          key={i}
+          d={`M${x + 10 + i * (w / 3.2)} ${top - 2} l6 -10 h${w / 4.2} l-6 10z`}
+          strokeWidth={2.5}
+        />
+      ))}
+      {Array.from({ length: rows }, (_, r) =>
+        Array.from({ length: cols }, (_, c) => {
+          const lit = (r * 7 + c * 3) % 5 === 0;
+          return (
+            <rect
+              key={`${r}-${c}`}
+              x={x + 8 + c * cw + 2}
+              y={top + 12 + r * 20}
+              width={cw - 4}
+              height={10}
+              fill={lit ? "#E3E6EB" : "#fff"}
+              strokeWidth={2}
+            />
+          );
+        }),
+      )}
+      {/* a few balcony plants */}
+      {[1, 3]
+        .filter((r) => r < rows)
+        .map((r) => (
+          <circle
+            key={r}
+            cx={x + w - 10}
+            cy={top + 10 + r * 20}
+            r={5}
+            strokeWidth={2}
+          />
+        ))}
+    </g>
+  );
+}
+
+/** A standing person, facing right; origin is between the feet. */
+function Person({
+  x,
+  y,
+  flip,
+  bag,
+}: {
+  x: number;
+  y: number;
+  flip?: boolean;
+  bag?: boolean;
+}) {
+  return (
+    <g transform={`translate(${x} ${y}) scale(${flip ? -1 : 1} 1)`}>
+      <path d="M-4 0 L-2 -20 M5 0 L2 -20" stroke={INK} strokeWidth={5} />
+      <rect x={-8} y={-46} width={16} height={28} rx={4} fill={INK} />
+      <circle cx={0} cy={-54} r={7} fill={INK} />
+      <path d="M-5 -38 L-12 -22" stroke={INK} strokeWidth={4} />
+      {bag && (
+        <rect
+          x={-18}
+          y={-24}
+          width={12}
+          height={14}
+          fill="#fff"
+          stroke={INK}
+          strokeWidth={2.5}
+        />
+      )}
+    </g>
+  );
+}
+
+/** Smart streetlight with a small solar panel; origin at its foot. */
+function StreetLight({ x }: { x: number }) {
+  return (
+    <g>
+      <line x1={x} x2={x} y1={500} y2={388} stroke={INK} strokeWidth={4} />
+      <path d={`M${x} 390 H${x + 22}`} stroke={INK} strokeWidth={4} />
+      <rect x={x + 14} y={388} width={20} height={7} fill={INK} />
+      <path
+        d={`M${x - 14} 384 l4 -8 h20 l-4 8z`}
+        fill="#fff"
+        stroke={INK}
+        strokeWidth={2.5}
+      />
+    </g>
+  );
+}
+
+/** Bus stop with a digital screen running an Urbn ad, and someone waiting. */
+function BusStop() {
+  return (
+    <g>
+      <line
+        x1={1452}
+        x2={1452}
+        y1={440}
+        y2={500}
+        stroke={INK}
+        strokeWidth={4}
+      />
+      <line
+        x1={1546}
+        x2={1546}
+        y1={440}
+        y2={500}
+        stroke={INK}
+        strokeWidth={4}
+      />
+      <rect x={1444} y={432} width={110} height={8} fill={INK} />
+      <rect
+        x={1456}
+        y={444}
+        width={40}
+        height={40}
+        fill="#fff"
+        stroke={GREY}
+        strokeWidth={2.5}
+      />
+      <rect x={1502} y={446} width={40} height={42} fill={BLUE} />
+      <Symbol x={1514} y={455} h={18} />
+      <rect x={1510} y={478} width={24} height={3} fill="#fff" />
+      <line
+        x1={1456}
+        x2={1500}
+        y1={482}
+        y2={482}
+        stroke={INK}
+        strokeWidth={4}
+      />
+      {/* seated passenger */}
+      <circle cx={1478} cy={456} r={6} fill={INK} />
+      <rect x={1471} y={463} width={14} height={20} rx={3} fill={INK} />
+      <path
+        d="M1484 482 H1494 V500"
+        stroke={INK}
+        strokeWidth={4.5}
+        fill="none"
+      />
+    </g>
+  );
+}
+
 // --- the street (baseline y = 500) ----------------------------------------------------
 function Tree({ x, r = 20 }: { x: number; r?: number }) {
   return (
@@ -258,11 +422,28 @@ function Street() {
         className="city-flag"
       />
 
-      <Tree x={250} />
-      <Tree x={530} r={16} />
-      <Tree x={800} r={15} />
-      <Tree x={1580} r={22} />
+      {/* solar panels on the bungalow and the school */}
+      {[852, 896].map((x) => (
+        <path key={x} d={`M${x} 410 l8 -10 h30 l-8 10z`} fill={INK} />
+      ))}
+      {[1160, 1206, 1252].map((x) => (
+        <path
+          key={x}
+          d={`M${x} 380 l6 -9 h34 l-6 9z`}
+          fill="#fff"
+          stroke={INK}
+          strokeWidth={2.5}
+        />
+      ))}
+
       <Tree x={60} r={22} />
+      <Tree x={528} r={16} />
+      <Tree x={800} r={15} />
+      <Tree x={1366} r={18} />
+      <StreetLight x={252} />
+      <StreetLight x={1586} />
+      <BusStop />
+      <Person x={462} y={506} flip bag />
     </g>
   );
 }
@@ -280,8 +461,8 @@ function Home() {
       <rect x={578} y={424} width={42} height={30} fill={INK} />
       <rect x={706} y={424} width={42} height={30} fill={INK} />
       <rect x={650} y={444} width={32} height={56} fill={INK} />
-      {/* the Urbn plaque */}
-      <g transform="translate(590 466)">
+      {/* the Urbn plaque, right of the door */}
+      <g transform="translate(694 462)">
         <g className="city-pop" style={{ animationDelay: "0.9s" }}>
           <rect width={46} height={24} fill={INK} />
           <Symbol x={6} y={5} h={14} />
@@ -289,6 +470,34 @@ function Home() {
           <rect x={22} y={12} width={14} height={2.5} fill="#8A90A0" />
           <rect x={22} y={17} width={18} height={2.5} fill={BLUE} />
         </g>
+      </g>
+      {/* a visitor scanning the plaque with their phone */}
+      <g transform="translate(606 508)">
+        <path
+          d="M24 -45 L88 -46 L88 -22Z"
+          fill={BLUE}
+          opacity={0.16}
+          className="city-beam"
+        />
+        <path d="M-4 0 L-2 -20 M5 0 L2 -20" stroke={INK} strokeWidth={5} />
+        <rect x={-8} y={-46} width={16} height={28} rx={4} fill={INK} />
+        <circle cx={0} cy={-54} r={7} fill={INK} />
+        <path
+          d="M4 -38 L16 -36 L20 -44"
+          stroke={INK}
+          strokeWidth={4}
+          fill="none"
+        />
+        <rect
+          x={18}
+          y={-52}
+          width={7}
+          height={12}
+          rx={1.5}
+          fill="#fff"
+          stroke={INK}
+          strokeWidth={2}
+        />
       </g>
     </g>
   );
@@ -383,23 +592,36 @@ function Selection() {
             Verified
           </text>
         </g>
-      </g>
-      <g transform="translate(790 506)">
-        <g className="city-cursor">
-          <path
-            d="M0 0 L0 26 L7 19 L12 30 L17 28 L12 17 L22 17Z"
-            fill={INK}
-            stroke="#fff"
-            strokeWidth={2}
-            strokeLinejoin="round"
+        <g className="city-delivered">
+          <rect
+            x={806}
+            y={422}
+            width={124}
+            height={30}
+            rx={15}
+            fill="#fff"
+            stroke={INK}
+            strokeWidth={2.5}
           />
+          <rect x={818} y={430} width={14} height={14} fill={BLUE} />
+          <rect x={823.5} y={430} width={3} height={14} fill="#fff" />
+          <text
+            x={840}
+            y={442}
+            fontFamily="Inter Variable, ui-sans-serif, system-ui, sans-serif"
+            fontSize={14}
+            fontWeight={600}
+            fill={INK}
+          >
+            Delivered
+          </text>
         </g>
       </g>
     </g>
   );
 }
 
-/** A Nearby pin in Urbn Blue with a white category glyph; rises in, then floats. */
+/** A Nearby pin in black with a white category glyph; rises in, then floats. */
 function Pin({
   x,
   y,
@@ -419,7 +641,7 @@ function Pin({
       >
         <path
           d="M0 0 C-4 -9 -16 -16 -16 -29 A16 16 0 1 1 16 -29 C16 -16 4 -9 0 0Z"
-          fill={BLUE}
+          fill={INK}
         />
         <g fill="#fff" stroke="#fff">
           {glyph === "shop" && (
@@ -492,6 +714,67 @@ function Van() {
   );
 }
 
+/** A car, facing right (or left with `flip`); origin is the road under its rear (front
+ *  when flipped). Black or Urbn Blue, with or without Urbn branding; the logo always
+ *  reads the right way round. */
+function Car({
+  kind,
+  color,
+  logo,
+  flip,
+}: {
+  kind: "sedan" | "suv" | "hatch";
+  color: string;
+  logo?: "wordmark" | "symbol";
+  flip?: boolean;
+}) {
+  const shape = {
+    suv: {
+      body: "M0 -12 V-46 Q0 -52 8 -52 H82 L102 -32 H118 Q124 -30 124 -24 V-12Z",
+      glass: "M8 -46 H40 V-34 H8Z M46 -46 H78 L92 -34 H46Z",
+      light: [118, -28],
+      wheels: [26, 100, 11],
+      mark: { x: 30, y: -29, w: 44 },
+    },
+    hatch: {
+      body: "M0 -12 V-26 Q2 -42 26 -44 H64 Q84 -42 98 -28 Q104 -26 104 -20 V-12Z",
+      glass: "M12 -30 Q14 -40 26 -40 H44 V-30Z M50 -40 H64 Q76 -38 86 -30 H50Z",
+      light: [98, -24],
+      wheels: [22, 82, 10],
+      mark: { x: 54, y: -27, w: 11 },
+    },
+    sedan: {
+      body: "M2 -12 V-24 Q4 -30 14 -31 L32 -33 L46 -46 H84 L100 -33 Q116 -31 118 -24 V-12Z",
+      glass: "M50 -42 H64 V-34 H40Z M68 -42 H82 L94 -34 H68Z",
+      light: [113, -28],
+      wheels: [26, 96, 10],
+      mark: { x: 42, y: -28, w: 38 },
+    },
+  }[kind];
+  const [w1, w2, r] = shape.wheels;
+  const m = shape.mark;
+  const mx = flip ? -(m.x + m.w) : m.x;
+  return (
+    <g>
+      <g transform={flip ? "scale(-1 1)" : undefined}>
+        <path d={shape.body} fill={color} />
+        <path d={shape.glass} fill="#fff" />
+        <rect
+          x={shape.light[0]}
+          y={shape.light[1]}
+          width={5}
+          height={4}
+          fill="#fff"
+        />
+        <Wheel cx={w1} cy={-r} r={r} />
+        <Wheel cx={w2} cy={-r} r={r} />
+      </g>
+      {logo === "wordmark" && <Wordmark x={mx} y={m.y} w={m.w} />}
+      {logo === "symbol" && <Symbol x={mx} y={m.y} h={m.w * (1172 / 1054)} />}
+    </g>
+  );
+}
+
 /** Urbn courier bike, facing left; origin is the road under its front wheel. */
 function Bike() {
   return (
@@ -501,7 +784,7 @@ function Bike() {
       <Symbol x={67} y={-60} h={16} />
       {/* rider */}
       <path d="M38 -40 L46 -68 Q50 -74 58 -70 L56 -44Z" fill={INK} />
-      <circle cx={46} cy={-80} r={9} fill={BLUE} />
+      <circle cx={46} cy={-80} r={9} fill={INK} />
       <rect x={34} y={-84} width={8} height={5} fill={INK} />
       <path
         d="M44 -66 L28 -54 L22 -56"
@@ -578,7 +861,57 @@ function Parcel() {
   );
 }
 
+// --- sky ----------------------------------------------------------------------------
+function Cloud({
+  x,
+  y,
+  s,
+  slow,
+}: {
+  x: number;
+  y: number;
+  s: number;
+  slow?: boolean;
+}) {
+  return (
+    <g transform={`translate(${x} ${y}) scale(${s})`}>
+      <path
+        className={slow ? "city-cloud city-cloud-slow" : "city-cloud"}
+        d="M0 0 H150 A26 26 0 0 0 128 -36 A34 34 0 0 0 68 -52 A30 30 0 0 0 18 -30 A20 20 0 0 0 0 0Z"
+        fill={CLOUD}
+      />
+    </g>
+  );
+}
+
+/** Soft grey clouds drifting behind the hero text and scene. */
+export function SkyClouds({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 1600 560"
+      preserveAspectRatio="xMidYMin slice"
+      className={clsx("city-scene", className)}
+      aria-hidden
+    >
+      <Cloud x={60} y={150} s={1.1} />
+      <Cloud x={420} y={90} s={0.7} slow />
+      <Cloud x={760} y={50} s={0.55} />
+      <Cloud x={1150} y={120} s={1.2} slow />
+      <Cloud x={1420} y={250} s={0.8} />
+      <Cloud x={230} y={360} s={0.6} slow />
+      <Cloud x={1290} y={420} s={0.65} />
+    </svg>
+  );
+}
+
 // --- the scene -------------------------------------------------------------------
+
+/** Vehicles on two lanes. Each sits at its resting x (used with reduced motion) and,
+ *  when animated, starts its loop from that same point. */
+const LANE_A = { y: 588, from: -280, to: 1720, dur: 22 };
+const LANE_B = { y: 546, from: 1760, to: -200, dur: 16 };
+const laneDelay = (lane: typeof LANE_A, x0: number) =>
+  `${(-((x0 - lane.from) / (lane.to - lane.from)) * lane.dur).toFixed(2)}s`;
 
 export function CityScene({
   className,
@@ -610,7 +943,7 @@ export function CityScene({
       className={clsx("city-scene", className)}
       data-paused={paused || undefined}
       role="img"
-      aria-label="Line drawing of an Ibadan street: Cocoa House and Mapo Hall above rows of rooftops, and a road lined with a food stall, a pharmacy, a home, a bungalow, a clinic and a school. A blue selection box picks out the home and its DPI shows Verified, blue Nearby pins mark the places around it, an Urbn drone lowers a parcel to its door, and an Urbn courier van and bike pass on the road."
+      aria-label="Line drawing of an Ibadan street in the near future: Cocoa House and Mapo Hall above rooftops and solar-roofed towers, and a road lined with a food stall, a pharmacy, a home, a bungalow, a clinic, a school and a bus stop. A visitor scans the home's Urbn plaque and its record shows Verified, an Urbn drone delivers a parcel to its door, black Nearby pins mark the places around it, and black and blue cars, some carrying Urbn branding, pass with an Urbn courier bike."
     >
       {/* far layer: rooftops and landmarks */}
       <motion.g style={far ? { y: far } : undefined}>
@@ -618,7 +951,7 @@ export function CityScene({
           <g
             key={i}
             fill="#fff"
-            stroke={INK}
+            stroke={i === 0 ? "#C6CAD2" : GREY}
             strokeWidth={2.5}
             strokeLinejoin="miter"
           >
@@ -630,6 +963,8 @@ export function CityScene({
             ))}
           </g>
         ))}
+        <Tower x={318} top={286} w={108} cols={4} />
+        <Tower x={1170} top={300} w={118} cols={4} />
         <CocoaHouse />
         <MapoHall />
       </motion.g>
@@ -670,16 +1005,42 @@ export function CityScene({
         strokeDasharray="28 22"
       />
       <line x1={0} x2={W} y1={592} y2={592} stroke={INK} strokeWidth={5} />
-      <g transform="translate(1210 544)">
-        <g className="city-bike">
-          <Bike />
+      {/* lane A, left to right: Urbn van, a black car, a blue Urbn hatch */}
+      {(
+        [
+          [120, <Van key="van" />],
+          [760, <Car key="sedan" kind="sedan" color={INK} />],
+          [1320, <Car key="hatch" kind="hatch" color={BLUE} logo="symbol" />],
+        ] as const
+      ).map(([x0, v], i) => (
+        <g key={i} transform={`translate(0 ${LANE_A.y})`}>
+          <g
+            transform={`translate(${x0} 0)`}
+            className="city-lane-a"
+            style={{ animationDelay: laneDelay(LANE_A, x0) }}
+          >
+            {v}
+          </g>
         </g>
-      </g>
-      <g transform="translate(150 586)">
-        <g className="city-van">
-          <Van />
+      ))}
+      {/* lane B, right to left: a black Urbn car, a courier bike, a black car */}
+      {(
+        [
+          [440, <Car key="suv" kind="suv" color={INK} logo="wordmark" flip />],
+          [1130, <Bike key="bike" />],
+          [1600, <Car key="sedan2" kind="sedan" color={INK} flip />],
+        ] as const
+      ).map(([x0, v], i) => (
+        <g key={i} transform={`translate(0 ${LANE_B.y})`}>
+          <g
+            transform={`translate(${x0} 0)`}
+            className="city-lane-b"
+            style={{ animationDelay: laneDelay(LANE_B, x0) }}
+          >
+            {v}
+          </g>
         </g>
-      </g>
+      ))}
     </svg>
   );
 }
