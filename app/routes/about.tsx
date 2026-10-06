@@ -1,7 +1,8 @@
 import { Eye, HeartHandshake, Scale, ShieldCheck } from "lucide-react";
 import { motion } from "motion/react";
+import { SceneFrame, SkyClouds } from "~/components/city-scene";
 import { CtaBanner } from "~/components/cta-banner";
-import { EASE, Reveal, Rings, Stagger, StaggerItem, WordsReveal } from "~/components/motion";
+import { EASE, Reveal, Stagger, StaggerItem, WordsReveal } from "~/components/motion";
 import { Rail } from "~/components/mobile";
 import { ButtonLink, SectionHeading } from "~/components/ui";
 import { breadcrumbs, seo } from "~/lib/seo";
@@ -33,9 +34,10 @@ const ROADMAP = [
 export default function About() {
   return (
     <>
-      <section className="relative overflow-hidden">
-        <div className="container-x grid gap-12 pt-16 pb-20 lg:grid-cols-2 lg:items-center lg:pt-24">
-          <div>
+      <section className="relative isolate overflow-hidden bg-white">
+        <SkyClouds className="absolute inset-x-0 top-0 -z-10 h-full w-full" />
+        <div className="container-x pt-12 pb-6 sm:pt-20">
+          <div className="max-w-3xl">
             <p className="eyebrow"><span className="size-2 rounded-full bg-urbn" /> About Urbn</p>
             <WordsReveal text="Every Property Deserves a Connected Record." highlight={["Connected", "Record."]} className="mt-4 text-5xl leading-[1] sm:text-6xl" />
             <motion.p className="lede mt-6 max-w-xl" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
@@ -43,11 +45,11 @@ export default function About() {
               digital infrastructure that connects them.
             </motion.p>
           </div>
-          <motion.div className="relative" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.2, ease: EASE }}>
-            <Rings className="top-1/2 left-1/2 aspect-square w-[110%] -translate-x-1/2 -translate-y-1/2" />
-            <img src="/images/house-identity.webp" alt="Verified modern home" className="relative w-full mix-blend-multiply" />
-          </motion.div>
         </div>
+        {/* The whole city Urbn starts in, with everything an onboarded property makes possible. */}
+        <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.2, ease: EASE }}>
+          <SceneFrame focus="city" />
+        </motion.div>
       </section>
 
       <section className="bg-ink py-16 text-white sm:py-24 lg:py-32">

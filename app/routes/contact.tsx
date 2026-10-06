@@ -6,6 +6,7 @@ import { Button } from "~/components/ui";
 import { breadcrumbs, seo } from "~/lib/seo";
 import { SITE } from "~/lib/site";
 import type { Route } from "./+types/contact";
+import { PageSky } from "~/components/city-scene";
 
 export const meta: Route.MetaFunction = () =>
   seo({
@@ -40,6 +41,8 @@ export default function Contact() {
   const busy = useNavigation().state === "submitting";
   const err = result?.errors ?? {};
   return (
+    <>
+      <PageSky />
     <section className="container-x grid gap-16 py-16 sm:py-24 lg:grid-cols-[1fr_1.1fr]">
       <div>
         <WordsReveal text="Let's talk." className="text-6xl sm:text-8xl" />
@@ -105,5 +108,6 @@ export default function Contact() {
         )}
       </Reveal>
     </section>
+    </>
   );
 }

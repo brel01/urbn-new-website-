@@ -7,6 +7,7 @@ import { ButtonLink } from "~/components/ui";
 import { ALL_FAQS, FAQ_GROUPS } from "~/lib/faqs";
 import { breadcrumbs, faqJsonLd, seo } from "~/lib/seo";
 import type { Route } from "./+types/faq";
+import { PageSky } from "~/components/city-scene";
 
 export const meta: Route.MetaFunction = () =>
   seo({
@@ -28,6 +29,7 @@ export default function FaqPage() {
   const current = FAQ_GROUPS.find((g) => g.id === group)!;
   return (
     <>
+      <PageSky />
       <section className="container-x pt-16 pb-24 sm:pt-24">
         <div className="mx-auto max-w-3xl text-center">
           <WordsReveal text="Frequently Asked Questions" className="text-5xl leading-[1] sm:text-7xl" />
