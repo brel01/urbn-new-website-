@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 import { CityScene, SkyClouds } from "~/components/city-scene";
+import { ConflictingArt, ConnectedArt, QuestionsArt } from "~/components/problem-art";
 import { CtaBanner } from "~/components/cta-banner";
 import { DpiSearch } from "~/components/dpi-search";
 import { FaqSection } from "~/components/faq";
@@ -150,22 +151,19 @@ function Problem() {
     {
       big: "One Property. Conflicting Details.",
       text: "Different listings can tell different stories about the same space.",
-      img: "/images/stat-sunset.webp",
-      alt: "Sunset view from a residential balcony",
+      art: <ConflictingArt />,
       tone: "bg-ink text-white",
     },
     {
       big: "Records That Stay Connected",
       text: "Keep a property's details and activities linked as people come and go.",
-      img: "/images/stat-skyline.webp",
-      alt: "Blue line illustration of a city skyline",
+      art: <ConnectedArt />,
       tone: "bg-urbn text-white",
     },
     {
       big: "Questions Before Payment",
       text: "Check the available property record and ask for the details you need before committing.",
-      img: "/images/stat-phone.webp",
-      alt: "Hand holding a phone running the Urbn app",
+      art: <QuestionsArt />,
       tone: "bg-mist text-ink",
     },
   ];
@@ -189,9 +187,8 @@ function Problem() {
                   {c.text}
                 </p>
               </div>
-              <div className="mt-auto overflow-hidden">
-                <img src={c.img} alt={c.alt} loading="lazy" className="aspect-[2/1] w-full object-cover transition-transform duration-700 group-hover:scale-105" />
-              </div>
+              {/* Drawn in the hero city's line style, so the section reads as the same world. */}
+              <div className="mt-auto px-4 pb-4 transition-transform duration-700 group-hover:scale-[1.03]">{c.art}</div>
             </article>
         ))}
         </Rail>
