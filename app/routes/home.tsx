@@ -1,14 +1,5 @@
 import { clsx } from "clsx";
-import {
-  Briefcase,
-  FileUp,
-  House,
-  Search,
-  ShieldCheck,
-  Stamp,
-  Users,
-  MapPin,
-} from "lucide-react";
+import { Briefcase, FileUp, House, Search, ShieldCheck, Stamp, Users, MapPin } from "lucide-react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
@@ -18,15 +9,7 @@ import { DpiSearch } from "~/components/dpi-search";
 import { FaqSection } from "~/components/faq";
 import { IbadanMap } from "~/components/ibadan-map";
 import { ListingCard } from "~/components/listing-card";
-import {
-  CountUp,
-  EASE,
-  Reveal,
-  Rings,
-  Stagger,
-  StaggerItem,
-  WordsReveal,
-} from "~/components/motion";
+import { CountUp, EASE, Reveal, Rings, Stagger, StaggerItem, WordsReveal } from "~/components/motion";
 import { Rail, useIsDesktop } from "~/components/mobile";
 import { ButtonLink, SectionHeading } from "~/components/ui";
 import { SAMPLE_DPI } from "~/lib/dpi";
@@ -49,10 +32,7 @@ export const meta: Route.MetaFunction = () =>
   });
 
 export async function loader() {
-  const [featured, nearby] = await Promise.all([
-    featuredListings(7),
-    searchNearby({ area: "bodija", limit: 2 }),
-  ]);
+  const [featured, nearby] = await Promise.all([featuredListings(7), searchNearby({ area: "bodija", limit: 2 })]);
   return { featured, nearby };
 }
 
@@ -79,10 +59,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 
 function Hero() {
   const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   // Layers drift at different speeds as the hero scrolls away (desktop only).
   const far = useTransform(scrollYProgress, [0, 1], [0, 70]);
   const mid = useTransform(scrollYProgress, [0, 1], [0, 28]);
@@ -90,10 +67,7 @@ function Hero() {
   const desktop = useIsDesktop();
 
   return (
-    <section
-      ref={ref}
-      className="relative isolate flex flex-col overflow-hidden bg-white"
-    >
+    <section ref={ref} className="relative isolate flex flex-col overflow-hidden bg-white">
       {/* Soft grey clouds drifting behind the text and the scene. */}
       <SkyClouds className="absolute inset-x-0 top-0 -z-10 h-[34rem] w-full lg:h-[40rem]" />
 
@@ -121,8 +95,7 @@ function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <span className="size-1.5 animate-pulse rounded-full bg-success" />{" "}
-          Live in Ibadan
+          <span className="size-1.5 animate-pulse rounded-full bg-success" /> Live in Ibadan
         </motion.span>
         <WordsReveal
           text="A Property Has More Than an Address."
@@ -134,9 +107,7 @@ function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.8, ease: EASE }}
         >
-          Urbn connects a property's identity, people and activities, from homes
-          and shops to offices, schools and clinics. Find a property, check its
-          record or manage yours.
+          Urbn connects a property's identity, people and activities, from homes and shops to offices, schools and clinics. Find a property, check its record or manage yours.
         </motion.p>
         <motion.div
           className="mt-6 w-full max-w-2xl lg:mt-8"
@@ -153,30 +124,18 @@ function Hero() {
               { to: "/dpi", label: "What Is DPI?", icon: ShieldCheck },
               { to: "/for-owners", label: "Add Your Property", icon: House },
             ].map((a) => (
-              <Link
-                key={a.to}
-                to={a.to}
-                className="inline-flex shrink-0 items-center gap-2 rounded-full bg-mist px-4 py-2.5 text-[13px] font-semibold active:scale-95 active:bg-fog"
-              >
+              <Link key={a.to} to={a.to} className="inline-flex shrink-0 items-center gap-2 rounded-full bg-mist px-4 py-2.5 text-[13px] font-semibold active:scale-95 active:bg-fog">
                 <a.icon className="size-4 text-urbn" /> {a.label}
               </Link>
             ))}
           </div>
           <p className="mt-4 hidden items-center gap-1.5 rounded-full bg-white/90 px-4 py-2 text-sm text-neutral-700 shadow-sm backdrop-blur lg:inline-flex">
             No DPI code?
-            <Link
-              to="/listings"
-              className="font-semibold text-urbn underline-offset-4 hover:underline"
-            >
+            <Link to="/listings" className="font-semibold text-urbn underline-offset-4 hover:underline">
               Browse Listings in Ibadan →
             </Link>
-            <span className="text-neutral-300" aria-hidden>
-              |
-            </span>
-            <Link
-              to="/nearby"
-              className="font-semibold text-urbn underline-offset-4 hover:underline"
-            >
+            <span className="text-neutral-300" aria-hidden>|</span>
+            <Link to="/nearby" className="font-semibold text-urbn underline-offset-4 hover:underline">
               Explore Nearby →
             </Link>
           </p>
@@ -219,49 +178,22 @@ function Problem() {
         />
       </Reveal>
       <Reveal className="mt-8 md:mt-14">
-        <Rail
-          grid="md:grid-cols-3 md:gap-5"
-          item="w-[78%] sm:w-[55%]"
-          label="Why property details get lost"
-        >
-          {cards.map((c, i) => (
-            <article
-              key={i}
-              className={clsx(
-                "group relative flex h-full flex-col overflow-hidden rounded-card",
-                c.tone,
-              )}
-            >
+        <Rail grid="md:grid-cols-3 md:gap-5" item="w-[78%] sm:w-[55%]" label="Why property details get lost">
+        {cards.map((c, i) => (
+            <article key={i} className={clsx("group relative flex h-full flex-col overflow-hidden rounded-card", c.tone)}>
               {i === 1 && <Rings className="-top-16 -right-16 size-48" />}
               <div className="relative p-7 pb-6">
-                <h3 className="font-display text-[1.75rem] leading-[1.08] sm:text-3xl">
-                  {c.big}
-                </h3>
-                <span
-                  className={clsx(
-                    "mt-4 block h-0.5 w-10",
-                    i === 2 ? "bg-urbn" : i === 1 ? "bg-white" : "bg-urbn",
-                  )}
-                />
-                <p
-                  className={clsx(
-                    "mt-3 max-w-[16rem] text-[15px] leading-snug",
-                    i === 2 ? "text-neutral-600" : "text-white/75",
-                  )}
-                >
+                <h3 className="font-display text-[1.75rem] leading-[1.08] sm:text-3xl">{c.big}</h3>
+                <span className={clsx("mt-4 block h-0.5 w-10", i === 2 ? "bg-urbn" : i === 1 ? "bg-white" : "bg-urbn")} />
+                <p className={clsx("mt-3 max-w-[16rem] text-[15px] leading-snug", i === 2 ? "text-neutral-600" : "text-white/75")}>
                   {c.text}
                 </p>
               </div>
               <div className="mt-auto overflow-hidden">
-                <img
-                  src={c.img}
-                  alt={c.alt}
-                  loading="lazy"
-                  className="aspect-[2/1] w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
+                <img src={c.img} alt={c.alt} loading="lazy" className="aspect-[2/1] w-full object-cover transition-transform duration-700 group-hover:scale-105" />
               </div>
             </article>
-          ))}
+        ))}
         </Rail>
       </Reveal>
     </section>
@@ -270,50 +202,34 @@ function Problem() {
 
 function Identity() {
   const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], [60, -60]);
   const desktop = useIsDesktop();
   return (
     <section className="overflow-hidden bg-gradient-to-b from-white via-blue-50/60 to-white">
-      <div
-        ref={ref}
-        className="container-x grid items-center gap-6 py-14 lg:grid-cols-[1fr_1.15fr] lg:gap-10 lg:py-28"
-      >
+      <div ref={ref} className="container-x grid items-center gap-6 py-14 lg:grid-cols-[1fr_1.15fr] lg:gap-10 lg:py-28">
         <Reveal>
           <p className="eyebrow">
-            <span className="size-2 rounded-full bg-urbn" /> Digital Property
-            Identity
+            <span className="size-2 rounded-full bg-urbn" /> Digital Property Identity
           </p>
           <h2 className="mt-4 text-[2.6rem] leading-[1.02] sm:text-6xl">
-            A Record Built Around the{" "}
-            <span className="text-urbn">Property</span>
+            A Record Built Around the <span className="text-urbn">Property</span>
           </h2>
           <p className="lede mt-6 max-w-lg">
-            A Digital Property Identity (DPI) connects a property to its record
-            on Urbn. It helps keep details and activities linked to the same
-            property as owners, managers and occupants change.
+            A Digital Property Identity (DPI) connects a property to its record on Urbn. It helps keep details and
+            activities linked to the same property as owners, managers and occupants change.
           </p>
           <div className="mt-6 grid gap-2 sm:flex sm:flex-wrap sm:gap-3 lg:mt-8">
             <ButtonLink to="/dpi" variant="blue" className="w-full sm:w-auto">
               Explore Property Identity
             </ButtonLink>
-            <ButtonLink
-              to="/verify"
-              variant="outline"
-              className="w-full sm:w-auto"
-            >
+            <ButtonLink to="/verify" variant="outline" className="w-full sm:w-auto">
               Check a DPI
             </ButtonLink>
           </div>
         </Reveal>
         <div className="relative order-first -mx-4 lg:order-none lg:mx-0">
-          <Rings
-            className="top-[58%] left-1/2 aspect-[2.6] w-[115%] -translate-x-1/2 -translate-y-1/2"
-            count={4}
-          />
+          <Rings className="top-[58%] left-1/2 aspect-[2.6] w-[115%] -translate-x-1/2 -translate-y-1/2" count={4} />
           <motion.img
             style={desktop ? { y } : undefined}
             src="/images/house-identity.webp"
@@ -335,12 +251,8 @@ function Identity() {
             </span>
             <span className="text-sm">
               <b className="block font-semibold">Property Verified</b>
-              <span className="block text-[11px] font-semibold tracking-wider text-warning uppercase">
-                Sample Record
-              </span>
-              <span className="font-mono text-xs text-neutral-500">
-                {SAMPLE_DPI}
-              </span>
+              <span className="block text-[11px] font-semibold tracking-wider text-warning uppercase">Sample Record</span>
+              <span className="font-mono text-xs text-neutral-500">{SAMPLE_DPI}</span>
             </span>
           </motion.div>
         </div>
@@ -350,21 +262,9 @@ function Identity() {
 }
 
 const STEPS = [
-  {
-    icon: FileUp,
-    title: "Submit Your Property",
-    text: "Add the property details and provide the documents required for your role.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Complete the Checks",
-    text: "Urbn reviews the submitted information and carries out the checks required for the property.",
-  },
-  {
-    icon: Stamp,
-    title: "View Your Property Record",
-    text: "Once approved, check the property's verification status and available plaque options in Urbn.",
-  },
+  { icon: FileUp, title: "Submit Your Property", text: "Add the property details and provide the documents required for your role." },
+  { icon: ShieldCheck, title: "Complete the Checks", text: "Urbn reviews the submitted information and carries out the checks required for the property." },
+  { icon: Stamp, title: "View Your Property Record", text: "Once approved, check the property's verification status and available plaque options in Urbn." },
 ];
 
 function HowItWorks() {
@@ -374,9 +274,7 @@ function HowItWorks() {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), {
-      threshold: 0.4,
-    });
+    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { threshold: 0.4 });
     io.observe(el);
     return () => io.disconnect();
   }, []);
@@ -390,12 +288,7 @@ function HowItWorks() {
     <section className="bg-ink py-16 text-white sm:py-24 lg:py-32">
       <div className="container-x" ref={ref}>
         <Reveal>
-          <SectionHeading
-            dark
-            eyebrow="How It Works"
-            title="Give Your Property a Connected Record"
-            lede="Submit your details, complete the required checks and follow your property's status in Urbn."
-          />
+          <SectionHeading dark eyebrow="How It Works" title="Give Your Property a Connected Record" lede="Submit your details, complete the required checks and follow your property's status in Urbn." />
         </Reveal>
         <HowItWorksDeck />
         <div className="mt-14 hidden gap-4 lg:grid lg:grid-cols-[1fr_1fr_1fr]">
@@ -407,25 +300,17 @@ function HowItWorks() {
                   onClick={() => setActive(i)}
                   className={clsx(
                     "relative flex w-full items-center gap-4 overflow-hidden rounded-card p-5 text-left transition-all duration-500 sm:p-6",
-                    active === i
-                      ? "bg-urbn"
-                      : "bg-blue-950/60 hover:bg-blue-900/60",
+                    active === i ? "bg-urbn" : "bg-blue-950/60 hover:bg-blue-900/60",
                   )}
                 >
                   <span className="grid size-12 shrink-0 place-items-center rounded-full bg-white text-urbn">
                     <s.icon className="size-5" />
                   </span>
                   <span className="relative z-10">
-                    <span className="block font-display text-xl">
-                      {s.title}
-                    </span>
-                    <span className="mt-1 block text-sm leading-snug text-white/80">
-                      {s.text}
-                    </span>
+                    <span className="block font-display text-xl">{s.title}</span>
+                    <span className="mt-1 block text-sm leading-snug text-white/80">{s.text}</span>
                   </span>
-                  <span className="pointer-events-none absolute right-3 -bottom-4 font-display text-8xl text-white/15">
-                    {i + 1}
-                  </span>
+                  <span className="pointer-events-none absolute right-3 -bottom-4 font-display text-8xl text-white/15">{i + 1}</span>
                   {active === i && visible && (
                     <motion.span
                       key={`bar-${i}`}
@@ -449,62 +334,30 @@ function HowItWorks() {
                 active === 3 ? "ring-urbn" : "ring-transparent",
               )}
             >
-              <img
-                src="/images/property-card-scene.webp"
-                alt="Black Urbn Property Card with QR code"
-                loading="lazy"
-                className="aspect-[1.42] w-full object-cover"
-              />
+              <img src="/images/property-card-scene.webp" alt="Black Urbn Property Card with QR code" loading="lazy" className="aspect-[1.42] w-full object-cover" />
               <div className="relative flex flex-1 flex-col p-6">
-                <p className="font-display text-2xl leading-tight">
-                  Your Property Card
-                </p>
+                <p className="font-display text-2xl leading-tight">Your Property Card</p>
                 <p className="mt-3 text-sm text-white/65">
-                  View the relationship to a property recorded on your Urbn
-                  account.
+                  View the relationship to a property recorded on your Urbn account.
                 </p>
-                <Link
-                  to="/dpi#property-card"
-                  className="mt-6 inline-flex w-fit items-center gap-1 rounded-lg bg-white px-4 py-2.5 text-sm font-medium text-ink"
-                >
+                <Link to="/dpi#property-card" className="mt-6 inline-flex w-fit items-center gap-1 rounded-lg bg-white px-4 py-2.5 text-sm font-medium text-ink">
                   Learn About Property Cards ›
                 </Link>
-                <span className="pointer-events-none absolute right-4 -bottom-4 font-display text-8xl text-white/10">
-                  4
-                </span>
+                <span className="pointer-events-none absolute right-4 -bottom-4 font-display text-8xl text-white/10">4</span>
               </div>
             </button>
           </Reveal>
 
-          <Reveal
-            delay={0.2}
-            className="relative hidden overflow-hidden rounded-card lg:block"
-          >
-            <img
-              src="/images/app-in-hand.webp"
-              alt="The Urbn app showing verified properties on a phone"
-              loading="lazy"
-              className="size-full object-cover"
-            />
+          <Reveal delay={0.2} className="relative hidden overflow-hidden rounded-card lg:block">
+            <img src="/images/app-in-hand.webp" alt="The Urbn app showing verified properties on a phone" loading="lazy" className="size-full object-cover" />
             <motion.div
               className="absolute right-4 bottom-4 left-4 rounded-xl bg-black/70 p-3 text-xs backdrop-blur"
               key={active}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              {active < 3 ? (
-                <span className="text-white/60">Step {active + 1} of 3 · </span>
-              ) : (
-                <span className="text-white/60">Optional · </span>
-              )}
-              {
-                [
-                  "Property Submitted",
-                  "Under Review",
-                  "Verification Complete",
-                  "Property Card",
-                ][active]
-              }
+              {active < 3 ? <span className="text-white/60">Step {active + 1} of 3 · </span> : <span className="text-white/60">Optional · </span>}
+              {["Property Submitted", "Under Review", "Verification Complete", "Property Card"][active]}
             </motion.div>
           </Reveal>
         </div>
@@ -517,53 +370,23 @@ function HowItWorks() {
 function HowItWorksDeck() {
   const cards = [
     ...STEPS.map((s, i) => ({ ...s, n: i + 1, img: null as string | null })),
-    {
-      icon: ShieldCheck,
-      title: "Your Property Card",
-      text: "View the relationship to a property recorded on your Urbn account.",
-      n: 4,
-      img: "/images/property-card-scene.webp",
-    },
+    { icon: ShieldCheck, title: "Your Property Card", text: "View the relationship to a property recorded on your Urbn account.", n: 4, img: "/images/property-card-scene.webp" },
   ];
   return (
     <Reveal className="mt-8 lg:hidden">
-      <Rail
-        grid="md:grid-cols-2 md:gap-4"
-        item="w-[82%] sm:w-[58%]"
-        dark
-        label="How it works"
-      >
+      <Rail grid="md:grid-cols-2 md:gap-4" item="w-[82%] sm:w-[58%]" dark label="How it works">
         {cards.map((c) => (
-          <article
-            key={c.title}
-            className={clsx(
-              "relative flex h-full min-h-[19rem] flex-col overflow-hidden rounded-[1.5rem] p-6",
-              c.n === 4 ? "bg-graphite" : "bg-urbn",
-            )}
-          >
+          <article key={c.title} className={clsx("relative flex h-full min-h-[19rem] flex-col overflow-hidden rounded-[1.5rem] p-6", c.n === 4 ? "bg-graphite" : "bg-urbn")}>
             <div className="flex items-center justify-between">
               <span className="grid size-12 place-items-center rounded-full bg-white text-urbn">
                 <c.icon className="size-5" />
               </span>
-              <span className="text-xs font-semibold tracking-widest text-white/60 uppercase">
-                {c.n < 4 ? `Step ${c.n} of 3` : "Optional"}
-              </span>
+              <span className="text-xs font-semibold tracking-widest text-white/60 uppercase">{c.n < 4 ? `Step ${c.n} of 3` : "Optional"}</span>
             </div>
-            {c.img && (
-              <img
-                src={c.img}
-                alt="Urbn Property Card"
-                loading="lazy"
-                className="mt-5 aspect-[1.6] w-full rounded-xl object-cover"
-              />
-            )}
+            {c.img && <img src={c.img} alt="Urbn Property Card" loading="lazy" className="mt-5 aspect-[1.6] w-full rounded-xl object-cover" />}
             <h3 className="mt-auto pt-6 font-display text-3xl">{c.title}</h3>
-            <p className="mt-2 text-[15px] leading-snug text-white/80">
-              {c.text}
-            </p>
-            <span className="pointer-events-none absolute -right-2 -bottom-8 font-display text-[9rem] leading-none text-white/10">
-              {c.n}
-            </span>
+            <p className="mt-2 text-[15px] leading-snug text-white/80">{c.text}</p>
+            <span className="pointer-events-none absolute -right-2 -bottom-8 font-display text-[9rem] leading-none text-white/10">{c.n}</span>
           </article>
         ))}
       </Rail>
@@ -614,12 +437,8 @@ function Audiences() {
         />
       </Reveal>
       <Reveal className="mt-8 md:mt-14">
-        <Rail
-          grid="md:grid-cols-3 md:items-center md:gap-5"
-          item="w-[80%] sm:w-[55%]"
-          label="Who Urbn is for"
-        >
-          {items.map((it) => (
+        <Rail grid="md:grid-cols-3 md:items-center md:gap-5" item="w-[80%] sm:w-[55%]" label="Who Urbn is for">
+        {items.map((it) => (
             <Link
               key={it.title}
               to={it.to}
@@ -630,54 +449,19 @@ function Audiences() {
                   : "bg-white shadow-[0_20px_60px_-30px_rgba(0,0,0,0.25)] ring-1 ring-black/5",
               )}
             >
-              <span
-                className={clsx(
-                  "grid size-12 place-items-center rounded-full",
-                  it.dark ? "bg-white text-ink" : "bg-blue-50 text-urbn",
-                )}
-              >
+              <span className={clsx("grid size-12 place-items-center rounded-full", it.dark ? "bg-white text-ink" : "bg-blue-50 text-urbn")}>
                 <it.icon className="size-5" />
               </span>
               <h3 className="mt-6 font-display text-2xl">{it.title}</h3>
-              <p
-                className={clsx(
-                  "mt-1 text-[15px]",
-                  it.dark ? "text-white/70" : "text-neutral-600",
-                )}
-              >
-                {it.kicker}
-              </p>
+              <p className={clsx("mt-1 text-[15px]", it.dark ? "text-white/70" : "text-neutral-600")}>{it.kicker}</p>
               <span className="mt-4 block h-px w-24 bg-current opacity-30" />
-              <p
-                className={clsx(
-                  "mt-4 text-sm leading-relaxed",
-                  it.dark ? "text-white/60" : "text-neutral-500",
-                )}
-              >
-                {it.text}
-              </p>
-              <img
-                src={it.img}
-                alt=""
-                loading="lazy"
-                className={clsx(
-                  "mt-6 h-28 w-full object-contain object-bottom",
-                  !it.dark && "mix-blend-multiply",
-                )}
-              />
-              <span
-                className={clsx(
-                  "mt-5 text-sm font-semibold",
-                  it.dark ? "text-blue-300" : "text-urbn",
-                )}
-              >
-                {it.link}{" "}
-                <span className="inline-block transition-transform group-hover:translate-x-1">
-                  →
-                </span>
+              <p className={clsx("mt-4 text-sm leading-relaxed", it.dark ? "text-white/60" : "text-neutral-500")}>{it.text}</p>
+              <img src={it.img} alt="" loading="lazy" className={clsx("mt-6 h-28 w-full object-contain object-bottom", !it.dark && "mix-blend-multiply")} />
+              <span className={clsx("mt-5 text-sm font-semibold", it.dark ? "text-blue-300" : "text-urbn")}>
+                {it.link} <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
               </span>
             </Link>
-          ))}
+        ))}
         </Rail>
       </Reveal>
     </section>
@@ -686,64 +470,36 @@ function Audiences() {
 
 function Growth({ listings }: { listings: Card[] }) {
   const stats = [
-    {
-      icon: MapPin,
-      label: "Starting in Ibadan",
-      text: "We'll announce new locations as coverage becomes available.",
-    },
-    {
-      icon: House,
-      label: "A Clearer Property Record",
-      text: "Follow submitted details and verification status in Urbn.",
-    },
-    {
-      icon: Users,
-      label: "Be Part of Urbn's Next City",
-      text: "Get an email when Urbn becomes available near you.",
-      to: "/download#launch-updates",
-    },
+    { icon: MapPin, label: "Starting in Ibadan", text: "We'll announce new locations as coverage becomes available." },
+    { icon: House, label: "A Clearer Property Record", text: "Follow submitted details and verification status in Urbn." },
+    { icon: Users, label: "Be Part of Urbn's Next City", text: "Get an email when Urbn becomes available near you.", to: "/download#launch-updates" },
   ];
   return (
     <section className="pt-4 pb-16 sm:pb-24 lg:pt-8 lg:pb-32">
       <Reveal className="container-x">
-        <SectionHeading
-          title="Start With Ibadan"
-          lede="Explore properties by area or see available listings on the map."
-        />
+        <SectionHeading title="Start With Ibadan" lede="Explore properties by area or see available listings on the map." />
       </Reveal>
       <div className="mt-8 lg:mt-12">
         <IbadanMap listings={listings} />
       </div>
       <Reveal className="container-x mt-10 lg:mt-16">
-        <Rail
-          grid="md:grid-cols-3 md:gap-10"
-          item="w-[72%] sm:w-[48%]"
-          label="Urbn in numbers"
-        >
-          {stats.map((s, i) => (
-            <div
-              key={i}
-              className="flex h-full gap-4 rounded-2xl bg-mist p-5 md:bg-transparent md:p-0"
-            >
-              <span className="grid size-12 shrink-0 place-items-center rounded-full bg-urbn text-white">
-                <s.icon className="size-5" />
-              </span>
-              <div>
-                <h3 className="font-display text-2xl leading-tight">
-                  {s.label}
-                </h3>
-                <p className="mt-1.5 text-sm text-neutral-500">{s.text}</p>
-                {s.to && (
-                  <Link
-                    to={s.to}
-                    className="mt-2 inline-block text-sm font-semibold text-urbn"
-                  >
-                    Get Launch Updates →
-                  </Link>
-                )}
-              </div>
+        <Rail grid="md:grid-cols-3 md:gap-10" item="w-[72%] sm:w-[48%]" label="Urbn in numbers">
+        {stats.map((s, i) => (
+          <div key={i} className="flex h-full gap-4 rounded-2xl bg-mist p-5 md:bg-transparent md:p-0">
+            <span className="grid size-12 shrink-0 place-items-center rounded-full bg-urbn text-white">
+              <s.icon className="size-5" />
+            </span>
+            <div>
+              <h3 className="font-display text-2xl leading-tight">{s.label}</h3>
+              <p className="mt-1.5 text-sm text-neutral-500">{s.text}</p>
+              {s.to && (
+                <Link to={s.to} className="mt-2 inline-block text-sm font-semibold text-urbn">
+                  Get Launch Updates →
+                </Link>
+              )}
             </div>
-          ))}
+          </div>
+        ))}
         </Rail>
       </Reveal>
     </section>
@@ -764,31 +520,18 @@ function FeaturedListings({ listings }: { listings: Card[] }) {
               lede="Browse available listings and check each property's current Urbn verification status."
             />
           </Reveal>
-          <ButtonLink
-            to="/listings"
-            variant="dark"
-            className="hidden shrink-0 md:inline-flex"
-          >
+          <ButtonLink to="/listings" variant="dark" className="hidden shrink-0 md:inline-flex">
             Browse Listings
           </ButtonLink>
         </div>
         <Reveal className="mt-8 lg:mt-12">
-          <Rail
-            grid="md:grid-cols-2 md:gap-5 lg:grid-cols-4"
-            item="w-[82%] sm:w-[52%]"
-            label="Featured verified listings"
-          >
+          <Rail grid="md:grid-cols-2 md:gap-5 lg:grid-cols-4" item="w-[82%] sm:w-[52%]" label="Featured verified listings">
             {featured.map((l) => (
               <ListingCard key={l.id} listing={l} />
             ))}
           </Rail>
         </Reveal>
-        <ButtonLink
-          to="/listings"
-          variant="dark"
-          size="lg"
-          className="mt-6 w-full md:hidden"
-        >
+        <ButtonLink to="/listings" variant="dark" size="lg" className="mt-6 w-full md:hidden">
           Browse Listings
         </ButtonLink>
       </div>
@@ -801,49 +544,24 @@ function Stories() {
     <section className="bg-ink py-16 text-white sm:py-24 lg:py-32">
       <div className="container-x">
         <Reveal>
-          <SectionHeading
-            dark
-            title="Stories From Urbn"
-            lede="Product updates, property insights and the people building Urbn."
-          />
+          <SectionHeading dark title="Stories From Urbn" lede="Product updates, property insights and the people building Urbn." />
         </Reveal>
         <Reveal className="mt-8 md:mt-14">
-          <Rail
-            grid="md:grid-cols-3 md:gap-5"
-            item="w-[80%] sm:w-[55%]"
-            dark
-            label="Stories"
-          >
-            {STORIES.slice(0, 6).map((s) => (
-              <Link
-                key={s.slug}
-                to={`/blog/${s.slug}`}
-                className="group flex h-full flex-col rounded-card bg-white p-3 text-ink transition-transform duration-500 active:scale-[0.98] lg:hover:-translate-y-1.5"
-              >
+          <Rail grid="md:grid-cols-3 md:gap-5" item="w-[80%] sm:w-[55%]" dark label="Stories">
+          {STORIES.slice(0, 6).map((s) => (
+              <Link key={s.slug} to={`/blog/${s.slug}`} className="group flex h-full flex-col rounded-card bg-white p-3 text-ink transition-transform duration-500 active:scale-[0.98] lg:hover:-translate-y-1.5">
                 <div className="overflow-hidden rounded-[0.9rem]">
-                  <img
-                    src={s.image}
-                    alt={s.imageAlt}
-                    loading="lazy"
-                    className={`aspect-[1.55] w-full ${coverFit(s)} transition-transform duration-700 group-hover:scale-105`}
-                  />
+                  <img src={s.image} alt={s.imageAlt} loading="lazy" className={`aspect-[1.55] w-full ${coverFit(s)} transition-transform duration-700 group-hover:scale-105`} />
                 </div>
                 <div className="flex flex-1 flex-col px-2 pt-4 pb-2">
-                  <h3 className="font-display text-xl leading-tight">
-                    {s.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-neutral-600">
-                    {s.excerpt}
-                  </p>
+                  <h3 className="font-display text-xl leading-tight">{s.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-neutral-600">{s.excerpt}</p>
                   <span className="mt-auto self-end pt-5 text-sm font-semibold text-urbn">
-                    Read Story{" "}
-                    <span className="inline-block transition-transform group-hover:translate-x-1">
-                      →
-                    </span>
+                    Read Story <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
                   </span>
                 </div>
               </Link>
-            ))}
+          ))}
           </Rail>
         </Reveal>
       </div>
