@@ -21,7 +21,7 @@ import { AnimatePresence, motion, useInView } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { CtaBanner } from "~/components/cta-banner";
 import { FaqSection } from "~/components/faq";
-import { SceneFrame } from "~/components/city-scene";
+import { SceneFrame, SkyClouds } from "~/components/city-scene";
 import { EASE, Reveal, Rings, Stagger, StaggerItem, WordsReveal } from "~/components/motion";
 import { Plaque } from "~/components/plaque";
 import { Rail } from "~/components/mobile";
@@ -118,7 +118,8 @@ export default function DpiPage() {
 
 function Hero() {
   return (
-    <section className="relative overflow-hidden">
+    <section className="relative isolate overflow-hidden bg-white">
+      <SkyClouds className="absolute inset-x-0 top-0 -z-10 h-full w-full" />
       <div className="container-x grid items-center gap-10 pt-12 pb-16 lg:grid-cols-[1fr_1.1fr] lg:pt-16 lg:pb-24">
         <div>
           <WordsReveal text="Every Property Needs a Connected Record." highlight={["Connected", "Record."]} className="text-5xl leading-[1] sm:text-6xl lg:text-7xl" />
