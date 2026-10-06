@@ -3,6 +3,7 @@
 // areas and categories so search engines can reach every activity page.
 import { MapPin } from "lucide-react";
 import { data, Link } from "react-router";
+import { SceneFrame, SkyClouds } from "~/components/city-scene";
 import { CtaBanner } from "~/components/cta-banner";
 import { Reveal } from "~/components/motion";
 import { NearbyListCard, SampleBadge } from "~/components/nearby";
@@ -80,34 +81,34 @@ export default function NearbyHub({ loaderData }: Route.ComponentProps) {
 
   return (
     <>
-      <section className="relative overflow-hidden bg-ink text-white">
-        <div aria-hidden className="pattern-u absolute inset-0 bg-white/[0.04]" />
-        <div className="container-x relative py-16 sm:py-24">
+      <section className="relative isolate overflow-hidden bg-white">
+        <SkyClouds className="absolute inset-x-0 top-0 -z-10 h-full w-full" />
+        <div className="container-x relative pt-10 pb-6 sm:pt-16">
           <Reveal>
-            <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-sm text-neutral-400">
-              <Link to="/nearby" className="hover:text-white">Nearby</Link>
+            <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-sm text-neutral-500">
+              <Link to="/nearby" className="hover:text-ink">Nearby</Link>
               <span aria-hidden>/</span>
-              {type ? <Link to={hubPath(area.slug)} className="hover:text-white">{area.name}</Link> : <span className="text-white">{area.name}</span>}
+              {type ? <Link to={hubPath(area.slug)} className="hover:text-ink">{area.name}</Link> : <span className="text-ink">{area.name}</span>}
               {type && (
                 <>
                   <span aria-hidden>/</span>
-                  <span className="text-white">{ACTIVITY_META[type].plural}</span>
+                  <span className="text-ink">{ACTIVITY_META[type].plural}</span>
                 </>
               )}
             </nav>
-            <p className="eyebrow mt-6 text-blue-400">
+            <p className="eyebrow mt-6 text-urbn">
               <MapPin className="size-4" /> Nearby
             </p>
             <h1 className="mt-4 max-w-3xl text-5xl leading-[1] sm:text-7xl">
-              {type ? ACTIVITY_META[type].plural : "Places Nearby"} in <span className="text-blue-400">{area.name}</span>
+              {type ? ACTIVITY_META[type].plural : "Places Nearby"} in <span className="text-urbn">{area.name}</span>
             </h1>
-            <p className="mt-6 max-w-xl text-lg text-neutral-400">
+            <p className="lede mt-6 max-w-xl">
               {result.meta.total > 0
                 ? `${result.meta.total} ${plural.toLowerCase()} recorded at properties in ${area.kind === "city" ? area.name : `${area.name}, ${area.city}`}. Open one for its address, contact details and directions.`
                 : `No ${plural.toLowerCase()} are recorded in ${area.name} yet.`}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <ButtonLink to={`/nearby?area=${area.slug}${type ? `&type=${type}` : ""}#search`} variant="light">
+              <ButtonLink to={`/nearby?area=${area.slug}${type ? `&type=${type}` : ""}#search`} variant="dark">
                 Explore on the Map
               </ButtonLink>
             </div>
@@ -117,13 +118,15 @@ export default function NearbyHub({ loaderData }: Route.ComponentProps) {
               <Link
                 key={a.slug}
                 to={hubPath(a.slug, type ?? undefined)}
-                className={`rounded-full px-4 py-2 text-sm transition ${a.slug === area.slug ? "bg-white text-ink" : "bg-white/[0.07] text-neutral-300 hover:bg-white/15"}`}
+                className={`rounded-full px-4 py-2 text-sm transition ${a.slug === area.slug ? "bg-ink text-white" : "bg-mist text-neutral-700 hover:bg-fog"}`}
               >
                 {a.name}
               </Link>
             ))}
           </nav>
         </div>
+        {/* The same city, with this area's own landmarks and its places pinned. */}
+        <SceneFrame focus="area" area={area.slug} className="mt-2" />
       </section>
 
       <section className="bg-[#F9FAFB] py-12 sm:py-16">

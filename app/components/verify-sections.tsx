@@ -1,26 +1,14 @@
 import { motion } from "motion/react";
+import { SceneFrame, SkyClouds } from "./city-scene";
 import { DpiSearch } from "./dpi-search";
 import { EASE, Reveal, WordsReveal } from "./motion";
 import { ButtonLink } from "./ui";
 
 export function VerifyHero({ defaultValue = "", compact = false }: { defaultValue?: string; compact?: boolean }) {
   return (
-    <section className="relative isolate overflow-hidden bg-[#7fb6e6]">
-      <motion.img
-        src="/images/hero-verify.webp"
-        srcSet="/images/hero-verify-768.webp 768w, /images/hero-verify.webp 1440w"
-        sizes="100vw"
-        alt=""
-        aria-hidden
-        fetchPriority="high"
-        className="absolute inset-0 -z-10 size-full object-cover object-[60%_center]"
-        initial={{ scale: 1.08 }}
-        animate={{ scale: 1 }}
-        transition={{ duration: 2, ease: EASE }}
-      />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-white/50 via-white/15 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 -z-10 h-2/5 bg-gradient-to-t from-white via-white/60 to-transparent" />
-      <div className={`container-x flex flex-col items-center text-center ${compact ? "py-14 sm:py-20" : "pt-16 pb-28 sm:pt-24 sm:pb-36"}`}>
+    <section className="relative isolate overflow-hidden bg-white">
+      <SkyClouds className="absolute inset-x-0 top-0 -z-10 h-full w-full" />
+      <div className={`container-x flex flex-col items-center text-center ${compact ? "py-14 sm:py-20" : "pt-12 pb-4 sm:pt-20"}`}>
         {compact ? (
           <h1 className="text-4xl sm:text-5xl">Check a Property Record</h1>
         ) : (
@@ -43,6 +31,17 @@ export function VerifyHero({ defaultValue = "", compact = false }: { defaultValu
           <DpiSearch variant="card" defaultValue={defaultValue} />
         </motion.div>
       </div>
+      {/* The homepage street, closed in on the scan and the Verified result. */}
+      {!compact && (
+        <motion.div
+          className="mx-auto max-w-5xl"
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 1, ease: EASE }}
+        >
+          <SceneFrame focus="verify" />
+        </motion.div>
+      )}
     </section>
   );
 }

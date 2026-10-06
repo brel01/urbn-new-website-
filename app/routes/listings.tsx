@@ -9,6 +9,7 @@ import { ListingCard } from "~/components/listing-card";
 import { AiSearchPanel } from "~/components/marketplace/ai-search";
 import { FilterPanel } from "~/components/marketplace/filter-panel";
 import { MarketplaceMap } from "~/components/marketplace/map-view";
+import { SceneFrame, SkyClouds } from "~/components/city-scene";
 import { EASE, WordsReveal } from "~/components/motion";
 import { ButtonLink } from "~/components/ui";
 import { activeFilterCount, filtersToParams, parseFilters } from "~/lib/marketplace/filters";
@@ -344,39 +345,29 @@ export default function Listings({ loaderData }: Route.ComponentProps) {
 
 function Hero() {
   return (
-    <section className="relative isolate overflow-hidden bg-mist">
-      <motion.div
-        className="absolute inset-y-0 right-0 -z-10 w-full lg:w-[70%]"
-        initial={{ opacity: 0, scale: 1.05 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.4, ease: EASE }}
-      >
-        <img
-          src="/images/hero-billboard.webp"
-          srcSet="/images/hero-billboard-640.webp 640w, /images/hero-billboard.webp 992w"
-          sizes="(min-width: 1024px) 70vw, 100vw"
-          alt="Verified apartment building with an Urbn DPI billboard"
-          fetchPriority="high"
-          className="size-full object-cover object-right"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-mist via-mist/70 to-transparent lg:via-mist/10" />
-        <div className="absolute inset-0 bg-mist/75 lg:hidden" />
-      </motion.div>
-      <div className="container-x flex min-h-[18rem] flex-col justify-end pt-16 pb-8 sm:min-h-[30rem] sm:pt-24 sm:pb-12 lg:min-h-[32rem] lg:justify-center lg:py-20">
-        <WordsReveal text="Find the Right Property for You." className="max-w-xl text-[2.6rem] leading-[1] sm:text-7xl" />
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.8, ease: EASE }}>
-          <p className="mt-3 max-w-md text-[15px] text-neutral-700 sm:mt-6 sm:text-lg">
-            Explore available homes, shops, offices and other spaces, compare the details and check each property's
-            current verification status before taking the next step.
-          </p>
-          <div className="mt-8 hidden flex-wrap gap-3 sm:flex">
-            <a href="#search" className="inline-flex h-11 items-center rounded-[10px] bg-ink px-5 text-[15px] font-medium text-white transition hover:bg-neutral-800">
-              Search Listings
-            </a>
-            <ButtonLink to="/dpi" variant="dark" arrow={false}>
-              What Is DPI?
-            </ButtonLink>
-          </div>
+    <section className="relative isolate overflow-hidden bg-white">
+      <SkyClouds className="absolute inset-x-0 top-0 -z-10 h-full w-full" />
+      <div className="container-x grid items-center gap-6 pt-10 pb-6 sm:pt-16 lg:grid-cols-[0.85fr_1.15fr] lg:gap-10 lg:py-16">
+        <div>
+          <WordsReveal text="Find the Right Property for You." className="max-w-xl text-[2.6rem] leading-[1] sm:text-7xl" />
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.8, ease: EASE }}>
+            <p className="mt-3 max-w-md text-[15px] text-neutral-700 sm:mt-6 sm:text-lg">
+              Explore available homes, shops, offices and other spaces, compare the details and check each property's
+              current verification status before taking the next step.
+            </p>
+            <div className="mt-8 hidden flex-wrap gap-3 sm:flex">
+              <a href="#search" className="inline-flex h-11 items-center rounded-[10px] bg-ink px-5 text-[15px] font-medium text-white transition hover:bg-neutral-800">
+                Search Listings
+              </a>
+              <ButtonLink to="/dpi" variant="dark" arrow={false}>
+                What Is DPI?
+              </ButtonLink>
+            </div>
+          </motion.div>
+        </div>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.1, ease: EASE }}>
+          {/* The homepage street, its "To Let" boards flipping to Verified. */}
+          <SceneFrame focus="listings" />
         </motion.div>
       </div>
     </section>

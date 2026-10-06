@@ -21,6 +21,7 @@ import { AnimatePresence, motion, useInView } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { CtaBanner } from "~/components/cta-banner";
 import { FaqSection } from "~/components/faq";
+import { SceneFrame } from "~/components/city-scene";
 import { EASE, Reveal, Rings, Stagger, StaggerItem, WordsReveal } from "~/components/motion";
 import { Plaque } from "~/components/plaque";
 import { Rail } from "~/components/mobile";
@@ -142,15 +143,8 @@ function Hero() {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 1.2, ease: EASE, delay: 0.2 }}
         >
-          <div className="absolute inset-[10%] -z-10 rounded-full bg-blue-100 blur-3xl" />
-          <img
-            src="/images/house-plaque.webp"
-            srcSet="/images/house-plaque-640.webp 640w, /images/house-plaque.webp 792w"
-            sizes="(min-width: 1024px) 50vw, 100vw"
-            alt="Modern house with an Urbn DPI plaque mounted on its front wall"
-            fetchPriority="high"
-            className="w-full mix-blend-multiply"
-          />
+          {/* The home from the homepage street, close up, getting its Urbn plaque and DPI. */}
+          <SceneFrame focus="identity" />
         </motion.div>
       </div>
     </section>

@@ -9,6 +9,7 @@ import { Check, Filter, List, LoaderCircle, Map as MapIcon, Navigation, Search, 
 import { AnimatePresence, motion } from "motion/react";
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, type ShouldRevalidateFunctionArgs, useSearchParams } from "react-router";
+import { SceneFrame, SkyClouds } from "~/components/city-scene";
 import { EASE, WordsReveal } from "~/components/motion";
 import { NearbyCategoryChips, NearbyDetail, NearbyListCard, NearbyRowCard, NearbySelectedCard, SampleBadge } from "~/components/nearby";
 import type { MapArea } from "~/components/nearby-map";
@@ -419,39 +420,29 @@ function BrowseByArea() {
 
 function Hero() {
   return (
-    <section className="relative isolate overflow-hidden bg-mist">
-      <motion.div
-        className="absolute inset-y-0 right-0 -z-10 w-full lg:w-[70%]"
-        initial={{ opacity: 0, scale: 1.05 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.4, ease: EASE }}
-      >
-        <img
-          src="/images/hero-lagos.webp"
-          srcSet="/images/hero-lagos-768.webp 768w, /images/hero-lagos.webp 1440w"
-          sizes="(min-width: 1024px) 70vw, 100vw"
-          alt="A busy Nigerian street lined with shops, offices and homes"
-          fetchPriority="high"
-          className="size-full object-cover object-[60%_center]"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-mist via-mist/70 to-transparent lg:via-mist/10" />
-        <div className="absolute inset-0 bg-mist/75 lg:hidden" />
-      </motion.div>
-      <div className="container-x flex min-h-[18rem] flex-col justify-end pt-16 pb-8 sm:min-h-[30rem] sm:pt-24 sm:pb-12 lg:min-h-[32rem] lg:justify-center lg:py-20">
-        <WordsReveal text="Discover What Is Around You." className="max-w-xl text-[2.6rem] leading-[1] sm:text-7xl" />
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.8, ease: EASE }}>
-          <p className="mt-3 max-w-md text-[15px] text-neutral-700 sm:mt-6 sm:text-lg">
-            Find the businesses, schools, clinics, restaurants and other places recorded at properties near you, then get
-            directions in a tap.
-          </p>
-          <div className="mt-8 hidden flex-wrap gap-3 sm:flex">
-            <a href="#search" className="inline-flex h-11 items-center rounded-[10px] bg-ink px-5 text-[15px] font-medium text-white transition hover:bg-neutral-800">
-              Explore Nearby
-            </a>
-            <ButtonLink to="/download" variant="dark" arrow={false}>
-              Get the App
-            </ButtonLink>
-          </div>
+    <section className="relative isolate overflow-hidden bg-white">
+      <SkyClouds className="absolute inset-x-0 top-0 -z-10 h-full w-full" />
+      <div className="container-x grid items-center gap-6 pt-10 pb-6 sm:pt-16 lg:grid-cols-[0.85fr_1.15fr] lg:gap-10 lg:py-16">
+        <div>
+          <WordsReveal text="Discover What Is Around You." className="max-w-xl text-[2.6rem] leading-[1] sm:text-7xl" />
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.8, ease: EASE }}>
+            <p className="mt-3 max-w-md text-[15px] text-neutral-700 sm:mt-6 sm:text-lg">
+              Find the businesses, schools, clinics, restaurants and other places recorded at properties near you, then get
+              directions in a tap.
+            </p>
+            <div className="mt-8 hidden flex-wrap gap-3 sm:flex">
+              <a href="#search" className="inline-flex h-11 items-center rounded-[10px] bg-ink px-5 text-[15px] font-medium text-white transition hover:bg-neutral-800">
+                Explore Nearby
+              </a>
+              <ButtonLink to="/download" variant="dark" arrow={false}>
+                Get the App
+              </ButtonLink>
+            </div>
+          </motion.div>
+        </div>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.1, ease: EASE }}>
+          {/* The homepage street, with Nearby pins rising over its places. */}
+          <SceneFrame focus="nearby" />
         </motion.div>
       </div>
     </section>
