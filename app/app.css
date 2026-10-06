@@ -151,3 +151,123 @@
     display: none;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Homepage city scene (components/city-scene.tsx). Each element's resting state
+   is its finished look; animations only add motion on top of it.
+   The keke, its wheels and the Verified badge share one 16s cycle: drive in,
+   stop at the home while it shows Verified, drive on. */
+.city-scene .city-wheel-keke,
+.city-scene .city-wheel-car,
+.city-scene .city-plaque,
+.city-scene .city-pin,
+.city-scene .city-verified,
+.city-scene .city-flag {
+  transform-box: fill-box;
+}
+.city-scene .city-keke {
+  animation: city-drive 16s infinite;
+}
+.city-scene .city-wheel-keke {
+  transform-origin: center;
+  animation: city-wheel-keke 16s infinite;
+}
+.city-scene .city-bob {
+  animation: city-bob 0.45s ease-in-out infinite alternate;
+}
+.city-scene .city-verified {
+  transform-origin: 50% 100%;
+  animation: city-verified 16s infinite;
+}
+.city-scene .city-car {
+  animation: city-car 11s linear infinite;
+  animation-delay: -3s;
+}
+.city-scene .city-wheel-car {
+  transform-origin: center;
+  animation: city-spin 0.5s linear infinite reverse;
+}
+.city-scene .city-plaque {
+  transform-origin: center;
+  animation: city-pop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.city-scene .city-glint {
+  animation: city-glint 4s ease-in-out 2.4s infinite;
+}
+.city-scene .city-pin {
+  transform-origin: 50% 100%;
+  animation:
+    city-rise 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both,
+    city-float 3.4s ease-in-out infinite;
+}
+.city-scene .city-cloud {
+  animation: city-cloud 22s ease-in-out infinite alternate;
+}
+.city-scene .city-cloud-slow {
+  animation-duration: 34s;
+  animation-direction: alternate-reverse;
+}
+.city-scene .city-blink {
+  animation: city-blink 2.4s steps(1) infinite;
+}
+.city-scene .city-flag {
+  transform-origin: 0 50%;
+  animation: city-flag 1.6s ease-in-out infinite alternate;
+}
+.city-scene[data-paused] * {
+  animation-play-state: paused !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .city-scene * {
+    animation: none !important;
+  }
+}
+
+@keyframes city-drive {
+  0% { transform: translateX(-820px); animation-timing-function: cubic-bezier(0.2, 0, 0.3, 1); }
+  38%, 56% { transform: translateX(0); animation-timing-function: cubic-bezier(0.6, 0, 0.9, 0.6); }
+  100% { transform: translateX(1120px); }
+}
+/* Matches city-drive: about 11.9 turns to arrive, 16.2 more to leave (r = 11). */
+@keyframes city-wheel-keke {
+  0% { transform: rotate(0deg); animation-timing-function: cubic-bezier(0.2, 0, 0.3, 1); }
+  38%, 56% { transform: rotate(4270deg); animation-timing-function: cubic-bezier(0.6, 0, 0.9, 0.6); }
+  100% { transform: rotate(10100deg); }
+}
+@keyframes city-verified {
+  0%, 39% { opacity: 0; transform: translateY(10px) scale(0.6); }
+  43%, 62% { opacity: 1; transform: none; animation-timing-function: ease-in; }
+  67%, 100% { opacity: 0; transform: translateY(-6px) scale(0.9); }
+}
+@keyframes city-car {
+  from { transform: translateX(490px); }
+  to { transform: translateX(-1510px); }
+}
+@keyframes city-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes city-bob {
+  to { transform: translateY(-1.5px); }
+}
+@keyframes city-pop {
+  from { opacity: 0; transform: scale(0.2); }
+}
+@keyframes city-rise {
+  from { opacity: 0; transform: translateY(18px) scale(0.4); }
+}
+@keyframes city-float {
+  50% { transform: translateY(-6px); }
+}
+@keyframes city-glint {
+  0% { transform: skewX(-20deg) translateX(0); }
+  30%, 100% { transform: skewX(-20deg) translateX(90px); }
+}
+@keyframes city-cloud {
+  to { transform: translateX(-60px); }
+}
+@keyframes city-blink {
+  50% { opacity: 0.25; }
+}
+@keyframes city-flag {
+  to { transform: skewY(4deg) scaleX(0.94); }
+}

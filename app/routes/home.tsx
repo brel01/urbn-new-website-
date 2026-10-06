@@ -3,6 +3,7 @@ import { Briefcase, FileUp, House, Search, ShieldCheck, Stamp, Users, MapPin } f
 import { motion, useScroll, useTransform } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
+import { CityScene } from "~/components/city-scene";
 import { CtaBanner } from "~/components/cta-banner";
 import { DpiSearch } from "~/components/dpi-search";
 import { FaqSection } from "~/components/faq";
@@ -59,36 +60,34 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 function Hero() {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "18%"]);
-  const fade = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+  // Layers drift at different speeds as the hero scrolls away (desktop only).
+  const far = useTransform(scrollYProgress, [0, 1], [0, 70]);
+  const mid = useTransform(scrollYProgress, [0, 1], [0, 28]);
+  const fade = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
   const desktop = useIsDesktop();
 
   return (
-    <section ref={ref} className="relative isolate overflow-hidden bg-white lg:bg-[#9fc6ea]">
-      <motion.div className="absolute inset-x-0 top-0 -z-10 h-[50svh] lg:inset-0 lg:h-auto" style={desktop ? { y } : undefined}>
-        <picture>
-          <source media="(max-width: 1023px)" srcSet="/images/hero-mobile.webp" />
-          <motion.img
-            src="/images/hero-lagos.webp"
-            srcSet="/images/hero-lagos-768.webp 768w, /images/hero-lagos.webp 1440w"
-            sizes="100vw"
-            alt="A modern home carrying an Urbn DPI plaque, set in an illustrated Nigerian city"
-            fetchPriority="high"
-            className="size-full object-cover object-[50%_80%] lg:object-[50%_70%]"
-            initial={{ scale: 1.12 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 2.4, ease: EASE }}
-          />
-        </picture>
-        {/* phones: art melts into a white "sheet" holding the content */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent from-60% to-white lg:hidden" />
-        <div className="absolute inset-0 hidden bg-gradient-to-b from-white/55 via-white/10 to-transparent lg:block" />
-        <div className="absolute inset-x-0 bottom-0 hidden h-1/3 bg-gradient-to-t from-black/25 to-transparent lg:block" />
+    <section ref={ref} className="relative isolate flex flex-col overflow-hidden bg-white">
+      {/* Sky colour behind the text (desktop) or behind the scene (phones). */}
+      <div aria-hidden className="absolute inset-x-0 top-0 -z-10 h-[clamp(17rem,44svh,23rem)] bg-[#FFF4DE] lg:h-[calc(100%-6vw)]" />
+
+      {/* The illustrated Ibadan street: under the text on desktop, above it on phones. */}
+      <motion.div
+        className="pointer-events-none relative order-first h-[clamp(17rem,44svh,23rem)] overflow-hidden lg:order-last lg:-mt-[19vw] lg:h-auto lg:overflow-visible"
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.2, ease: EASE }}
+      >
+        <CityScene
+          far={desktop ? far : undefined}
+          mid={desktop ? mid : undefined}
+          className="absolute bottom-0 left-1/2 h-full w-auto max-w-none -translate-x-[31%] lg:static lg:block lg:h-auto lg:w-full lg:translate-x-0"
+        />
       </motion.div>
 
       <motion.div
         style={desktop ? { opacity: fade } : undefined}
-        className="container-x flex flex-col pt-[44svh] pb-10 lg:min-h-[48rem] lg:items-center lg:pt-24 lg:pb-40 lg:text-center"
+        className="container-x relative z-10 flex flex-col pt-2 pb-10 lg:items-center lg:pt-20 lg:pb-0 lg:text-center"
       >
         <motion.span
           className="mb-4 inline-flex w-fit items-center gap-2 rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold shadow-sm lg:hidden"

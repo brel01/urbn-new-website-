@@ -48,7 +48,7 @@ export function Header() {
                     to={item.to}
                     className={({ isActive }) =>
                       clsx(
-                        "relative rounded-full px-3.5 py-2 text-[14.5px] transition-colors",
+                        "relative rounded-full px-2.5 py-2 text-[13.5px] whitespace-nowrap transition-colors xl:px-3.5 xl:text-[14.5px]",
                         isActive ? "text-ink" : "text-neutral-600 hover:text-ink",
                       )
                     }
@@ -118,7 +118,7 @@ function MoreMenu() {
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-haspopup="true"
-        className={clsx("inline-flex items-center gap-1 rounded-full px-3.5 py-2 text-[14.5px] transition-colors", active || open ? "text-ink" : "text-neutral-600 hover:text-ink")}
+        className={clsx("inline-flex items-center gap-1 rounded-full px-2.5 py-2 text-[13.5px] whitespace-nowrap transition-colors xl:px-3.5 xl:text-[14.5px]", active || open ? "text-ink" : "text-neutral-600 hover:text-ink")}
       >
         More <ChevronDown className={clsx("size-4 transition-transform", open && "rotate-180")} />
       </button>
