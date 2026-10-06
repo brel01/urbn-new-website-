@@ -4,6 +4,11 @@
 // its plaque, the selection box, and the Urbn fleet. Grey is only for depth (the
 // rooftops and towers behind the street) and the clouds.
 //
+// One world, a different focus per page (`focus` prop): Home shows the full street;
+// Property Identity closes in on the home getting its plaque; Verify on the scan and
+// Verified; Nearby on the street with pins rising; Listings on "To Let" signs flipping
+// to Verified; area pages swap in each area's own landmarks.
+//
 // Story: what happens around a property once it's onboarded. A visitor scans the
 // home's DPI plaque and its record comes back Verified, an Urbn drone delivers a
 // parcel to its door, black Nearby pins mark the places around it, and the street
@@ -317,6 +322,302 @@ function BusStop() {
   );
 }
 
+// --- area landmarks (left slot ~x 90-260, right slot ~x 1280-1570, baseline 500) -------
+const TXT = {
+  fontFamily: "Inter Variable, ui-sans-serif, system-ui, sans-serif",
+  fontWeight: 700,
+} as const;
+
+/** Bodija: the University of Ibadan clock tower and Bodija Market's sheds. */
+function Bodija() {
+  return (
+    <g>
+      <path d="M140 118 L173 70 L206 118Z" {...LINE} />
+      <rect x={146} y={118} width={54} height={382} {...LINE} />
+      <circle cx={173} cy={156} r={16} {...LINE} strokeWidth={4} />
+      <path d="M173 156 V145 M173 156 L181 160" stroke={INK} strokeWidth={3} />
+      {[200, 250, 300, 350, 400, 450].map((y) => (
+        <rect key={y} x={166} y={y} width={14} height={26} fill={INK} />
+      ))}
+      {[1290, 1380, 1470].map((x) => (
+        <g key={x}>
+          <path d={`M${x - 6} 432 L${x + 45} 404 L${x + 96} 432Z`} {...LINE} />
+          <rect x={x} y={432} width={90} height={68} {...LINE} />
+          <path
+            d={`M${x + 10} 452 H${x + 80} M${x + 10} 470 H${x + 80}`}
+            {...THIN}
+          />
+        </g>
+      ))}
+      <rect x={1330} y={372} width={170} height={26} fill={INK} />
+      <text
+        x={1415}
+        y={390}
+        textAnchor="middle"
+        fontSize={13}
+        fill="#fff"
+        {...TXT}
+      >
+        BODIJA MARKET
+      </text>
+    </g>
+  );
+}
+
+/** Akobo: the estate water tower and Akobo's community hall. */
+function Akobo() {
+  return (
+    <g>
+      <path
+        d="M140 220 L128 500 M206 220 L218 500 M136 300 L210 380 M210 300 L136 380 M132 400 L214 470 M214 400 L132 470"
+        stroke={INK}
+        strokeWidth={4}
+        fill="none"
+      />
+      <rect x={118} y={150} width={110} height={70} rx={10} {...LINE} />
+      <path d="M118 176 H228" {...THIN} />
+      <path d="M1296 420 L1424 344 L1552 420Z" {...LINE} />
+      <rect x={1304} y={420} width={240} height={80} {...LINE} />
+      <rect x={1344} y={430} width={160} height={22} fill={INK} />
+      <text
+        x={1424}
+        y={446}
+        textAnchor="middle"
+        fontSize={12}
+        fill="#fff"
+        {...TXT}
+      >
+        COMMUNITY HALL
+      </text>
+      <rect x={1406} y={462} width={36} height={38} fill={INK} />
+      {[1322, 1366, 1462, 1506].map((x) => (
+        <rect key={x} x={x} y={464} width={22} height={18} fill={INK} />
+      ))}
+    </g>
+  );
+}
+
+/** Jericho: palms of the GRA and the specialist hospital. */
+function Jericho() {
+  const palm = (x: number, h: number) => (
+    <g key={x}>
+      <path
+        d={`M${x} 500 Q${x - 8} ${500 - h / 2} ${x + 4} ${500 - h}`}
+        stroke={INK}
+        strokeWidth={5}
+        fill="none"
+      />
+      <path
+        d={`M${x + 4} ${500 - h} q-30 -6 -44 18 M${x + 4} ${500 - h} q30 -6 44 18 M${x + 4} ${500 - h} q-22 -24 -40 -16 M${x + 4} ${500 - h} q22 -24 40 -16 M${x + 4} ${500 - h} q0 -22 4 -30`}
+        stroke={INK}
+        strokeWidth={4}
+        fill="none"
+      />
+    </g>
+  );
+  return (
+    <g>
+      {palm(120, 300)}
+      {palm(190, 230)}
+      <rect x={1300} y={330} width={180} height={170} {...LINE} />
+      <rect x={1480} y={410} width={84} height={90} {...LINE} />
+      <rect x={1366} y={300} width={48} height={30} {...LINE} strokeWidth={3} />
+      <path
+        d="M1385 304 h10 v8 h8 v10 h-8 v8 h-10 v-8 h-8 v-10 h8z"
+        transform="translate(0 -2) scale(1 0.92)"
+        fill={INK}
+      />
+      {[350, 386, 422].map((y) =>
+        [1316, 1352, 1416, 1452].map((x) => (
+          <rect
+            key={`${x}-${y}`}
+            x={x}
+            y={y}
+            width={20}
+            height={18}
+            fill={INK}
+          />
+        )),
+      )}
+      <rect x={1374} y={460} width={32} height={40} fill={INK} />
+      {[1496, 1530].map((x) => (
+        <rect key={x} x={x} y={430} width={20} height={18} fill={INK} />
+      ))}
+    </g>
+  );
+}
+
+/** Oluyole: the industrial estate gate and a factory with chimneys. */
+function Oluyole() {
+  return (
+    <g>
+      <rect x={100} y={404} width={18} height={96} {...LINE} />
+      <rect x={228} y={404} width={18} height={96} {...LINE} />
+      <rect x={92} y={380} width={162} height={26} fill={INK} />
+      <text
+        x={173}
+        y={398}
+        textAnchor="middle"
+        fontSize={11}
+        fill="#fff"
+        {...TXT}
+      >
+        OLUYOLE ESTATE
+      </text>
+      <rect x={1498} y={300} width={22} height={200} {...LINE} />
+      <rect x={1536} y={330} width={22} height={170} {...LINE} />
+      <g fill={CLOUD}>
+        <circle cx={1509} cy={282} r={12} className="city-cloud" />
+        <circle
+          cx={1528}
+          cy={262}
+          r={16}
+          className="city-cloud city-cloud-slow"
+        />
+        <circle cx={1547} cy={314} r={10} className="city-cloud" />
+      </g>
+      <path
+        d="M1290 500 V430 L1330 404 V430 L1370 404 V430 L1410 404 V430 L1450 404 V430 L1490 404 V500Z"
+        {...LINE}
+      />
+      {[1302, 1342, 1382, 1422, 1462].map((x) => (
+        <rect key={x} x={x} y={446} width={18} height={16} fill={INK} />
+      ))}
+      <rect x={1380} y={470} width={40} height={30} fill={INK} />
+    </g>
+  );
+}
+
+/** Samonda: the central mosque and The Polytechnic's clock tower block. */
+function Samonda() {
+  return (
+    <g>
+      <rect x={96} y={430} width={110} height={70} {...LINE} />
+      <path d="M116 430 A35 35 0 0 1 186 430Z" {...LINE} />
+      <line x1={151} x2={151} y1={395} y2={380} stroke={INK} strokeWidth={4} />
+      <rect x={212} y={330} width={18} height={170} {...LINE} />
+      <path d="M208 330 L221 304 L234 330Z" {...LINE} />
+      <path d="M136 470 a15 15 0 0 1 30 0 V500 H136Z" fill={INK} />
+      <rect x={1296} y={392} width={256} height={108} {...LINE} />
+      <rect x={1400} y={312} width={48} height={80} {...LINE} />
+      <path d="M1394 312 L1424 286 L1454 312Z" {...LINE} />
+      <circle cx={1424} cy={340} r={13} {...LINE} strokeWidth={4} />
+      <path
+        d="M1424 340 V331 M1424 340 L1431 344"
+        stroke={INK}
+        strokeWidth={3}
+      />
+      {[1314, 1350, 1466, 1502].map((x) =>
+        [408, 444].map((y) => (
+          <rect
+            key={`${x}-${y}`}
+            x={x}
+            y={y}
+            width={22}
+            height={20}
+            fill={INK}
+          />
+        )),
+      )}
+      <rect x={1408} y={452} width={32} height={48} fill={INK} />
+    </g>
+  );
+}
+
+/** Each live area's landmarks; Ibadan (the city) uses Cocoa House and Mapo Hall. */
+function Landmarks({ area }: { area?: string }) {
+  switch (area) {
+    case "bodija":
+      return <Bodija />;
+    case "akobo":
+      return <Akobo />;
+    case "jericho":
+      return <Jericho />;
+    case "oluyole":
+      return <Oluyole />;
+    case "samonda":
+      return <Samonda />;
+    case "ibadan":
+    case undefined:
+      return (
+        <>
+          <CocoaHouse />
+          <MapoHall />
+        </>
+      );
+    default:
+      // Cities Urbn isn't in yet: no Ibadan landmarks, just a generic skyline.
+      return (
+        <>
+          <Tower x={110} top={180} w={120} cols={4} />
+          <Tower x={1330} top={220} w={180} cols={6} />
+        </>
+      );
+  }
+}
+
+/** A "To Let" board that flips to Verified (Listings). Resting face: Verified. */
+function ToLet({ x, delay }: { x: number; delay: number }) {
+  return (
+    <g>
+      <line x1={x} x2={x} y1={484} y2={500} stroke={INK} strokeWidth={4} />
+      <g transform={`translate(${x} 470)`}>
+        <g className="city-flip" style={{ animationDelay: `${delay}s` }}>
+          <g
+            className="city-face-tolet"
+            style={{ animationDelay: `${delay}s` }}
+            opacity={0}
+          >
+            <rect
+              x={-34}
+              y={-15}
+              width={68}
+              height={30}
+              fill="#fff"
+              stroke={INK}
+              strokeWidth={3}
+            />
+            <text
+              x={0}
+              y={5}
+              textAnchor="middle"
+              fontSize={13}
+              fill={INK}
+              {...TXT}
+            >
+              TO LET
+            </text>
+          </g>
+          <g
+            className="city-face-verified"
+            style={{ animationDelay: `${delay}s` }}
+          >
+            <rect x={-34} y={-15} width={68} height={30} fill={BLUE} />
+            <path
+              d="M-24 0 l4 4 l8 -8.5"
+              stroke="#fff"
+              strokeWidth={2.6}
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <text
+              x={8}
+              y={4}
+              textAnchor="middle"
+              fontSize={10}
+              fill="#fff"
+              {...TXT}
+            >
+              VERIFIED
+            </text>
+          </g>
+        </g>
+      </g>
+    </g>
+  );
+}
+
 // --- the street (baseline y = 500) ----------------------------------------------------
 function Tree({ x, r = 20 }: { x: number; r?: number }) {
   return (
@@ -449,7 +750,13 @@ function Street() {
 }
 
 /** The home being identified: Urbn's house mark, drawn in Urbn Blue. */
-function Home() {
+function Home({
+  scan = true,
+  plaqueLoop = false,
+}: {
+  scan?: boolean;
+  plaqueLoop?: boolean;
+}) {
   return (
     <g>
       <path
@@ -463,7 +770,10 @@ function Home() {
       <rect x={650} y={444} width={32} height={56} fill={INK} />
       {/* the Urbn plaque, right of the door */}
       <g transform="translate(694 462)">
-        <g className="city-pop" style={{ animationDelay: "0.9s" }}>
+        <g
+          className={plaqueLoop ? "city-plaque-loop" : "city-pop"}
+          style={plaqueLoop ? undefined : { animationDelay: "0.9s" }}
+        >
           <rect width={46} height={24} fill={INK} />
           <Symbol x={6} y={5} h={14} />
           <rect x={22} y={6} width={18} height={3} fill="#fff" />
@@ -472,33 +782,35 @@ function Home() {
         </g>
       </g>
       {/* a visitor scanning the plaque with their phone */}
-      <g transform="translate(606 508)">
-        <path
-          d="M24 -45 L88 -46 L88 -22Z"
-          fill={BLUE}
-          opacity={0.16}
-          className="city-beam"
-        />
-        <path d="M-4 0 L-2 -20 M5 0 L2 -20" stroke={INK} strokeWidth={5} />
-        <rect x={-8} y={-46} width={16} height={28} rx={4} fill={INK} />
-        <circle cx={0} cy={-54} r={7} fill={INK} />
-        <path
-          d="M4 -38 L16 -36 L20 -44"
-          stroke={INK}
-          strokeWidth={4}
-          fill="none"
-        />
-        <rect
-          x={18}
-          y={-52}
-          width={7}
-          height={12}
-          rx={1.5}
-          fill="#fff"
-          stroke={INK}
-          strokeWidth={2}
-        />
-      </g>
+      {scan && (
+        <g transform="translate(606 508)">
+          <path
+            d="M24 -45 L88 -46 L88 -22Z"
+            fill={BLUE}
+            opacity={0.16}
+            className="city-beam"
+          />
+          <path d="M-4 0 L-2 -20 M5 0 L2 -20" stroke={INK} strokeWidth={5} />
+          <rect x={-8} y={-46} width={16} height={28} rx={4} fill={INK} />
+          <circle cx={0} cy={-54} r={7} fill={INK} />
+          <path
+            d="M4 -38 L16 -36 L20 -44"
+            stroke={INK}
+            strokeWidth={4}
+            fill="none"
+          />
+          <rect
+            x={18}
+            y={-52}
+            width={7}
+            height={12}
+            rx={1.5}
+            fill="#fff"
+            stroke={INK}
+            strokeWidth={2}
+          />
+        </g>
+      )}
     </g>
   );
 }
@@ -507,7 +819,13 @@ function Home() {
  * Urbn's selection-box motif (from its posts): a blue box with square handles and a
  * cursor picks out the home, its DPI appears in a blue label and comes back Verified.
  */
-function Selection() {
+function Selection({
+  verified = true,
+  delivered = true,
+}: {
+  verified?: boolean;
+  delivered?: boolean;
+}) {
   const [x0, y0, x1, y1] = [536, 322, 796, 512];
   const handles = [
     [x0, y0],
@@ -561,61 +879,65 @@ function Selection() {
             IBADAN-NORTH-0041-U
           </text>
         </g>
-        <g className="city-verified">
-          <rect
-            x={806}
-            y={386}
-            width={112}
-            height={30}
-            rx={15}
-            fill="#fff"
-            stroke={INK}
-            strokeWidth={2.5}
-          />
-          <circle cx={826} cy={401} r={9} fill={SUCCESS} />
-          <path
-            d="M821.5 401 l3 3 l6 -6.5"
-            stroke="#fff"
-            strokeWidth={2.4}
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <text
-            x={842}
-            y={406}
-            fontFamily="Inter Variable, ui-sans-serif, system-ui, sans-serif"
-            fontSize={14}
-            fontWeight={600}
-            fill={INK}
-          >
-            Verified
-          </text>
-        </g>
-        <g className="city-delivered">
-          <rect
-            x={806}
-            y={422}
-            width={124}
-            height={30}
-            rx={15}
-            fill="#fff"
-            stroke={INK}
-            strokeWidth={2.5}
-          />
-          <rect x={818} y={430} width={14} height={14} fill={BLUE} />
-          <rect x={823.5} y={430} width={3} height={14} fill="#fff" />
-          <text
-            x={840}
-            y={442}
-            fontFamily="Inter Variable, ui-sans-serif, system-ui, sans-serif"
-            fontSize={14}
-            fontWeight={600}
-            fill={INK}
-          >
-            Delivered
-          </text>
-        </g>
+        {verified && (
+          <g className="city-verified">
+            <rect
+              x={806}
+              y={386}
+              width={112}
+              height={30}
+              rx={15}
+              fill="#fff"
+              stroke={INK}
+              strokeWidth={2.5}
+            />
+            <circle cx={826} cy={401} r={9} fill={SUCCESS} />
+            <path
+              d="M821.5 401 l3 3 l6 -6.5"
+              stroke="#fff"
+              strokeWidth={2.4}
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <text
+              x={842}
+              y={406}
+              fontFamily="Inter Variable, ui-sans-serif, system-ui, sans-serif"
+              fontSize={14}
+              fontWeight={600}
+              fill={INK}
+            >
+              Verified
+            </text>
+          </g>
+        )}
+        {delivered && (
+          <g className="city-delivered">
+            <rect
+              x={806}
+              y={422}
+              width={124}
+              height={30}
+              rx={15}
+              fill="#fff"
+              stroke={INK}
+              strokeWidth={2.5}
+            />
+            <rect x={818} y={430} width={14} height={14} fill={BLUE} />
+            <rect x={823.5} y={430} width={3} height={14} fill="#fff" />
+            <text
+              x={840}
+              y={442}
+              fontFamily="Inter Variable, ui-sans-serif, system-ui, sans-serif"
+              fontSize={14}
+              fontWeight={600}
+              fill={INK}
+            >
+              Delivered
+            </text>
+          </g>
+        )}
       </g>
     </g>
   );
@@ -627,17 +949,21 @@ function Pin({
   y,
   glyph,
   delay,
+  loop,
 }: {
   x: number;
   y: number;
   glyph: "shop" | "cross" | "cap" | "bowl";
   delay: number;
+  loop?: boolean;
 }) {
   return (
     <g transform={`translate(${x} ${y})`}>
       <g
-        className="city-pin"
-        style={{ animationDelay: `${delay}s, ${delay + 0.9}s` }}
+        className={loop ? "city-pin-loop" : "city-pin"}
+        style={{
+          animationDelay: loop ? `${delay}s` : `${delay}s, ${delay + 0.9}s`,
+        }}
       >
         <path
           d="M0 0 C-4 -9 -16 -16 -16 -29 A16 16 0 1 1 16 -29 C16 -16 4 -9 0 0Z"
@@ -923,15 +1249,58 @@ const LANE_B = { y: ROAD_MID - WHEEL_INSET, from: 1760, to: -200, dur: 16 };
 const laneDelay = (lane: typeof LANE_A, x0: number) =>
   `${(-((x0 - lane.from) / (lane.to - lane.from)) * lane.dur).toFixed(2)}s`;
 
+export type SceneFocus =
+  | "home"
+  | "identity"
+  | "verify"
+  | "nearby"
+  | "listings"
+  | "area";
+
+/** The crop of the world each page shows (viewBox), and which story beats play. */
+const FOCUS: Record<
+  SceneFocus,
+  {
+    view: string;
+    scan?: boolean;
+    select?: boolean;
+    verified?: boolean;
+    drone?: boolean;
+    pins?: "once" | "loop";
+    toLet?: boolean;
+    plaqueLoop?: boolean;
+  }
+> = {
+  home: {
+    view: `0 0 ${W} ${H}`,
+    scan: true,
+    select: true,
+    verified: true,
+    drone: true,
+    pins: "once",
+  },
+  identity: { view: "430 286 620 354", select: true, plaqueLoop: true },
+  verify: { view: "400 286 640 354", scan: true, select: true, verified: true },
+  nearby: { view: "220 236 1120 404", pins: "loop" },
+  listings: { view: "220 236 1120 404", toLet: true },
+  area: { view: `0 40 ${W} ${H - 40}`, pins: "once" },
+};
+
 export function CityScene({
   className,
   far,
   mid,
+  focus = "home",
+  area,
 }: {
   className?: string;
   far?: MotionValue<number>;
   mid?: MotionValue<number>;
+  focus?: SceneFocus;
+  /** Area slug for `focus="area"`: picks that area's landmarks. */
+  area?: string;
 }) {
+  const f = FOCUS[focus];
   const ref = useRef<SVGSVGElement>(null);
   const [paused, setPaused] = useState(false);
 
@@ -949,7 +1318,8 @@ export function CityScene({
   return (
     <svg
       ref={ref}
-      viewBox={`0 0 ${W} ${H}`}
+      viewBox={f.view}
+      data-focus={focus}
       className={clsx("city-scene", className)}
       data-paused={paused || undefined}
       role="img"
@@ -975,36 +1345,80 @@ export function CityScene({
         ))}
         <Tower x={318} top={286} w={108} cols={4} />
         <Tower x={1170} top={300} w={118} cols={4} />
-        <CocoaHouse />
-        <MapoHall />
+        <Landmarks area={focus === "area" ? area : undefined} />
       </motion.g>
 
       {/* mid layer: the street, the home and the Urbn layer on top of it */}
       <motion.g style={mid ? { y: mid } : undefined}>
         <Street />
-        <Home />
-        <Pin x={310} y={414} glyph="bowl" delay={1.4} />
-        <Pin x={450} y={384} glyph="shop" delay={1.6} />
-        <Pin x={1059} y={376} glyph="cross" delay={1.8} />
-        <Pin x={1226} y={378} glyph="cap" delay={2} />
-        <Selection />
-        <g transform="translate(666 372)">
-          <g className="city-parcel">
-            <Parcel />
-          </g>
-        </g>
-        <g transform="translate(666 250)">
-          <g className="city-drone">
-            <g className="city-hover">
-              <Drone />
+        <Home scan={!!f.scan} plaqueLoop={!!f.plaqueLoop} />
+        {f.pins && (
+          <>
+            <Pin
+              x={310}
+              y={414}
+              glyph="bowl"
+              delay={f.pins === "loop" ? 0 : 1.4}
+              loop={f.pins === "loop"}
+            />
+            <Pin
+              x={450}
+              y={384}
+              glyph="shop"
+              delay={f.pins === "loop" ? 1.2 : 1.6}
+              loop={f.pins === "loop"}
+            />
+            <Pin
+              x={1059}
+              y={376}
+              glyph="cross"
+              delay={f.pins === "loop" ? 2.4 : 1.8}
+              loop={f.pins === "loop"}
+            />
+            <Pin
+              x={1226}
+              y={378}
+              glyph="cap"
+              delay={f.pins === "loop" ? 3.6 : 2}
+              loop={f.pins === "loop"}
+            />
+          </>
+        )}
+        {f.toLet && (
+          <>
+            <ToLet x={600} delay={0} />
+            <ToLet x={930} delay={1.6} />
+          </>
+        )}
+        {f.select && <Selection verified={!!f.verified} delivered={!!f.drone} />}
+        {f.drone && (
+          <>
+            <g transform="translate(666 372)">
+              <g className="city-parcel">
+                <Parcel />
+              </g>
             </g>
-          </g>
-        </g>
+            <g transform="translate(666 250)">
+              <g className="city-drone">
+                <g className="city-hover">
+                  <Drone />
+                </g>
+              </g>
+            </g>
+          </>
+        )}
       </motion.g>
 
       {/* road */}
       <line x1={0} x2={W} y1={500} y2={500} stroke={INK} strokeWidth={5} />
-      <line x1={0} x2={W} y1={ROAD_TOP} y2={ROAD_TOP} stroke={INK} strokeWidth={3} />
+      <line
+        x1={0}
+        x2={W}
+        y1={ROAD_TOP}
+        y2={ROAD_TOP}
+        stroke={INK}
+        strokeWidth={3}
+      />
       <line
         x1={0}
         x2={W}
@@ -1014,7 +1428,14 @@ export function CityScene({
         strokeWidth={3}
         strokeDasharray="28 22"
       />
-      <line x1={0} x2={W} y1={ROAD_BOTTOM} y2={ROAD_BOTTOM} stroke={INK} strokeWidth={5} />
+      <line
+        x1={0}
+        x2={W}
+        y1={ROAD_BOTTOM}
+        y2={ROAD_BOTTOM}
+        stroke={INK}
+        strokeWidth={5}
+      />
       {/* lane A (near), left to right: the blue Urbn van and a plain black car */}
       {(
         [
@@ -1050,5 +1471,21 @@ export function CityScene({
         </g>
       ))}
     </svg>
+  );
+}
+
+/**
+ * A page's slice of the city. On phones it keeps a usable height and crops around the
+ * middle of the focus; from `sm` up it shows the whole focus at full width.
+ */
+export function SceneFrame({ focus, area, className }: { focus: SceneFocus; area?: string; className?: string }) {
+  return (
+    <div className={clsx("pointer-events-none relative h-52 overflow-hidden sm:h-auto sm:overflow-visible", className)}>
+      <CityScene
+        focus={focus}
+        area={area}
+        className="absolute bottom-0 left-1/2 h-full w-auto max-w-none -translate-x-1/2 sm:static sm:block sm:h-auto sm:w-full sm:translate-x-0"
+      />
+    </div>
   );
 }

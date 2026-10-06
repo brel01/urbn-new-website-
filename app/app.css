@@ -251,7 +251,7 @@
   animation-play-state: paused !important;
 }
 @media (max-width: 1023px) {
-  .city-scene .city-callout {
+  .city-scene[data-focus="home"] .city-callout {
     transform: translate(-476px, -110px);
   }
 }
@@ -261,6 +261,58 @@
   }
 }
 
+/* Page focuses: Nearby pins keep rising; Property Identity's plaque keeps mounting;
+   Listings' "To Let" boards flip to Verified (resting face: Verified). */
+.city-scene .city-pin-loop,
+.city-scene .city-plaque-loop,
+.city-scene .city-flip {
+  transform-box: fill-box;
+}
+.city-scene .city-pin-loop {
+  transform-origin: 50% 100%;
+  animation: city-pin-cycle 6s infinite both;
+}
+.city-scene .city-plaque-loop {
+  transform-origin: center;
+  animation: city-plaque-cycle 10s infinite;
+}
+.city-scene .city-flip {
+  transform-origin: center;
+  animation: city-flip 8s infinite;
+}
+.city-scene .city-face-tolet {
+  animation: city-face-tolet 8s infinite;
+}
+.city-scene .city-face-verified {
+  animation: city-face-verified 8s infinite;
+}
+@keyframes city-pin-cycle {
+  0% { opacity: 0; transform: translateY(18px) scale(0.4); animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1); }
+  12%, 78% { opacity: 1; transform: none; }
+  88%, 100% { opacity: 0; transform: translateY(-6px); }
+}
+@keyframes city-plaque-cycle {
+  0%, 4% { opacity: 0; transform: scale(0.2); animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1); }
+  12%, 88% { opacity: 1; transform: none; }
+  94%, 100% { opacity: 0; transform: scale(0.9); }
+}
+@keyframes city-flip {
+  0%, 30% { transform: scaleX(1); }
+  34% { transform: scaleX(0); }
+  38%, 84% { transform: scaleX(1); }
+  88% { transform: scaleX(0); }
+  92%, 100% { transform: scaleX(1); }
+}
+@keyframes city-face-tolet {
+  0%, 33.9% { opacity: 1; }
+  34%, 87.9% { opacity: 0; }
+  88%, 100% { opacity: 1; }
+}
+@keyframes city-face-verified {
+  0%, 33.9% { opacity: 0; }
+  34%, 87.9% { opacity: 1; }
+  88%, 100% { opacity: 0; }
+}
 @keyframes city-drone {
   0% {
     transform: translate(760px, -260px);

@@ -1,5 +1,6 @@
 import { MapPin } from "lucide-react";
 import { data, Link } from "react-router";
+import { SceneFrame, SkyClouds } from "~/components/city-scene";
 import { CtaBanner } from "~/components/cta-banner";
 import { ListingCard } from "~/components/listing-card";
 import { Reveal, Stagger, StaggerItem } from "~/components/motion";
@@ -40,29 +41,29 @@ export default function PlacePage({ loaderData }: Route.ComponentProps) {
   const where = place.kind === "area" ? `${place.name}, ${place.city}` : place.name;
   return (
     <>
-      <section className="relative overflow-hidden bg-ink text-white">
-        <div aria-hidden className="pattern-u absolute inset-0 bg-white/[0.04]" />
-        <div className="container-x relative py-20 sm:py-28">
+      <section className="relative isolate overflow-hidden bg-white">
+        <SkyClouds className="absolute inset-x-0 top-0 -z-10 h-full w-full" />
+        <div className="container-x relative pt-12 pb-6 sm:pt-20">
           <Reveal>
-            <p className="eyebrow text-blue-400">
+            <p className="eyebrow text-urbn">
               <MapPin className="size-4" /> {place.live ? "Available" : "Coming Soon"}
             </p>
             <h1 className="mt-4 max-w-3xl text-5xl leading-[1] sm:text-7xl">
               {place.live ? (
-                <>Find a Property in <span className="text-blue-400">{place.name}</span></>
+                <>Find a Property in <span className="text-urbn">{place.name}</span></>
               ) : (
-                <>Urbn Is Coming to <span className="text-blue-400">{place.name}</span></>
+                <>Urbn Is Coming to <span className="text-urbn">{place.name}</span></>
               )}
             </h1>
-            <p className="mt-6 max-w-xl text-lg text-neutral-400">{place.blurb}</p>
+            <p className="lede mt-6 max-w-xl">{place.blurb}</p>
           </Reveal>
           {place.live && (
-            <nav aria-label="Areas" className="mt-10 flex flex-wrap gap-2">
+            <nav aria-label="Areas" className="mt-8 flex flex-wrap gap-2">
               {[PLACES[0], ...LIVE_AREAS].map((a) => (
                 <Link
                   key={a.slug}
                   to={`/listings/in/${a.slug}`}
-                  className={`rounded-full px-4 py-2 text-sm transition ${a.slug === place.slug ? "bg-white text-ink" : "bg-white/[0.07] text-neutral-300 hover:bg-white/15"}`}
+                  className={`rounded-full px-4 py-2 text-sm transition ${a.slug === place.slug ? "bg-ink text-white" : "bg-mist text-neutral-700 hover:bg-fog"}`}
                 >
                   {a.name}
                 </Link>
@@ -70,6 +71,8 @@ export default function PlacePage({ loaderData }: Route.ComponentProps) {
             </nav>
           )}
         </div>
+        {/* The same city, with this area's own landmarks on the skyline. */}
+        <SceneFrame focus="area" area={place.slug} className="mt-2" />
       </section>
 
       {place.live ? (
@@ -98,7 +101,7 @@ export default function PlacePage({ loaderData }: Route.ComponentProps) {
           )}
         </section>
       ) : (
-        <section className="container-x grid gap-10 py-16 sm:py-24 lg:grid-cols-2 lg:items-center">
+        <section className="container-x grid grid-cols-[minmax(0,1fr)] gap-10 py-16 sm:py-24 lg:grid-cols-2 lg:items-center">
           <div>
             <h2 className="text-3xl sm:text-4xl">Get Updates for {place.name}</h2>
             <p className="lede mt-4">We'll email you when Urbn becomes available here.</p>
