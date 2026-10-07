@@ -448,4 +448,8 @@ export const SEED_LISTINGS: ListingDetail[] = SEEDS.map(({ beds, baths, seq, ...
     { roomType: "Bathroom", count: baths },
   ],
   dpi: makeDpi(s.lga!, seq),
+  // Sample reels (public/videos/reels), made from the listing's own photos.
+  ...(s.propertyVideoUrl
+    ? { propertyVideoUrl: `/videos/reels/${s.id}.mp4`, propertyVideoPosterUrl: `/videos/reels/${s.id}.jpg` }
+    : {}),
 }));

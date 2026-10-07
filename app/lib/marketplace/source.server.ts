@@ -10,6 +10,7 @@ import { SAMPLE_PROPERTIES } from "../nearby/seed";
 import { SEED_LISTINGS } from "./seed";
 import type { AiSearchResult, ListingCard, ListingDetail, ListingFilters, Paged } from "./types";
 import { listingPath, roomCount } from "./types";
+import { reelVideo, type Reel, type ReelComment, type ReelComments, type ReelsPage } from "../reels";
 
 const API = process.env.URBN_API_URL?.replace(/\/$/, "");
 const TOKEN = process.env.URBN_API_TOKEN; // optional service token for AI search
@@ -149,6 +150,64 @@ export async function similarListings(id: string, limit = 3): Promise<ListingCar
       .slice(0, limit);
   }
   return (await api<{ data: ListingCard[] }>(`/listings/${encodeURIComponent(id)}/similar`, { query: { limit } })).data;
+}
+
+// ---------------------------------------------------------------------------
+// Reels (GET /listings/reels, the app's Reels tab): listings that have a video.
+
+const hasVideo = (l: ListingCard) => Boolean(reelVideo(l));
+
+export async function reelsFeed(f: { page?: number; limit?: number } = {}): Promise<ReelsPage> {
+  const page = Math.max(1, f.page ?? 1), limit = Math.min(20, Math.max(1, f.limit ?? 8));
+  if (!API) {
+    const rows = SEED_LISTINGS.filter(hasVideo);
+    return {
+      data: rows.slice((page - 1) * limit, page * limit),
+      meta: { total: rows.length, page, limit, totalPages: Math.max(1, Math.ceil(rows.length / limit)) },
+      source: "sample",
+    };
+  }
+  const r = await api<{ data: ListingCard[]; meta: Paged<ListingCard>["meta"] }>("/listings/reels", { query: { page, limit } });
+  return { data: r.data.filter(hasVideo), meta: r.meta, source: "live" };
+}
+
+/** One reel by listing id; null when the listing is gone or has no video. */
+export async function getReel(id: string): Promise<Reel | null> {
+  const l = await getListing(id);
+  return l && hasVideo(l) ? l : null;
+}
+
+const SAMPLE_COMMENTS: { name: [string, string]; text: string; ago: number }[] = [
+  { name: ["Tolu", "A"], text: "Is the borehole water treated?", ago: 2 },
+  { name: ["Ifeoluwa", "O"], text: "Love the finishing on this one. When can I inspect?", ago: 5 },
+  { name: ["Chinedu", "E"], text: "How far is it from the main road?", ago: 9 },
+  { name: ["Bisi", "K"], text: "Checked the DPI before booking. Very helpful.", ago: 26 },
+];
+
+/** Public comments on a reel (GET /listings/:id/comments). Reading only; posting happens in the app. */
+export async function reelComments(id: string, cursor?: string): Promise<ReelComments> {
+  if (!API) {
+    const now = Date.now();
+    return {
+      data: SAMPLE_COMMENTS.map((c, i) => ({
+        id: `${id}-c${i}`,
+        text: c.text,
+        isDeleted: false,
+        createdAt: new Date(now - c.ago * 3_600_000).toISOString(),
+        user: { id: `u${i}`, firstName: c.name[0], lastInitial: c.name[1], profileImageUrl: null },
+        replyCount: i === 0 ? 1 : 0,
+      })),
+      nextCursor: null,
+      source: "sample",
+    };
+  }
+  try {
+    const r = await api<{ data: ReelComment[]; nextCursor: string | null }>(`/listings/${encodeURIComponent(id)}/comments`, { query: { limit: 20, cursor } });
+    return { data: r.data, nextCursor: r.nextCursor, source: "live" };
+  } catch {
+    // If the API keeps comments behind sign-in, the web shows the count and points to the app.
+    return { data: [], nextCursor: null, source: "live", unavailable: true };
+  }
 }
 
 /** Every listing path, for pre-rendering and the sitemap. */

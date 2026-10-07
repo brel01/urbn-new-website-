@@ -31,6 +31,7 @@ import { Plaque } from "~/components/plaque";
 import { BottomBar } from "~/components/mobile";
 import { ButtonLink } from "~/components/ui";
 import { appDeepLink, verifyPath } from "~/lib/dpi";
+import { reelPath } from "~/lib/reels";
 import { getListing, similarListings } from "~/lib/marketplace/source.server";
 import {
   formatCount,
@@ -165,6 +166,7 @@ export default function ListingPage({ loaderData }: Route.ComponentProps) {
         onSave={() => setSaved((v) => !v)}
         onShare={share}
         shared={shared}
+        reelHref={hasVideo ? reelPath(l) : undefined}
       />
       <div className="container-x hidden pt-6 lg:block">
         <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm text-neutral-500">
@@ -213,10 +215,10 @@ export default function ListingPage({ loaderData }: Route.ComponentProps) {
               </button>
             </div>
             {hasVideo && (
-              <a href="/download" className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full bg-black/70 py-1.5 pr-4 pl-1.5 text-sm text-white backdrop-blur hover:bg-black">
+              <Link to={reelPath(l)} className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full bg-black/70 py-1.5 pr-4 pl-1.5 text-sm text-white backdrop-blur hover:bg-black">
                 <span className="grid size-8 place-items-center rounded-full bg-white text-ink"><Play className="size-3.5 fill-ink" /></span>
-                Watch Video in the App
-              </a>
+                Watch the Video Tour
+              </Link>
             )}
           </div>
           {l.images.length > 1 && (
@@ -505,6 +507,7 @@ function MobileGallery({
   onSave,
   onShare,
   shared,
+  reelHref,
 }: {
   images: string[];
   title: string;
@@ -513,6 +516,8 @@ function MobileGallery({
   onSave: () => void;
   onShare: () => void;
   shared: boolean;
+  /** The listing's video, as a reel. */
+  reelHref?: string;
 }) {
   const [index, setIndex] = useState(0);
   return (
@@ -546,6 +551,12 @@ function MobileGallery({
         </div>
       </div>
       <div className="absolute bottom-10 left-4 flex gap-2">{badges}</div>
+      {reelHref && (
+        <Link to={reelHref} className="absolute top-1/2 left-1/2 inline-flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 rounded-full bg-black/70 py-1.5 pr-4 pl-1.5 text-sm font-semibold text-white backdrop-blur active:scale-95">
+          <span className="grid size-8 place-items-center rounded-full bg-white text-ink"><Play className="size-3.5 fill-ink" /></span>
+          Watch Video
+        </Link>
+      )}
       {images.length > 1 && (
         <span className="absolute right-4 bottom-10 rounded-full bg-black/60 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur">
           {index + 1} / {images.length}

@@ -9,6 +9,8 @@ type SeoInput = {
   imageAlt?: string;
   type?: "website" | "article" | "product";
   noindex?: boolean;
+  /** A playable video for the share preview (WhatsApp, X, Facebook): og:video tags. */
+  video?: { url: string; type?: string };
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 };
 
@@ -24,6 +26,7 @@ export function seo({
   imageAlt = "Urbn: The digital infrastructure for housing",
   type = "website",
   noindex = false,
+  video,
   jsonLd,
 }: SeoInput): MetaDescriptor[] {
   const fullTitle = title.includes("Urbn") ? title : `${title} | Urbn`;
@@ -35,7 +38,14 @@ export function seo({
     { tagName: "link", rel: "canonical", href: url },
     { property: "og:site_name", content: SITE.name },
     { property: "og:locale", content: SITE.locale },
-    { property: "og:type", content: type === "product" ? "website" : type },
+    { property: "og:type", content: video ? "video.other" : type === "product" ? "website" : type },
+    ...(video
+      ? [
+          { property: "og:video", content: absoluteUrl(video.url) },
+          { property: "og:video:secure_url", content: absoluteUrl(video.url) },
+          { property: "og:video:type", content: video.type ?? "video/mp4" },
+        ]
+      : []),
     { property: "og:title", content: fullTitle },
     { property: "og:description", content: description },
     { property: "og:url", content: url },

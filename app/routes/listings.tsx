@@ -359,6 +359,9 @@ function Hero() {
               <a href="#search" className="inline-flex h-11 items-center rounded-[10px] bg-ink px-5 text-[15px] font-medium text-white transition hover:bg-neutral-800">
                 Search Listings
               </a>
+              <ButtonLink to="/reels" variant="outline" arrow={false}>
+                Watch Reels
+              </ButtonLink>
               <ButtonLink to="/dpi" variant="dark" arrow={false}>
                 What Is DPI?
               </ButtonLink>
