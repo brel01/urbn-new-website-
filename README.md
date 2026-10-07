@@ -65,6 +65,16 @@ With `URBN_API_URL` set, Nearby uses the app's public endpoints: `GET /activitie
 
 Privacy: device coordinates stay in browser state. They're never put in page URLs, and point searches are sent with `Cache-Control: no-store`.
 
+## Reels (property video tours)
+
+`/reels` is the app's Reels tab on the web: a vertical feed of listings that have a video (`GET /listings/reels`), with the price badge, title, lister and area, tap to pause, double-tap, mute, and ↑/↓ or swipe to move. Each reel has its own share page, `/reels/:id/:slug`, with `og:video`, the poster and the price in the preview, and `VideoObject` structured data.
+
+- **Works on the web:** watching, swiping, muting, sharing (native share sheet on phones; copy link, WhatsApp, X and Facebook on desktop), opening the listing, and reading comments (`GET /listings/:id/comments`).
+- **Continues in the app:** like, save, writing a comment, viewing replies and agent profiles open a "Continue in the app" prompt with `urbn://listing/:id` and the store badges.
+- **Data saving:** only the reel on screen and its neighbours mount a `<video>`; others show the poster. Videos start muted.
+- **Samples:** without `URBN_API_URL`, six sample reels in `public/videos/reels/` (made from listing photos with ffmpeg) are served and marked SAMPLE; their pages are `noindex`. Live reel pages are added to the sitemap.
+- **To confirm with the backend:** that `/listings/reels` and comment reads are public without sign-in, and whether web views should be counted (`POST /listings/:id/video-view` is not called from the web yet).
+
 ## DPI codes
 
 DPI codes follow the backend and app format: `LGA-NNNN-C` (e.g. `IBADAN-NORTH-0041-U`), optionally followed by `/UNIT` (e.g. `/U01`). `C` is the mod-23 check character from `geo.service`/`dpi.helpers.ts`, so typos are caught before a lookup. `app/lib/dpi.ts` ports `computeDpiCheckChar`, `isValidDpiFormat` and `parseDpiIdentifier` exactly (it passes the app's `AKINYELE-0004-S` fixture).
