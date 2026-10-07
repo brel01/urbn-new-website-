@@ -7,7 +7,7 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import { Footer } from "./components/footer";
 import { Header } from "./components/header";
-import { TabBar } from "./components/mobile";
+import { NavProgress, TabBar } from "./components/mobile";
 import { ButtonLink } from "./components/ui";
 import { organizationJsonLd, websiteJsonLd } from "./lib/seo";
 import { SITE } from "./lib/site";
@@ -52,6 +52,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <MotionConfig reducedMotion="user">
+        <NavProgress />
         <Header />
         <main id="main">
           <Outlet />
