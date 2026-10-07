@@ -170,11 +170,28 @@ const ago = (iso: string) => {
 /** Read-only comments, like the app's comments sheet; writing one continues in the app. */
 export function CommentsSheet({ reel, onClose, onApp }: { reel: Reel | null; onClose: () => void; onApp: (a: AppAction) => void }) {
   const [state, setState] = useState<{ id: string; data: ReelComments | null; error: boolean } | null>(null);
+  const [more, setMore] = useState(false);
+  const url = (id: string, cursor?: string | null) => `/api/reels/${encodeURIComponent(id)}/comments${cursor ? `?cursor=${encodeURIComponent(cursor)}` : ""}`;
+
+  // The API returns comments a page at a time: fetch the next page near the bottom of the list.
+  const loadMore = useCallback(() => {
+    const d = state?.data;
+    if (!reel || !d?.nextCursor || more) return;
+    setMore(true);
+    fetch(url(reel.id, d.nextCursor))
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((next: ReelComments) =>
+        setState((s) => (s && s.id === reel.id && s.data ? { ...s, data: { ...s.data, data: [...s.data.data, ...next.data], nextCursor: next.nextCursor } } : s)),
+      )
+      .catch(() => {})
+      .finally(() => setMore(false));
+  }, [reel, state, more]);
+
   useEffect(() => {
     if (!reel) return;
     const ctrl = new AbortController();
     setState({ id: reel.id, data: null, error: false });
-    fetch(`/api/reels/${encodeURIComponent(reel.id)}/comments`, { signal: ctrl.signal })
+    fetch(url(reel.id), { signal: ctrl.signal })
       .then((r) => (r.ok ? r.json() : Promise.reject()))
       .then((data: ReelComments) => setState({ id: reel.id, data, error: false }))
       .catch(() => !ctrl.signal.aborted && setState({ id: reel.id, data: null, error: true }));
@@ -207,7 +224,14 @@ export function CommentsSheet({ reel, onClose, onApp }: { reel: Reel | null; onC
                 <X className="size-4" />
               </button>
             </div>
-            <div className="min-h-40 flex-1 overflow-y-auto px-5 py-3">
+            {/* min-h-0 lets the list shrink inside the sheet and scroll; overscroll-contain keeps swipes off the reels behind. */}
+            <div
+              className="min-h-0 flex-1 touch-pan-y overflow-y-auto overscroll-contain px-5 py-3"
+              onScroll={(e) => {
+                const el = e.currentTarget;
+                if (el.scrollHeight - el.scrollTop - el.clientHeight < 120) loadMore();
+              }}
+            >
               {!d && !state?.error && <p className="py-8 text-center text-sm text-neutral-400">Loading comments…</p>}
               {(state?.error || d?.unavailable) && (
                 <p className="py-8 text-center text-sm text-neutral-500">Comments on this home are in the Urbn app.</p>
@@ -233,6 +257,11 @@ export function CommentsSheet({ reel, onClose, onApp }: { reel: Reel | null; onC
                     </li>
                   ))}
               </ul>
+              {d?.nextCursor && (
+                <button type="button" onClick={loadMore} className="mt-4 w-full py-2 text-center text-xs font-semibold text-neutral-500 hover:text-ink">
+                  {more ? "Loading…" : "Load more comments"}
+                </button>
+              )}
             </div>
             <div className="border-t border-black/5 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
               <button type="button" onClick={() => onApp("comment")} className="flex h-11 w-full items-center rounded-full bg-mist px-4 text-left text-sm text-neutral-500 hover:bg-fog">

@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
 import { Children, type ReactNode, useEffect, useRef, useState } from "react";
-import { Link, NavLink, useLocation, useMatches } from "react-router";
+import { Link, NavLink, matchPath, useLocation, useMatches, useNavigation } from "react-router";
 import { EASE } from "./motion";
 import { SocialLinks } from "./social";
 
@@ -141,6 +141,9 @@ export function TabBar() {
   const { scrollY } = useScroll();
   const location = useLocation();
   const routeHidden = useTabBarHidden();
+  // Highlight the tapped tab straight away, while its page is still loading.
+  const target = useNavigation().location?.pathname ?? location.pathname;
+  const isOn = (t: (typeof TABS)[number]) => !!matchPath({ path: t.to, end: "end" in t }, target);
 
   useMotionValueEvent(scrollY, "change", (y) => {
     const prev = scrollY.getPrevious() ?? 0;
@@ -164,10 +167,12 @@ export function TabBar() {
               <NavLink
                 to={t.to}
                 end={"end" in t}
+                // Fetch each tab's code and data while the bar is on screen, so a tap lands at once.
+                prefetch="viewport"
                 className="group flex flex-col items-center gap-0.5 py-1 active:scale-95"
                 aria-label={t.label}
               >
-                {({ isActive }) =>
+                {() =>
                   "primary" in t ? (
                     <span className="-mt-6 grid size-14 place-items-center rounded-full bg-urbn shadow-[0_10px_24px_-6px_rgba(37,61,226,0.9)] ring-4 ring-[#F9FAFB] transition-transform group-active:scale-90">
                       <t.icon className="size-6" />
@@ -175,12 +180,12 @@ export function TabBar() {
                   ) : (
                     <>
                       <span className="relative grid h-8 w-12 place-items-center">
-                        {isActive && (
+                        {isOn(t) && (
                           <motion.span layoutId="tab-pill" className="absolute inset-0 rounded-full bg-white/15" transition={{ type: "spring", stiffness: 420, damping: 34 }} />
                         )}
-                        <t.icon className={clsx("relative size-[1.2rem]", isActive ? "text-white" : "text-white/55")} />
+                        <t.icon className={clsx("relative size-[1.2rem]", isOn(t) ? "text-white" : "text-white/55")} />
                       </span>
-                      <span className={clsx("text-[10px] font-medium", isActive ? "text-white" : "text-white/55")}>{t.label}</span>
+                      <span className={clsx("text-[10px] font-medium", isOn(t) ? "text-white" : "text-white/55")}>{t.label}</span>
                     </>
                   )
                 }
@@ -258,7 +263,7 @@ export function MenuSheet({ open, onClose }: { open: boolean; onClose: () => voi
               </button>
             </div>
             {/* Reels lead the menu: the easiest thing to watch and share. */}
-            <Link to="/reels" className="mt-5 flex items-center gap-3 rounded-2xl bg-ink p-4 text-white transition active:scale-[0.98]">
+            <Link to="/reels" prefetch="intent" className="mt-5 flex items-center gap-3 rounded-2xl bg-ink p-4 text-white transition active:scale-[0.98]">
               <span className="grid size-11 shrink-0 place-items-center rounded-full bg-urbn">
                 <Play className="size-5 fill-white" />
               </span>
@@ -276,7 +281,7 @@ export function MenuSheet({ open, onClose }: { open: boolean; onClose: () => voi
             >
               {MENU.map((m) => (
                 <motion.li key={m.to} variants={{ h: { opacity: 0, y: 12, scale: 0.96 }, s: { opacity: 1, y: 0, scale: 1 } }}>
-                  <Link to={m.to} className="flex aspect-square flex-col items-start justify-between rounded-2xl bg-mist p-3 transition active:scale-95 active:bg-fog">
+                  <Link to={m.to} prefetch="intent" className="flex aspect-square flex-col items-start justify-between rounded-2xl bg-mist p-3 transition active:scale-95 active:bg-fog">
                     <span className="grid size-9 place-items-center rounded-xl bg-white text-urbn shadow-sm">
                       <m.icon className="size-[18px]" />
                     </span>
@@ -305,6 +310,24 @@ export function BottomBar({ children }: { children: ReactNode }) {
   return (
     <div className="fixed inset-x-0 bottom-0 z-50 border-t border-black/5 bg-white/90 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-xl lg:hidden">
       {children}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// NavProgress: a thin bar along the top while the next page loads, so a tap on
+// a slow connection is acknowledged at once. Hidden for quick navigations.
+
+export function NavProgress() {
+  const loading = useNavigation().state === "loading";
+  return (
+    <div aria-hidden className="pointer-events-none fixed inset-x-0 top-0 z-[60] h-0.5 overflow-hidden">
+      <div
+        className={clsx(
+          "h-full origin-left bg-urbn",
+          loading ? "scale-x-[0.85] opacity-100 transition-[transform,opacity] delay-150 duration-[2500ms] ease-out" : "scale-x-0 opacity-0 transition-opacity duration-200",
+        )}
+      />
     </div>
   );
 }
