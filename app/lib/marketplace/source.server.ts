@@ -182,22 +182,35 @@ const SAMPLE_COMMENTS: { name: [string, string]; text: string; ago: number }[] =
   { name: ["Ifeoluwa", "O"], text: "Love the finishing on this one. When can I inspect?", ago: 5 },
   { name: ["Chinedu", "E"], text: "How far is it from the main road?", ago: 9 },
   { name: ["Bisi", "K"], text: "Checked the DPI before booking. Very helpful.", ago: 26 },
+  { name: ["Kunle", "F"], text: "Is the rent negotiable for a two-year lease?", ago: 30 },
+  { name: ["Amaka", "N"], text: "Does it have a prepaid meter?", ago: 41 },
+  { name: ["Seun", "B"], text: "The kitchen looks bigger than in the photos.", ago: 50 },
+  { name: ["Halima", "Y"], text: "Is there space to park two cars?", ago: 62 },
+  { name: ["Dayo", "I"], text: "How is the road during the rainy season?", ago: 75 },
+  { name: ["Ngozi", "U"], text: "Booked a virtual inspection. Fingers crossed!", ago: 90 },
+  { name: ["Femi", "L"], text: "Any service charge on top of the rent?", ago: 110 },
+  { name: ["Zainab", "M"], text: "Close to the market and the school run. Nice.", ago: 130 },
 ];
 
 /** Public comments on a reel (GET /listings/:id/comments). Reading only; posting happens in the app. */
 export async function reelComments(id: string, cursor?: string): Promise<ReelComments> {
   if (!API) {
+    // Sample comments page through like the API does (cursor = next index).
     const now = Date.now();
+    const from = Number(cursor) || 0, to = from + 6;
     return {
-      data: SAMPLE_COMMENTS.map((c, i) => ({
-        id: `${id}-c${i}`,
-        text: c.text,
-        isDeleted: false,
-        createdAt: new Date(now - c.ago * 3_600_000).toISOString(),
-        user: { id: `u${i}`, firstName: c.name[0], lastInitial: c.name[1], profileImageUrl: null },
-        replyCount: i === 0 ? 1 : 0,
-      })),
-      nextCursor: null,
+      data: SAMPLE_COMMENTS.slice(from, to).map((c, j) => {
+        const i = from + j;
+        return {
+          id: `${id}-c${i}`,
+          text: c.text,
+          isDeleted: false,
+          createdAt: new Date(now - c.ago * 3_600_000).toISOString(),
+          user: { id: `u${i}`, firstName: c.name[0], lastInitial: c.name[1], profileImageUrl: null },
+          replyCount: i === 0 ? 1 : 0,
+        };
+      }),
+      nextCursor: to < SAMPLE_COMMENTS.length ? String(to) : null,
       source: "sample",
     };
   }
