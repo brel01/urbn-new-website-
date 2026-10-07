@@ -1,9 +1,9 @@
 import { keepPreviousData, useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { clsx } from "clsx";
-import { List, Map as MapIcon, MapPin, Search, SlidersHorizontal, Sparkles, X } from "lucide-react";
+import { List, Map as MapIcon, MapPin, Play, Search, SlidersHorizontal, Sparkles, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { type ShouldRevalidateFunctionArgs, useSearchParams } from "react-router";
+import { Link, type ShouldRevalidateFunctionArgs, useSearchParams } from "react-router";
 import { CtaBanner } from "~/components/cta-banner";
 import { ListingCard } from "~/components/listing-card";
 import { AiSearchPanel } from "~/components/marketplace/ai-search";
@@ -355,6 +355,13 @@ function Hero() {
               Explore available homes, shops, offices and other spaces, compare the details and check each property's
               current verification status before taking the next step.
             </p>
+            {/* phones: the hero buttons are hidden, so Reels gets its own pill */}
+            <Link to="/reels" className="mt-5 inline-flex h-10 items-center gap-2 rounded-full bg-ink pr-4 pl-1.5 text-sm font-semibold text-white active:scale-95 sm:hidden">
+              <span className="grid size-7 place-items-center rounded-full bg-urbn">
+                <Play className="size-3.5 fill-white" />
+              </span>
+              Watch Property Reels
+            </Link>
             <div className="mt-8 hidden flex-wrap gap-3 sm:flex">
               <a href="#search" className="inline-flex h-11 items-center rounded-[10px] bg-ink px-5 text-[15px] font-medium text-white transition hover:bg-neutral-800">
                 Search Listings

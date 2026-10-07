@@ -9,6 +9,7 @@ import {
   LayoutGrid,
   MapPin,
   Mail,
+  Play,
   ScanLine,
   Search,
   ShieldCheck,
@@ -256,8 +257,19 @@ export function MenuSheet({ open, onClose }: { open: boolean; onClose: () => voi
                 <X className="size-5" />
               </button>
             </div>
+            {/* Reels lead the menu: the easiest thing to watch and share. */}
+            <Link to="/reels" className="mt-5 flex items-center gap-3 rounded-2xl bg-ink p-4 text-white transition active:scale-[0.98]">
+              <span className="grid size-11 shrink-0 place-items-center rounded-full bg-urbn">
+                <Play className="size-5 fill-white" />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-[15px] font-semibold">Property Reels</span>
+                <span className="block text-xs text-white/60">Watch and share video tours of homes</span>
+              </span>
+              <span aria-hidden className="text-white/50">→</span>
+            </Link>
             <motion.ul
-              className="mt-5 grid grid-cols-3 gap-2.5"
+              className="mt-3 grid grid-cols-3 gap-2.5"
               initial="h"
               animate="s"
               variants={{ h: {}, s: { transition: { staggerChildren: 0.03, delayChildren: 0.12 } } }}
