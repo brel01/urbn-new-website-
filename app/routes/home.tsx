@@ -1,5 +1,5 @@
 import { clsx } from "clsx";
-import { Briefcase, FileUp, House, Search, ShieldCheck, Stamp, Users, MapPin } from "lucide-react";
+import { Briefcase, FileUp, House, Search, ShieldCheck, Stamp, Users, MapPin, Play } from "lucide-react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
@@ -121,6 +121,7 @@ function Hero() {
           <div className="no-scrollbar -mx-4 mt-4 flex gap-2 overflow-x-auto px-4 lg:hidden">
             {[
               { to: "/listings", label: "Browse Listings", icon: Search },
+              { to: "/reels", label: "Watch Reels", icon: Play },
               { to: "/nearby", label: "Explore Nearby", icon: MapPin },
               { to: "/dpi", label: "What Is DPI?", icon: ShieldCheck },
               { to: "/for-owners", label: "Add Your Property", icon: House },
