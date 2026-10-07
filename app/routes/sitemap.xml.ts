@@ -1,4 +1,5 @@
-import { allListingPaths } from "~/lib/marketplace/source.server";
+import { allListingPaths, reelsFeed } from "~/lib/marketplace/source.server";
+import { reelPath, reelPoster } from "~/lib/reels";
 import { nearbySitemapEntries } from "~/lib/nearby/source.server";
 import { PLACES } from "~/lib/places";
 import { STORIES } from "~/lib/stories";
@@ -10,6 +11,7 @@ const STATIC: [string, string, number][] = [
   ["/verify", "monthly", 0.9],
   ["/listings", "daily", 0.9],
   ["/nearby", "daily", 0.8],
+  ["/reels", "daily", 0.7],
   ["/features", "monthly", 0.8],
   ["/for-renters", "monthly", 0.7],
   ["/for-owners", "monthly", 0.7],
@@ -28,11 +30,19 @@ type Url = { loc: string; changefreq: string; priority: number; lastmod?: string
 
 export async function loader() {
   // One source failing (API down) must not take the whole sitemap down.
-  const [listings, nearby] = await Promise.all([allListingPaths().catch(() => []), nearbySitemapEntries().catch(() => [])]);
+  const [listings, nearby, reels] = await Promise.all([
+    allListingPaths().catch(() => []),
+    nearbySitemapEntries().catch(() => []),
+    // Reel pages: live data only (sample reels are noindex).
+    reelsFeed({ limit: 20 })
+      .then((f) => (f.source === "live" ? f.data : []))
+      .catch(() => []),
+  ]);
   const urls: Url[] = [
     ...STATIC.map(([loc, changefreq, priority]) => ({ loc, changefreq, priority })),
     ...PLACES.map((p) => ({ loc: `/listings/in/${p.slug}`, changefreq: p.live ? "daily" : "monthly", priority: p.live ? 0.8 : 0.4 })),
     ...listings.map((l) => ({ loc: l.path, changefreq: "weekly", priority: 0.7, lastmod: l.lastmod, image: l.image })),
+    ...reels.map((r) => ({ loc: reelPath(r), changefreq: "weekly", priority: 0.6, lastmod: r.createdAt.slice(0, 10), image: reelPoster(r) })),
     ...STORIES.map((s) => ({ loc: `/blog/${s.slug}`, changefreq: "monthly", priority: 0.5, lastmod: s.date })),
     // Nearby: area/category pages and every public place page (live data only).
     ...nearby.map((n) => ({ loc: n.path, changefreq: n.path.startsWith("/nearby/in/") ? "daily" : "weekly", priority: n.path.startsWith("/nearby/in/") ? 0.7 : 0.6, image: n.image })),
