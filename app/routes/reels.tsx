@@ -105,6 +105,18 @@ function Feed({ reel, feed }: { reel: Reel | null; feed: ReelsPage }) {
   const [shareFor, setShareFor] = useState<Reel | null>(null);
   const scroller = useRef<HTMLDivElement>(null);
   const current = items[active] ?? null;
+  const sheetOpen = Boolean(prompt || commentsFor || shareFor);
+
+  // While a sheet is open, swipes must not move the feed or the page behind it.
+  useEffect(() => {
+    if (!sheetOpen) return;
+    const root = document.documentElement;
+    const prev = root.style.overflow;
+    root.style.overflow = "hidden";
+    return () => {
+      root.style.overflow = prev;
+    };
+  }, [sheetOpen]);
   const closeComments = useCallback(() => setCommentsFor(null), []);
   const closePrompt = useCallback(() => setPrompt(null), []);
   const commentsToApp = useCallback((a: AppAction) => {
@@ -195,7 +207,7 @@ function Feed({ reel, feed }: { reel: Reel | null; feed: ReelsPage }) {
   return (
     <section className="relative h-[calc(100svh-3.5rem)] bg-black lg:h-[calc(100svh-4.5rem)]" aria-label="Property reels">
       <h1 className="sr-only">{reel ? `${reel.propertyTitle} video tour` : "Property Reels"}</h1>
-      <div ref={scroller} className="no-scrollbar h-full snap-y snap-mandatory overflow-y-auto">
+      <div ref={scroller} className={`no-scrollbar h-full snap-y snap-mandatory ${sheetOpen ? "overflow-hidden" : "overflow-y-auto"}`}>
         {items.map((r, i) => (
           <div key={r.id} data-index={i} className="h-full">
             <ReelItem
