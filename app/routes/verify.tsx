@@ -5,8 +5,9 @@ import { FaqSection } from "~/components/faq";
 import { Reveal } from "~/components/motion";
 import { CheckBeforeCommit, VerifyHero } from "~/components/verify-sections";
 import { ButtonLink } from "~/components/ui";
+import { UBeepExplainer } from "~/components/verify-sections";
 import { parseDpiIdentifier, SAMPLE_DPI, verifyPath } from "~/lib/dpi";
-import { lookupDpi } from "~/lib/marketplace/source.server";
+import { lookupDpi, usingLiveApi } from "~/lib/marketplace/source.server";
 import { VERIFY_FAQS } from "~/lib/faqs";
 import { breadcrumbs, faqJsonLd, seo } from "~/lib/seo";
 import type { Route } from "./+types/verify";
@@ -18,7 +19,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     const parsed = parseDpiIdentifier(code);
     throw redirect(parsed ? verifyPath(parsed.dpiCode, parsed.unitCode) : `/verify/${encodeURIComponent(code.trim())}`);
   }
-  return { sample: await lookupDpi(SAMPLE_DPI) };
+  return { sample: await lookupDpi(SAMPLE_DPI), sampleMode: !usingLiveApi };
 }
 
 export const meta: Route.MetaFunction = () =>
@@ -37,7 +38,7 @@ export const meta: Route.MetaFunction = () =>
   });
 
 export default function Verify({ loaderData }: Route.ComponentProps) {
-  const { sample } = loaderData;
+  const { sample, sampleMode } = loaderData;
   return (
     <>
       <VerifyHero />
@@ -51,11 +52,12 @@ export default function Verify({ loaderData }: Route.ComponentProps) {
             View Sample Record
           </ButtonLink>
         </Reveal>
-        <Reveal>{sample.status === "verified" && <VerifiedResult record={sample.record} animate={false} />}</Reveal>
+        <Reveal>{sample.status === "verified" && <VerifiedResult record={sample.record} animate={false} sampleMode={sampleMode} searchAgainButton={false} />}</Reveal>
         <Reveal className="mt-4">
           <NoMatch />
         </Reveal>
       </section>
+      <UBeepExplainer />
       <CheckBeforeCommit />
       <FaqSection faqs={VERIFY_FAQS} />
       <CtaBanner />

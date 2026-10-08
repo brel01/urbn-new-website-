@@ -6,6 +6,9 @@ export default [
   route("verify", "routes/verify.tsx"),
   route("verify/:code/:unit?", "routes/verify-result.tsx"),
   route("p/dpi/:code/:unit?", "routes/verify-result.tsx", { id: "plaque-landing" }),
+  // Universal link the app shares and the plaque QR opens (apple-app-site-association / assetlinks.json).
+  route("property/dpi/:code/:unit?", "routes/verify-result.tsx", { id: "dpi-link" }),
+  route("listing/:id", "routes/listing-link.ts"),
   route("features", "routes/features.tsx"),
   route("listings", "routes/listings.tsx"),
   route("listings/in/:place", "routes/listings-place.tsx"),
@@ -37,6 +40,7 @@ export default [
   route("api/nearby", "routes/api.nearby.ts"),
   route("api/nearby/:id", "routes/api.nearby-place.ts"),
   route("api/waitlist", "routes/api.waitlist.ts"),
+  route("api/ubeep/*", "routes/api.ubeep.ts"),
   route("sitemap.xml", "routes/sitemap.xml.ts"),
   route("robots.txt", "routes/robots.txt.ts"),
 

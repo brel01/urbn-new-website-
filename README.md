@@ -80,9 +80,41 @@ Privacy: device coordinates stay in browser state. They're never put in page URL
 DPI codes follow the backend and app format: `LGA-NNNN-C` (e.g. `IBADAN-NORTH-0041-U`), optionally followed by `/UNIT` (e.g. `/U01`). `C` is the mod-23 check character from `geo.service`/`dpi.helpers.ts`, so typos are caught before a lookup. `app/lib/dpi.ts` ports `computeDpiCheckChar`, `isValidDpiFormat` and `parseDpiIdentifier` exactly (it passes the app's `AKINYELE-0004-S` fixture).
 
 - `/verify/:code[/:unit]`: verification result (noindex).
-- `/p/dpi/:code[/:unit]`: web landing for plaque QR codes and shared links, the `https://` form of the app's `urbn://property/dpi/:code[/:unit]` deep link. Before printing `https` QR codes, add `/.well-known/apple-app-site-association` and `assetlinks.json` so the links open the app when it's installed.
+- `/property/dpi/:code[/:unit]`: the universal link the plaque QR and the app share; it opens the app when installed (see "U-Beep and app links"). `/p/dpi/:code[/:unit]` still works for older links.
 
 > The Figma frames use a placeholder code (`DPI-IBD-25-7X9K-1A2B`). The site uses the real format, and the DPI page's "DPI Code Explained" section explains it.
+
+## U-Beep and app links
+
+**Scanning a plaque.** The plaque QR and the app's Share DPI open `https://www.urbn.ng/property/dpi/:dpi[/:unitCode]`, and the app's Share Listing opens `/listing/:id`.
+- **App installed:** iOS or Android opens the Urbn app on that record.
+- **No app:** this website renders the record. `/property/dpi/...` is server-rendered with Open Graph tags for WhatsApp, iMessage and Instagram previews. `/listing/:id` redirects to the listing page.
+
+**Verification files.** `server.js` answers `/.well-known/apple-app-site-association` and `/.well-known/assetlinks.json`: JSON content type, no redirects, no auth. Set these at run time:
+
+| Variable | Value |
+|---|---|
+| `APPLE_TEAM_ID` | Apple Developer Team ID (app ID becomes `<TEAM_ID>.com.urbn`) |
+| `ANDROID_CERT_SHA256` | Release signing SHA-256 fingerprint(s), comma-separated. Include the Play App Signing certificate. |
+| `VITE_APP_STORE_URL` / `VITE_PLAY_STORE_URL` | Store listing URLs for the "Get the app" badges (build time). They fall back to `/download`. |
+| `VITE_APP_LINK_ORIGIN` | Defaults to `https://www.urbn.ng`. It must match the app's associated domain. |
+
+`www.urbn.ng` must serve these files itself. Don't redirect `www` to the apex domain, or app links fail verification. Check with Apple's AASA validator, and on Android with `adb shell pm get-app-links com.urbn`.
+
+**U-Beep.** The record page's U-Beep button runs the app's sender flow: reason, then unit (when the scan was for a multi-unit property), then message, then phone code, then sent. The page then waits up to 30 minutes for a reply.
+- The browser talks to `/api/ubeep/*`, which proxies to the API with a per-IP throttle:
+  - `GET /u-beep/target-options`
+  - `POST /u-beep/otp/send` and `POST /u-beep/otp/verify`
+  - `POST /u-beep`
+  - `GET /u-beep/:id/status` (with the beep's trackToken)
+- Without `URBN_API_URL` it runs a sample version: the code is `123456`, and a reply arrives after about 12 seconds.
+- Any record page with `?beep=1` opens U-Beep straight away.
+
+**Find a Property.** The website's search follows the app's screen:
+- Search by DPI or `DPI/UNIT`.
+- **Scan QR** uses the camera, via the browser's BarcodeDetector or jsQR as a fallback.
+- **Upload QR Image** reads a photo of the code.
+- The result card has the DPI code panel with QR and copy, the listing box, U-Beep, View Listing and Search Again.
 
 ## SEO
 

@@ -15,9 +15,9 @@ export const SITE = {
   // Bump ?v= whenever the share card changes so WhatsApp/Facebook refetch it.
   ogImage: "/og/urbn-share.png?v=3",
   apps: {
-    // TODO: replace with live store links at launch
-    ios: "/download",
-    android: "/download",
+    // Store links go live via VITE_APP_STORE_URL / VITE_PLAY_STORE_URL; until then, the download page.
+    ios: import.meta.env.VITE_APP_STORE_URL || "/download",
+    android: import.meta.env.VITE_PLAY_STORE_URL || "/download",
   },
   socials: {
     whatsapp: "https://wa.me/", // TODO

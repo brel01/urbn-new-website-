@@ -62,6 +62,21 @@ export const appDeepLink = (dpi: string, unit?: string | null) =>
 export const verifyPath = (dpi: string, unit?: string | null) =>
   `/verify/${[dpi, unit].filter(Boolean).map((s) => encodeURIComponent(s!)).join("/")}`;
 
+/** Path of the universal link the app shares and the plaque QR opens. */
+export const dpiLinkPath = (dpi: string, unit?: string | null) =>
+  `/property/dpi/${[dpi, unit].filter(Boolean).map((s) => encodeURIComponent(s!)).join("/")}`;
+
+/**
+ * The https link that opens the Urbn app when it's installed and this website
+ * when it isn't (same as the app's buildDpiUniversalLink). The host must match
+ * the app's associated domain, so it's www.urbn.ng rather than the site URL.
+ */
+export const APP_LINK_ORIGIN = (import.meta.env?.VITE_APP_LINK_ORIGIN ?? "https://www.urbn.ng").replace(/\/$/, "");
+export const dpiShareLink = (dpi: string, unit?: string | null) => APP_LINK_ORIGIN + dpiLinkPath(dpi, unit);
+
+/** How a lookup was started, sent to the API as ?source= for its analytics. */
+export type DpiLookupSource = "SEARCH" | "SCAN" | "DEEP_LINK";
+
 // ---------------------------------------------------------------------------
 
 /** Backend error codes from GET /public/dpi/:dpiCode (DpiErrorCode enum). */
@@ -92,8 +107,19 @@ export type DpiRecord = {
   ownership: string | null;
   /** website listing path, when the property has an active listing */
   listingPath?: string;
-  listing?: { type: string; price: number; rentPeriod: string | null } | null;
+  listing?: { type: string; price: number; rentPeriod: string | null; purpose?: string | null; currency?: string | null } | null;
   history: DpiEvent[];
+  /** TRACEABLE records show identity and location only; PUBLIC ones carry full details. */
+  mode?: "TRACEABLE" | "PUBLIC";
+  description?: string | null;
+  postalCode?: string | null;
+  buildingType?: string | null;
+  lat?: number | null;
+  lng?: number | null;
+  /** set on a unit lookup (DPI/U01) */
+  unit?: { number: string; floor: number | null; rooms: number | null; structureType: string | null } | null;
+  /** unit codes, when known; sample mode uses these for U-Beep's "Which unit?" */
+  units?: string[];
 };
 
 export type DpiLookup =

@@ -11,6 +11,36 @@ const app = express();
 app.disable("x-powered-by");
 app.use(compression());
 
+// App link verification files, so https://www.urbn.ng/property/dpi/... and
+// /listing/... open the Urbn app when it's installed. Apple and Google fetch these
+// directly: JSON content type, no auth and no redirects (so they're answered
+// before the trailing-slash redirect below). The IDs come from the environment,
+// so going live is a config change:
+//   APPLE_TEAM_ID         Apple Developer Team ID
+//   ANDROID_CERT_SHA256   release signing certificate fingerprint(s), comma-separated
+//                         (include both the upload and Play App Signing certificates)
+const APP_LINK_PATHS = ["/listing/*", "/property/dpi/*"];
+const appleAppSiteAssociation = JSON.stringify({
+  applinks: { apps: [], details: [{ appID: `${process.env.APPLE_TEAM_ID || "<TEAM_ID>"}.com.urbn`, paths: APP_LINK_PATHS }] },
+});
+const assetLinks = JSON.stringify([
+  {
+    relation: ["delegate_permission/common.handle_all_urls"],
+    target: {
+      namespace: "android_app",
+      package_name: "com.urbn",
+      sha256_cert_fingerprints: (process.env.ANDROID_CERT_SHA256 || "<RELEASE_CERT_SHA256>").split(",").map((s) => s.trim()).filter(Boolean),
+    },
+  },
+]);
+const sendAppLinkFile = (body) => (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  res.setHeader("Cache-Control", "public, max-age=3600");
+  res.end(Buffer.from(body)); // Buffer: no "; charset" suffix on the content type
+};
+for (const p of ["/.well-known/apple-app-site-association", "/apple-app-site-association"]) app.get([p, `${p}/`], sendAppLinkFile(appleAppSiteAssociation));
+app.get(["/.well-known/assetlinks.json", "/.well-known/assetlinks.json/"], sendAppLinkFile(assetLinks));
+
 // Fingerprinted build assets: cache forever.
 app.use("/assets", express.static(path.join(CLIENT, "assets"), { immutable: true, maxAge: "1y", index: false, redirect: false }));
 

@@ -3,7 +3,7 @@
  * every call goes to the same endpoints the mobile app uses; otherwise the
  * seed data in seed.ts is served through an equivalent local query engine.
  */
-import { type DpiLookup, type DpiErrorCode, isValidDpiFormat } from "../dpi";
+import { type DpiLookup, type DpiLookupSource, type DpiErrorCode, isValidDpiFormat } from "../dpi";
 import { PLACES } from "../places";
 import { interpretQuery } from "./interpret";
 import { SAMPLE_PROPERTIES } from "../nearby/seed";
@@ -256,10 +256,12 @@ export async function aiSearch(query: string): Promise<AiSearchResult> {
 
 // ---------------------------------------------------------------------------
 
+const SAMPLE_UNITS = ["U01", "U02", "U03"];
+
 function seedLookup(code: string, unitCode: string | null): DpiLookup {
   const l = SEED_LISTINGS.find((x) => x.dpi === code);
   if (!l) return sampleActivityPropertyLookup(code, unitCode);
-  if (unitCode && !/^U\d{2}$/.test(unitCode)) return { status: "error", code, unitCode, error: "UNIT_NOT_FOUND" };
+  if (unitCode && (l.isMainUnit || !SAMPLE_UNITS.includes(unitCode))) return { status: "error", code, unitCode, error: "UNIT_NOT_FOUND" };
   const registered = l.createdAt.slice(0, 10);
   const day = (offset: number) => new Date(Date.parse(registered) - offset * 864e5).toISOString().slice(0, 10);
   return {
@@ -277,11 +279,19 @@ function seedLookup(code: string, unitCode: string | null): DpiLookup {
       city: l.propertyCity,
       state: l.propertyState,
       image: l.thumbnailUrl,
-      unitType: l.isMainUnit ? "Whole Property" : "Multi-Unit",
+      unitType: unitCode ? `Unit ${unitCode}` : l.isMainUnit ? "Whole Property" : "Multi-Unit",
       registeredOn: registered,
       ownership: null,
       listingPath: listingPath(l),
-      listing: { type: l.listingType, price: l.price, rentPeriod: l.rentPeriod },
+      listing: { type: l.listingType, price: l.price, rentPeriod: l.rentPeriod, purpose: null, currency: "NGN" },
+      mode: "PUBLIC",
+      description: l.description,
+      postalCode: null,
+      buildingType: l.structureType ?? l.propertyBuildingType,
+      lat: l.latitude,
+      lng: l.longitude,
+      units: l.isMainUnit ? undefined : SAMPLE_UNITS,
+      unit: unitCode ? { number: unitCode, floor: Number(unitCode.slice(1)) > 1 ? 1 : 0, rooms: l.roomCount, structureType: l.structureType } : null,
       history: [
         { date: day(10), label: "Property submitted" },
         { date: day(7), label: "Identity check completed" },
@@ -317,6 +327,11 @@ function sampleActivityPropertyLookup(code: string, unitCode: string | null): Dp
       registeredOn: p.registeredOn,
       ownership: null,
       listing: null,
+      mode: "PUBLIC",
+      lat: p.lat,
+      lng: p.lng,
+      units: p.units,
+      unit: unitCode ? { number: unitCode, floor: null, rooms: null, structureType: null } : null,
       history: [
         { date: "2026-06-05", label: "Property submitted" },
         { date: "2026-06-10", label: "Documents reviewed" },
@@ -326,22 +341,46 @@ function sampleActivityPropertyLookup(code: string, unitCode: string | null): Dp
   };
 }
 
+type PublicDpiUnit = {
+  id?: string;
+  unitNumber?: string | null;
+  thumbnailUrl?: string | null;
+  floorNumber?: number | null;
+  roomCount?: number | null;
+  structureType?: string | null;
+  property?: Partial<PublicProperty> | null;
+};
 type PublicDpiResult = {
   dpi: string;
   mode: "TRACEABLE" | "PUBLIC";
-  property: Partial<PublicProperty> & { name?: string | null; city?: string | null; state?: string | null; thumbnailUrl?: string | null };
-  listing: { id: string; listingType: string; price: number; rentPeriod: string | null } | null;
+  property: Partial<PublicProperty> & {
+    name?: string | null;
+    city?: string | null;
+    state?: string | null;
+    thumbnailUrl?: string | null;
+    latitude?: number | null;
+    longitude?: number | null;
+    postalCode?: string | null;
+    buildingType?: string | null;
+    description?: string | null;
+    units?: { unitNumber?: string | null; unitCode?: string | null }[] | null;
+  };
+  /** unit lookups (GET /public/dpi/:dpi/:unitCode) */
+  unit?: PublicDpiUnit | null;
+  listing: { id: string; listingType: string; price: number; rentPeriod: string | null; purpose?: string | null; currency?: string | null } | null;
 };
 
-export async function lookupDpi(rawCode: string, rawUnit: string | null = null): Promise<DpiLookup> {
+export async function lookupDpi(rawCode: string, rawUnit: string | null = null, source: DpiLookupSource = "SEARCH"): Promise<DpiLookup> {
   const code = rawCode.trim().toUpperCase();
   const unitCode = rawUnit?.trim().toUpperCase() || null;
   if (!isValidDpiFormat(code)) return { status: "error", code, unitCode, error: "INVALID_DPI_FORMAT" };
   if (!API) return seedLookup(code, unitCode);
   try {
     const path = `/public/dpi/${encodeURIComponent(code)}${unitCode ? `/${encodeURIComponent(unitCode)}` : ""}`;
-    const r = await api<PublicDpiResult>(path, { query: { source: "SEARCH" } });
-    const p = r.property;
+    const r = await api<PublicDpiResult>(path, { query: { source } });
+    // A unit result carries the property's full details under unit.property in PUBLIC mode.
+    const p = { ...r.property, ...(r.unit?.property ?? {}) } as PublicDpiResult["property"];
+    const u = r.unit;
     return {
       status: "verified",
       code,
@@ -356,14 +395,24 @@ export async function lookupDpi(rawCode: string, rawUnit: string | null = null):
         lga: p.lga ?? "",
         city: p.city ?? "",
         state: p.state ?? "",
-        image: p.thumbnailUrl ?? null,
-        unitType: unitCode ? `Unit ${unitCode}` : "Whole Property",
+        image: u?.thumbnailUrl ?? p.thumbnailUrl ?? null,
+        unitType: unitCode ? `Unit ${u?.unitNumber ?? unitCode}` : "Whole Property",
         registeredOn: null,
         // Shown only once the API defines a public ownership field.
         ownership: null,
         listingPath: r.listing ? `/listings/${r.listing.id}` : undefined,
-        listing: r.listing ? { type: r.listing.listingType, price: r.listing.price, rentPeriod: r.listing.rentPeriod } : null,
+        listing: r.listing
+          ? { type: r.listing.listingType, price: r.listing.price, rentPeriod: r.listing.rentPeriod, purpose: r.listing.purpose ?? null, currency: r.listing.currency ?? null }
+          : null,
         history: [],
+        mode: r.mode,
+        description: p.description ?? null,
+        postalCode: p.postalCode ?? null,
+        buildingType: p.buildingType ?? null,
+        lat: p.latitude ?? null,
+        lng: p.longitude ?? null,
+        units: p.units?.map((x) => x.unitCode ?? x.unitNumber ?? "").filter(Boolean),
+        unit: u ? { number: u.unitNumber ?? unitCode!, floor: u.floorNumber ?? null, rooms: u.roomCount ?? null, structureType: u.structureType ?? null } : null,
       },
     };
   } catch (e: any) {
