@@ -1,12 +1,14 @@
 import { clsx } from "clsx";
-import { ScanLine, ShieldCheck } from "lucide-react";
+import { ImageUp, QrCode, ScanLine, ShieldCheck } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useId, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Form, useNavigate, useNavigation } from "react-router";
 import { DPI_ERROR_COPY, isValidDpiFormat, makeDpi, parseDpiIdentifier, verifyPath } from "~/lib/dpi";
+import { QrImageError, QrScanSheet, decodeQrImage } from "./qr-scanner";
 import { Arrow } from "./ui";
 
-const EXAMPLES = [makeDpi("IBADAN-NORTH", 41), makeDpi("LAGELU", 12), makeDpi("AKINYELE", 22)];
+// Same shapes as the app's placeholder: a property, or a unit (DPI/U01).
+const EXAMPLES = [makeDpi("IBADAN-NORTH", 41), `${makeDpi("LAGELU", 12)}/U01`, makeDpi("AKINYELE", 22)];
 
 /** Cycles typed-out example codes in the placeholder. */
 function useTypewriter(words: string[], active: boolean) {
@@ -56,6 +58,23 @@ export function DpiSearch({
   const [error, setError] = useState<string | null>(null);
   const typed = useTypewriter(EXAMPLES, value === "");
   const busy = navigation.state !== "idle" && navigation.location?.pathname.startsWith("/verify/");
+  const [scanning, setScanning] = useState(false);
+  const [reading, setReading] = useState(false);
+  const file = useRef<HTMLInputElement>(null);
+
+  /** A scanned or uploaded QR: the plaque link, an urbn:// link or a bare code. */
+  const openScanned = useCallback(
+    (text: string) => {
+      setScanning(false);
+      const parsed = parseDpiIdentifier(text);
+      if (!parsed || !isValidDpiFormat(parsed.dpiCode)) return setError("That QR code isn't an Urbn property code. Try another, or type the DPI.");
+      setError(null);
+      setValue(parsed.unitCode ? `${parsed.dpiCode}/${parsed.unitCode}` : parsed.dpiCode);
+      navigate(`${verifyPath(parsed.dpiCode, parsed.unitCode)}?via=scan`);
+    },
+    [navigate],
+  );
+  const closeScanner = useCallback(() => setScanning(false), []);
 
   return (
     <Form
@@ -74,9 +93,12 @@ export function DpiSearch({
       aria-label="Check a property's DPI"
     >
       {variant === "card" && (
-        <label htmlFor={id} className="mb-3 block text-left font-display text-xl text-ink">
-          Check a Property's DPI
-        </label>
+        <div className="mb-3 text-left">
+          <label htmlFor={id} className="block font-display text-xl text-ink">
+            Find a Property
+          </label>
+          <p className="mt-1 text-sm text-neutral-500">Search using a property or unit's DPI, or scan its QR code.</p>
+        </div>
       )}
       <div
         className={clsx(
@@ -98,6 +120,7 @@ export function DpiSearch({
           <input
             id={id}
             name="code"
+            data-dpi-input
             value={value}
             onChange={(e) => {
               setValue(e.target.value);
@@ -113,7 +136,7 @@ export function DpiSearch({
           />
           {value === "" && (
             <span className="pointer-events-none absolute inset-0 flex items-center overflow-hidden text-[15px] whitespace-nowrap text-neutral-400">
-              <span className="hidden sm:inline">Enter a DPI code, e.g.&nbsp;</span>
+              <span className="hidden sm:inline">DPI Code, e.g.&nbsp;</span>
               <span className="sm:hidden">e.g.&nbsp;</span>
               {typed}
               <span className="ml-px h-5 w-px animate-pulse bg-neutral-400" />
@@ -124,10 +147,54 @@ export function DpiSearch({
           type="submit"
           className="group inline-flex h-11 shrink-0 items-center gap-1.5 rounded-xl bg-ink px-4 text-[15px] font-medium text-white transition hover:bg-neutral-800 active:scale-[0.97] sm:px-5"
         >
-          {busy ? "Checking…" : "Check Record"}
+          {busy ? "Searching…" : "Search"}
           <Arrow />
         </button>
       </div>
+      <div className={clsx("mt-3 flex flex-wrap gap-2", variant === "pill" && "justify-center sm:justify-start")}>
+        <button
+          type="button"
+          onClick={() => setScanning(true)}
+          className={clsx(
+            "inline-flex h-10 items-center gap-2 rounded-xl px-3.5 text-sm font-semibold transition active:scale-[0.97]",
+            variant === "pill" ? "bg-white/90 text-ink ring-1 ring-black/5 hover:bg-white" : "bg-mist text-ink hover:bg-fog",
+          )}
+        >
+          <QrCode className="size-4" /> Scan QR
+        </button>
+        <button
+          type="button"
+          disabled={reading}
+          onClick={() => file.current?.click()}
+          className={clsx(
+            "inline-flex h-10 items-center gap-2 rounded-xl px-3.5 text-sm font-semibold transition active:scale-[0.97]",
+            variant === "pill" ? "bg-white/90 text-ink ring-1 ring-black/5 hover:bg-white" : "bg-mist text-ink hover:bg-fog",
+          )}
+        >
+          <ImageUp className="size-4" /> {reading ? "Reading…" : "Upload QR Image"}
+        </button>
+        <input
+          ref={file}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          aria-label="Upload a photo of the QR code"
+          onChange={async (e) => {
+            const f = e.target.files?.[0];
+            e.target.value = "";
+            if (!f) return;
+            setReading(true);
+            try {
+              openScanned(await decodeQrImage(f));
+            } catch (err) {
+              setError(err instanceof QrImageError ? err.message : "Could not read that image");
+            } finally {
+              setReading(false);
+            }
+          }}
+        />
+      </div>
+      <QrScanSheet open={scanning} onClose={closeScanner} onResult={openScanned} />
       <AnimatePresence>
         {error && (
           <motion.p

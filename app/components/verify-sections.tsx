@@ -86,3 +86,33 @@ export function CheckBeforeCommit() {
     </section>
   );
 }
+
+const BEEP_STEPS = [
+  { title: "Scan the Plaque", text: "Point your phone camera at the QR code on the property's Urbn plaque. It opens in the Urbn app, or on this website if you don't have it." },
+  { title: "Tap U-Beep", text: "Say why you're there (a delivery, a visit, a service call) and add a short message. Pick the unit if there's more than one." },
+  { title: "Get a Reply", text: "The people at the property get an alert and can reply within 30 minutes. On the website, you confirm your number with a code first." },
+];
+
+/** What U-Beep is, on /verify: the plaque is also a doorbell. */
+export function UBeepExplainer() {
+  return (
+    <section className="container-x pb-16 sm:pb-24" aria-labelledby="ubeep-heading">
+      <Reveal className="rounded-card bg-ink p-6 text-white sm:p-10">
+        <p className="text-xs font-semibold tracking-widest text-white/50 uppercase">U-Beep</p>
+        <h2 id="ubeep-heading" className="mt-2 max-w-2xl text-4xl leading-tight sm:text-5xl">
+          Let Them Know You're at the Gate
+        </h2>
+        <p className="mt-3 max-w-xl text-white/70">Every Urbn plaque is also a doorbell. Scan it, and beep the people inside, without needing their number.</p>
+        <ol className="mt-8 grid gap-6 sm:grid-cols-3">
+          {BEEP_STEPS.map((s, i) => (
+            <li key={s.title} className="border-white/15 sm:border-l sm:pl-5">
+              <span className="grid size-7 place-items-center rounded-full bg-urbn text-xs font-semibold">{String(i + 1).padStart(2, "0")}</span>
+              <p className="mt-3 font-display text-xl">{s.title}</p>
+              <p className="mt-1 text-sm text-white/65">{s.text}</p>
+            </li>
+          ))}
+        </ol>
+      </Reveal>
+    </section>
+  );
+}
